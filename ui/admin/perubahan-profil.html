@@ -1,0 +1,28 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <h2>History Perubahan Profil</h2>
+</div>
+<div class="search-bar" style="justify-content: space-between;">
+    <input type="text" id="changesSearch" placeholder="Search user, field, value..." class="form-control"
+        >
+    <button class="btn btn-primary" onclick="window.showDeleteChangesHistoryModal()">
+        <i class="ri-delete-bin-line"></i> Hapus History
+    </button>
+</div>
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="changesTable">
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>User</th>
+                    <th>Field</th>
+                    <th>Lama</th>
+                    <th>Baru</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="changesPagination" class="pagination-container"></div>
+</div>

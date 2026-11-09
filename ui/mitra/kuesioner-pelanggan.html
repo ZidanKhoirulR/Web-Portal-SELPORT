@@ -1,0 +1,470 @@
+<div class="kuesioner-dashboard">
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="header-title">Kuesioner Pelanggan</h1>
+            <p class="header-subtitle">Monitoring hasil survei dan pengaturan teks pertanyaan kuesioner.</p>
+        </div>
+    </div>
+
+    
+    <div class="tabs-nav">
+        <button class="tab-item active" onclick="switchTab('monitoring')" id="tab-monitoring">
+            <i class="ri-dashboard-line"></i> Monitoring Hasil
+        </button>
+
+        <button class="tab-item" onclick="switchTab('general')" id="tab-general">
+            <i class="ri-equalizer-line"></i> Pengaturan Umum
+        </button>
+    </div>
+
+    
+    <div id="section-monitoring" class="tab-content">
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div class="search-box">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="kuesionerSearch" placeholder="Cari responden...">
+                    </div>
+
+                    <div class="admin-custom-select" id="dropdown-kuesionerTahun" style="width: 150px;">
+                        <button type="button" class="select-trigger" style="width: 100%; height: 100%; border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; display: flex; align-items: center; justify-content: space-between; background: white;">
+                            <span class="selected-text" id="kuesionerTahunSelectedText">Semua Tahun</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options" id="kuesionerTahunOptions">
+                            <div class="option selected" data-value="">Semua Tahun</div>
+                        </div>
+                        <input type="hidden" id="filter-tahun" value="">
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <button id="btn-cetak-rekap" onclick="downloadRekap()" class="btn-rekap" title="Unduh rekap semua kuesioner dalam format Excel">
+                        <i class="ri-printer-line"></i> Cetak Rekapan
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" style="text-align: center;">
+                        <thead>
+                            <tr>
+                                <th>TANGGAL UPLOAD</th>
+                                <th style="text-align: left;">NAMA PERUSAHAAN</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kuesionerBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div id="kuesionerPagination" class="pagination-container" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+    <div id="section-general" class="tab-content" style="display: none;">
+        <div class="card" style="max-width: 600px;">
+            <div class="card-header">
+                <h3 class="card-title"><i class="ri-equalizer-line"></i> Konfigurasi Kuesioner</h3>
+            </div>
+            <div class="card-body">
+                <form id="generalSettingsForm">
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Jangka Waktu Pengisian Kembali</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="number" id="kuesioner_interval_value" name="kuesioner_interval_value" class="form-control" min="0" required style="width: 100px; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <div class="admin-custom-select" id="dropdown-intervalUnit" style="width: 130px; height: 42px;">
+                                <button type="button" class="select-trigger" style="width: 100%; height: 100%; border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; display: flex; align-items: center; justify-content: space-between; background: white;">
+                                    <span class="selected-text">Bulan</span>
+                                    <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </button>
+                                <div class="select-options" style="width: 100%;">
+                                    <div class="option" data-value="hari">Hari</div>
+                                    <div class="option selected" data-value="bulan">Bulan</div>
+                                    <div class="option" data-value="tahun">Tahun</div>
+                                </div>
+                                <input type="hidden" id="kuesioner_interval_unit" name="kuesioner_interval_unit" value="bulan">
+                            </div>
+                        </div>
+                        <small style="color: #6b7280; font-size: 0.75rem; margin-top: 8px; display: block;">
+                            Tentukan berapa lama sekali pelanggan diwajibkan mengisi kuesioner sebelum diperbolehkan mengunduh berkas. 
+                            Setel ke <b>0</b> jika ingin pelanggan mengisi kuesioner setiap kali ada pesanan baru.
+                        </small>
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 25px;">
+                            <i class="ri-save-line"></i> Simpan Pengaturan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<style>
+    /* Option row styles */
+    .option-row:hover input {
+        border-color: #3b82f6 !important;
+    }
+    .option-row button:hover {
+        background: #f87171 !important;
+        color: white !important;
+    }
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+    .btn-cancel:hover {
+        background: #6b7280 !important;
+    }
+
+    /* Rekap button */
+    .btn-rekap {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: linear-gradient(135deg, #2C7BE5 0%, #1a68d1 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(44,123,229,0.25);
+    }
+    .btn-rekap:hover {
+        background: linear-gradient(135deg, #1a68d1 0%, #1555ab 100%);
+        box-shadow: 0 4px 12px rgba(44,123,229,0.35);
+        transform: translateY(-1px);
+    }
+    .btn-rekap:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(44,123,229,0.2);
+    }
+    .btn-rekap.loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    /* Dashboard styles */
+    .kuesioner-dashboard { padding: 10px; }
+    .dashboard-header { margin-bottom: 25px; }
+    .header-title { font-size: 1.75rem; color: #1e293b; margin: 0; }
+    .header-subtitle { color: #64748b; margin-top: 5px; }
+    .tabs-nav { display: flex; gap: 10px; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px; }
+    .tab-item { padding: 12px 20px; border: none; background: none; color: #64748b; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tab-item:hover { color: #2C7BE5; }
+    .tab-item.active { color: #2C7BE5; border-bottom-color: #2C7BE5; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
+    .stat-card { background: white; padding: 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stat-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+    .stat-label { font-size: 0.875rem; color: #64748b; }
+    .stat-value { font-size: 1.5rem; color: #1e293b; margin: 0; font-weight: 700; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+    .card-header { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; background: #fff; }
+    .card-title { font-size: 1.125rem; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .search-box { position: relative; width: 300px; }
+    .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+    .search-box input { width: 100%; padding: 8px 12px 8px 38px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.875rem; }
+    .table { width: 100%; border-collapse: collapse; }
+    .table th { background: #f8fafc; padding: 12px 15px; text-align: center; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #edf2f7; }
+    .table td { padding: 15px; border-bottom: 1px solid #f1f5f9; color: #334155; font-size: 0.875rem; vertical-align: middle; }
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-secondary { background: #f1f5f9; color: #475569; }
+
+    /* Detailed View Styles */
+    .detail-section-header { 
+        background: #f1f5f9; 
+        padding: 8px 15px; 
+        border-radius: 6px; 
+        margin: 20px 0 10px 0; 
+        font-weight: 700; 
+        color: #475569; 
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .detail-answer-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    .detail-q-text {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+    .detail-a-text {
+        color: #2C7BE5;
+        font-weight: 700;
+        font-size: 0.95rem;
+        padding-left: 10px;
+        border-left: 3px solid #2C7BE5;
+    }
+    .detail-info-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .detail-info-card {
+        background: white;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+    .detail-info-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        margin-bottom: 4px;
+        display: block;
+    }
+    .detail-info-value {
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 0.95rem;
+    }
+</style>
+
+<script>
+(function() {
+    window.switchTab = function(tabName) {
+        document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        
+        document.getElementById('tab-' + tabName).classList.add('active');
+        document.getElementById('section-' + tabName).style.display = 'block';
+        
+        if (tabName === 'monitoring') {
+            loadKuesioner();
+        } else if (tabName === 'settings') {
+            loadQuestions();
+        } else if (tabName === 'general') {
+            loadGeneralSettings();
+        }
+    };
+
+    window.allKuesionerData = [];
+    window.currentKuesionerPage = 1;
+    window.itemsPerPage = 8;
+    let kuesionerSearchTimeout;
+
+    // Monitoring Logic
+    window.loadKuesioner = async function() {
+        const search = document.getElementById('kuesionerSearch')?.value || '';
+        const tableBody = document.getElementById('kuesionerBody');
+        if (!tableBody) return;
+        
+        try {
+            const response = await fetch(`${BASE_URL}/mitra/api/kuesioner?search=${search}`);
+            const data = await response.json();
+
+            if (data.stats) {
+                const elTotal = document.getElementById('totalResponden');
+                if (elTotal) elTotal.textContent = data.stats.total;
+            }
+
+            if (data.success) {
+                window.allKuesionerData = data.data || [];
+                
+                // Extract unique years for the dropdown
+                const years = new Set();
+                window.allKuesionerData.forEach(item => {
+                    if (item.created_at_formatted) {
+                        const y = item.created_at ? item.created_at.substring(0,4) : (item.created_at_formatted.split(' ').pop());
+                        if (y && !isNaN(y)) years.add(y);
+                    }
+                });
+                
+                // Populate dropdown
+                const tahunOptions = document.getElementById('kuesionerTahunOptions');
+                if (tahunOptions) {
+                    const currentFilter = document.getElementById('filter-tahun')?.value || '';
+                    let optsHtml = '<div class="option ' + (currentFilter === '' ? 'selected' : '') + '" data-value="">Semua Tahun</div>';
+                    Array.from(years).sort().reverse().forEach(y => {
+                        optsHtml += `<div class="option ${currentFilter === y ? 'selected' : ''}" data-value="${y}">${y}</div>`;
+                    });
+                    tahunOptions.innerHTML = optsHtml;
+                }
+
+                window.currentKuesionerPage = 1;
+                renderKuesionerTable();
+            } else {
+                window.allKuesionerData = [];
+                renderKuesionerTable();
+            }
+        } catch (e) { console.error(e); }
+    };
+
+    window.renderKuesionerTable = function() {
+        const tableBody = document.getElementById('kuesionerBody');
+        const paginationContainer = document.getElementById('kuesionerPagination');
+        if (!tableBody) return;
+
+        let filteredData = window.allKuesionerData;
+        
+        const selectedYear = document.getElementById('filter-tahun')?.value;
+        if (selectedYear) {
+            filteredData = filteredData.filter(item => {
+                const y = item.created_at ? item.created_at.substring(0,4) : (item.created_at_formatted.split(' ').pop());
+                return y === selectedYear;
+            });
+        }
+
+        if (filteredData.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3">Tidak ada data.</td></tr>';
+            if (paginationContainer) paginationContainer.innerHTML = '';
+            return;
+        }
+
+        const perPage = window.itemsPerPage;
+        const totalPages = Math.ceil(filteredData.length / perPage);
+        window.currentKuesionerPage = Math.min(Math.max(window.currentKuesionerPage || 1, 1), totalPages);
+
+        const start = (window.currentKuesionerPage - 1) * perPage;
+        const end = start + perPage;
+        const pageData = filteredData.slice(start, end);
+
+        let html = '';
+        pageData.forEach(item => {
+            html += `
+                <tr>
+                    <td>${item.created_at_formatted}</td>
+                    <td style="text-align: left;">${item.instansi || '-'}</td>
+                    <td><a href="${BASE_URL}/mitra/kuesioner/excel/${item.pdf_token}" target="_blank" style="text-decoration: underline; color: #2C7BE5; font-weight: 500;">Unduh Excel</a></td>
+                </tr>
+            `;
+        });
+        tableBody.innerHTML = html;
+
+        if (typeof renderPagination === 'function' && paginationContainer) {
+            renderPagination(window.currentKuesionerPage, totalPages, paginationContainer, 'Kuesioner');
+        }
+    };
+
+    window.changeKuesionerPage = function(page) {
+        window.currentKuesionerPage = page;
+        renderKuesionerTable();
+    };
+
+    document.getElementById('kuesionerSearch')?.addEventListener('input', () => {
+        clearTimeout(kuesionerSearchTimeout);
+        kuesionerSearchTimeout = setTimeout(loadKuesioner, 500);
+    });
+
+    window.loadGeneralSettings = async function() {
+        try {
+            const res = await fetch(`${BASE_URL}/mitra/api/kuesioner/settings`);
+            const json = await res.json();
+            if (json.success && json.data) {
+                if (json.data.kuesioner_interval_value !== undefined) {
+                    document.getElementById('kuesioner_interval_value').value = json.data.kuesioner_interval_value;
+                }
+                if (json.data.kuesioner_interval_unit !== undefined) {
+                    document.getElementById('kuesioner_interval_unit').value = json.data.kuesioner_interval_unit;
+                    
+                    // Update dropdown UI
+                    const dropdown = document.getElementById('dropdown-intervalUnit');
+                    if (dropdown) {
+                        const options = dropdown.querySelectorAll('.option');
+                        options.forEach(opt => {
+                            if (opt.dataset.value === json.data.kuesioner_interval_unit) {
+                                opt.classList.add('selected');
+                                dropdown.querySelector('.selected-text').textContent = opt.textContent;
+                            } else {
+                                opt.classList.remove('selected');
+                            }
+                        });
+                    }
+                }
+            }
+        } catch (e) { console.error(e); }
+    };
+
+    if (typeof setupCustomDropdown === 'function') {
+        setupCustomDropdown('dropdown-intervalUnit', 'kuesioner_interval_unit');
+        setupCustomDropdown('dropdown-kuesionerTahun', 'filter-tahun', () => {
+            renderKuesionerTable();
+        });
+    }
+
+    document.getElementById('generalSettingsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new URLSearchParams(new FormData(e.target));
+        
+        try {
+            const res = await fetch(`${BASE_URL}/mitra/api/kuesioner/settings/update`, { 
+                method: 'POST', 
+                body: formData 
+            });
+            const json = await res.json();
+            if (json.success) {
+                if (typeof showMessage === 'function') showMessage('Berhasil', json.message, 'success');
+                else alert(json.message);
+            } else { alert(json.message); }
+        } catch (e) { alert('Gagal menyimpan.'); }
+    });
+
+    // Initial Load
+    loadKuesioner();
+
+    // Download rekap semua kuesioner
+    window.downloadRekap = function() {
+        const btn = document.getElementById('btn-cetak-rekap');
+        if (btn) {
+            btn.classList.add('loading');
+            btn.innerHTML = '<i class="ri-loader-4-line"></i> Memproses...';
+        }
+
+        const tahun = document.getElementById('filter-tahun')?.value || '';
+        const search = document.getElementById('kuesionerSearch')?.value || '';
+        const params = new URLSearchParams();
+        if (tahun)  params.append('tahun', tahun);
+        if (search) params.append('search', search);
+
+        const url = `${BASE_URL}/mitra/kuesioner/rekap/excel` + (params.toString() ? '?' + params.toString() : '');
+
+        // Buka di tab baru agar browser memproses download
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Kembalikan tampilan button setelah 2 detik
+        setTimeout(() => {
+            if (btn) {
+                btn.classList.remove('loading');
+                btn.innerHTML = '<i class="ri-printer-line"></i> Cetak Rekapan';
+            }
+        }, 2000);
+    };
+})();
+</script>

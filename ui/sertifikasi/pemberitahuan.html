@@ -1,0 +1,197 @@
+<div class="page-header" style="margin-bottom:15px;">
+    <div>
+        <h2 style="margin:0; font-size:1.5rem; color:#5a5c69;">Kelola Pemberitahuan</h2>
+        <p style="margin:5px 0 0; color:#858796; font-size:0.9rem;">
+            Pemberitahuan ini akan ditampilkan kepada pelanggan di tab Upload Berkas Pendaftaran.
+        </p>
+    </div>
+</div>
+
+<div class="card" style="max-width:780px;">
+    <div style="padding:24px;">
+
+        <!-- Status aktif badge -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="pb-status-badge"
+                    style="display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:20px; font-size:0.78rem; font-weight:700; background:#e6f9f1; color:#1cc88a; border:1px solid #cef1e2;">
+                    <i class="ri-checkbox-circle-fill"></i> Aktif – ditampilkan ke pelanggan
+                </span>
+            </div>
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.875rem; color:#374151; font-weight:500;">
+                <div id="pb-toggle-wrap" style="position:relative; width:44px; height:24px; flex-shrink:0;">
+                    <input type="checkbox" id="pb-aktif" checked
+                        style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:2; margin:0;"
+                        onchange="pbUpdateToggle()">
+                    <div id="pb-toggle-track"
+                        style="position:absolute; inset:0; background:#1cc88a; border-radius:12px; transition:background 0.2s;"></div>
+                    <div id="pb-toggle-thumb"
+                        style="position:absolute; top:3px; left:22px; width:18px; height:18px; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.25); transition:left 0.2s;"></div>
+                </div>
+                Tampilkan ke pelanggan
+            </label>
+        </div>
+
+        <div class="form-group" style="margin-bottom:18px;">
+            <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+                Judul Pemberitahuan
+            </label>
+            <input type="text" id="pb-judul" class="form-control" placeholder="contoh: Perhatian Pelanggan Sertifikasi"
+                style="width:100%; box-sizing:border-box; border-radius:8px; border:1px solid #d1d3e2; padding:10px 14px; font-size:0.875rem;">
+        </div>
+
+        <div class="form-group" style="margin-bottom:24px;">
+            <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+                Isi Pemberitahuan
+                <span style="font-weight:400; color:#94a3b8; font-size:0.8rem;">(mendukung teks biasa, baris baru otomatis ditampilkan)</span>
+            </label>
+            <textarea id="pb-isi" class="form-control" rows="8" placeholder="Tulis isi pemberitahuan di sini..."
+                style="width:100%; box-sizing:border-box; border-radius:8px; border:1px solid #d1d3e2; padding:10px 14px; font-size:0.875rem; resize:vertical; line-height:1.6;"></textarea>
+        </div>
+
+        <!-- Preview -->
+        <div style="margin-bottom:24px;">
+            <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:10px;">
+                Preview (tampilan di halaman pelanggan)
+            </label>
+            <div id="pb-preview"
+                style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border:1px solid #bfdbfe; border-left:4px solid #3b82f6; border-radius:10px; padding:16px 20px;">
+                <div style="display:flex; gap:12px; align-items:flex-start;">
+                    <i class="ri-information-line" style="font-size:1.3rem; color:#3b82f6; margin-top:1px; flex-shrink:0;"></i>
+                    <div style="flex:1; min-width:0;">
+                        <div id="pb-preview-judul" style="font-weight:700; color:#1e3a8a; font-size:0.9rem; margin-bottom:6px;">
+                            Judul pemberitahuan
+                        </div>
+                        <div id="pb-preview-isi" style="color:#1e40af; font-size:0.85rem; line-height:1.6; white-space:pre-line;">
+                            Isi pemberitahuan akan tampil di sini...
+                        </div>
+                        <div id="pb-preview-date" style="font-size:0.75rem; color:#1d4ed8; margin-top:8px; font-style:italic;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info terakhir diperbarui -->
+        <div id="pb-last-updated" style="font-size:0.8rem; color:#94a3b8; margin-bottom:16px; display:none;">
+            <i class="ri-time-line"></i> Terakhir diperbarui: <span id="pb-updated-at"></span>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <button id="pb-btn-simpan" onclick="pbSimpan()"
+                style="padding:11px 28px; background:#4e73df; color:#fff; border:none; border-radius:8px; font-weight:600; font-size:0.875rem; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 8px rgba(78,115,223,0.3);"
+                onmouseover="this.style.background='#3a5fc8'" onmouseout="this.style.background='#4e73df'">
+                <i class="ri-save-line"></i> Simpan Pemberitahuan
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+
+    function pbUpdateToggle() {
+        const cb = document.getElementById('pb-aktif');
+        const track = document.getElementById('pb-toggle-track');
+        const thumb = document.getElementById('pb-toggle-thumb');
+        const badge = document.getElementById('pb-status-badge');
+        if (cb.checked) {
+            track.style.background = '#1cc88a';
+            thumb.style.left = '22px';
+            badge.style.background = '#e6f9f1';
+            badge.style.color = '#1cc88a';
+            badge.style.border = '1px solid #cef1e2';
+            badge.innerHTML = '<i class="ri-checkbox-circle-fill"></i> Aktif – ditampilkan ke pelanggan';
+        } else {
+            track.style.background = '#cbd5e1';
+            thumb.style.left = '3px';
+            badge.style.background = '#f1f5f9';
+            badge.style.color = '#94a3b8';
+            badge.style.border = '1px solid #e2e8f0';
+            badge.innerHTML = '<i class="ri-close-circle-fill"></i> Nonaktif – tersembunyi dari pelanggan';
+        }
+        pbSyncPreview();
+    }
+    window.pbUpdateToggle = pbUpdateToggle;
+
+    function pbSyncPreview() {
+        const judul = document.getElementById('pb-judul').value.trim();
+        const isi   = document.getElementById('pb-isi').value.trim();
+        document.getElementById('pb-preview-judul').textContent = judul || 'Judul pemberitahuan';
+        document.getElementById('pb-preview-isi').textContent   = isi   || 'Isi pemberitahuan akan tampil di sini...';
+    }
+
+    document.getElementById('pb-judul').addEventListener('input', pbSyncPreview);
+    document.getElementById('pb-isi').addEventListener('input', pbSyncPreview);
+
+    // Load existing
+    fetch(`${BASE_URL}/sertifikasi/api/pemberitahuan`)
+        .then(r => r.json())
+        .then(res => {
+            if (res.success && res.data) {
+                const d = res.data;
+                document.getElementById('pb-judul').value = d.judul || '';
+                document.getElementById('pb-isi').value   = d.isi   || '';
+                document.getElementById('pb-aktif').checked = d.aktif == 1;
+                pbUpdateToggle();
+                pbSyncPreview();
+                if (d.updated_at) {
+                    document.getElementById('pb-last-updated').style.display = 'block';
+                    document.getElementById('pb-updated-at').textContent = d.updated_at;
+                    document.getElementById('pb-preview-date').textContent = 'Diperbarui: ' + d.updated_at;
+                }
+            }
+        })
+        .catch(console.error);
+
+    window.pbSimpan = function () {
+        const judul = document.getElementById('pb-judul').value.trim();
+        const isi   = document.getElementById('pb-isi').value.trim();
+        const aktif = document.getElementById('pb-aktif').checked ? 1 : 0;
+
+        if (!judul || !isi) {
+            if (typeof showSertAlert === 'function') {
+                showSertAlert('Judul dan isi pemberitahuan tidak boleh kosong.', 'error');
+            } else { alert('Judul dan isi tidak boleh kosong.'); }
+            return;
+        }
+
+        const btn = document.getElementById('pb-btn-simpan');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ri-loader-4-line"></i> Menyimpan...';
+
+        const fd = new FormData();
+        fd.append('judul', judul);
+        fd.append('isi', isi);
+        fd.append('aktif', aktif);
+
+        fetch(`${BASE_URL}/sertifikasi/api/pemberitahuan/save`, { method: 'POST', body: fd })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    if (typeof showSertAlert === 'function') {
+                        showSertAlert(res.message || 'Pemberitahuan berhasil disimpan!');
+                    }
+                    const now = new Date().toLocaleString('id-ID');
+                    document.getElementById('pb-last-updated').style.display = 'block';
+                    document.getElementById('pb-updated-at').textContent = now;
+                    document.getElementById('pb-preview-date').textContent = 'Diperbarui: ' + now;
+                } else {
+                    if (typeof showSertAlert === 'function') {
+                        showSertAlert(res.message || 'Gagal menyimpan.', 'error');
+                    }
+                }
+            })
+            .catch(() => {
+                if (typeof showSertAlert === 'function') {
+                    showSertAlert('Terjadi kesalahan jaringan.', 'error');
+                }
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ri-save-line"></i> Simpan Pemberitahuan';
+            });
+    };
+
+})();
+</script>

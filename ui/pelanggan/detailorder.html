@@ -1,0 +1,279 @@
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <button onclick="loadSection('beranda')" class="back-btn-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <div class="header-text-group">
+            <span class="header-subtitle">DETAIL ORDER</span>
+            <h1 class="header-order-id">{{ order_id }}</h1>
+        </div>
+    </div>
+
+    <!-- STEPPER_HTML -->
+
+    <div class="order-tabs-wrapper">
+        <div class="order-tabs-header">
+            <button class="tab-btn active" onclick="switchOrderTab(event, 'tab-data-order')">Data Order</button>
+            <button class="tab-btn" id="btn-tab-bapc" onclick="switchOrderTab(event, 'tab-data-bapc')">Data
+                BAPC/Surat Pengantar Perusahaan</button>
+            <button class="tab-btn" onclick="switchOrderTab(event, 'tab-biaya')">Informasi Biaya</button>
+            <button class="tab-btn" onclick="switchOrderTab(event, 'tab-parameter')">Parameter Pengujian</button>
+
+            <button class="tab-btn" onclick="switchOrderTab(event, 'tab-download')">Download Berkas</button>
+        </div>
+
+        <div class="order-tabs-content">
+            <div id="tab-data-order" class="tab-pane active">
+                <div class="content-card-modern">
+                    <div class="info-details-list">
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Nomor Permintaan Pengujian</span>
+                            <span class="info-value-modern">{{ no_permintaan }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Jenis Contoh</span>
+                            <span class="info-value-modern">{{ sample_type }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Contoh Detail</span>
+                            <span class="info-value-modern">{{ detail_contoh }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Jenis Tarif Uji</span>
+                            <span class="info-value-modern">{{ jenis_pengujian }}</span>
+                        </div>
+
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Sumber Sample</span>
+                            <span class="info-value-modern">{{ sumber_sampel }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Jumlah Contoh</span>
+                            <span class="info-value-modern">{{ banyak_contoh }}</span>
+                        </div>
+
+                        <div class="info-row-vertical">
+                            <span class="info-label-modern">Rincian Contoh</span>
+                            <div class="rincian-table-wrapper" style="overflow-x: auto;">
+                                <table class="custom-table" style="min-width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <!-- RINCIAN_CONTOH_HEADER -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- ORDER_DETAILS_ROWS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Tanggal Penerimaan</span>
+                            <span class="info-value-modern">{{ tgl_terima }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Estimasi Selesai LHU</span>
+                            <span class="info-value-modern">{{ tgl_selesai_lhu_plus3 }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Jumlah LHU</span>
+                            <span class="info-value-modern">{{ jumlah_lhu }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Bahasa LHU</span>
+                            <span class="info-value-modern">{{ bahasa_lhu }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-data-bapc" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="info-details-list">
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Nomor Berita Acara</span>
+                            <span class="info-value-modern">{{ bapc_no_sp }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Tanggal Pengambilan Contoh</span>
+                            <span class="info-value-modern">{{ bapc_tanggal_sp }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Petugas Pengambilan Contoh</span>
+                            <span class="info-value-modern">{{ bapc_petugas }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Prosedur Pengambilan Contoh</span>
+                            <span class="info-value-modern">{{ bapc_prosedur }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-biaya" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="info-details-list">
+                        <!-- BIAYA_ROWS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-parameter" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="parameter-table-wrapper">
+                        <table class="custom-table" id="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th width="50px">No</th>
+                                    <th>Parameter</th>
+                                    <th width="80px">Jumlah</th>
+                                    <th width="120px">Tarif</th>
+                                    <th width="120px">Biaya</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- PARAMETER_ROWS -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="total-label">TOTAL</td>
+                                    <td class="total-value"><!-- PARAMETER_TOTAL --></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="tab-download" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Dokumen tersedia</h3>
+                    </div>
+
+                    <div class="document-list-simple">
+                        <!-- DOK_PENGECUALIAN_HTML -->
+                        <div class="document-list-item">
+                            <div class="doc-list-info">
+                                <div class="doc-list-text">
+                                    <span class="doc-list-title">BAPC/Surat Pengantar Perusahaan</span>
+                                    <span class="doc-list-desc">Berita Acara Pengambilan Contoh / Surat Pengantar
+                                        Perusahaan</span>
+                                </div>
+                            </div>
+                            <!-- BAPC_STATUS_HTML -->
+                        </div>
+
+                        <div class="document-list-item">
+                            <div class="doc-list-info">
+                                <div class="doc-list-text">
+                                    <span class="doc-list-title">Surat Penawaran</span>
+                                    <span class="doc-list-desc">Penawaran Harga Layanan</span>
+                                </div>
+                            </div>
+                            <!-- SURAT_PENAWARAN_STATUS_HTML -->
+                        </div>
+
+                        <!-- INVOICES_HTML -->
+
+
+                        <!-- LHU_STATUS_HTML -->
+
+
+                        <div style="margin-top: 20px; padding: 0 4px;">
+                            <div
+                                style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #1e293b; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;">
+                                Catatan Pengiriman</div>
+                            <div class="info-row-modern">
+                                <span class="info-label-modern">No. Resi</span>
+                                <span class="info-value-modern" style="color: #1e293b;">{{ no_resi }}</span>
+                            </div>
+                            <div class="info-row-modern">
+                                <span class="info-label-modern">Nama Ekspedisi</span>
+                                <span class="info-value-modern" style="color: #1e293b;">{{ nama_ekspedisi }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<input type="hidden" id="current-sample-type" value="Kertas">
+<input type="hidden" id="current-sumber-sampel" value="">
+
+<script>
+    (function () {
+        // Handle Tab Switching
+        window.switchOrderTab = function (evt, tabId) {
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(p => {
+
+                p.classList.remove('active')
+
+            });
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        };
+
+        // Conditional Tabs Logic based on Sample Type and Sumber Sampel
+        const initConditionalTabs = function () {
+            const sampleType = document.getElementById('current-sample-type')?.value || 'Kertas';
+            const sumberSampel = document.getElementById('current-sumber-sampel')?.value || '';
+
+            const btnBapc = document.getElementById('btn-tab-bapc');
+
+            if (btnBapc) btnBapc.style.display = 'none';
+
+            if (sumberSampel === 'Diambil') {
+                if (btnBapc) btnBapc.style.display = 'block';
+            }
+        };
+
+        initConditionalTabs();
+
+        // Handle Questionnaire Logic for Download Tab
+        const orderId = "{{ order_id }}";
+        const jenisLayanan = "{{ jenis_layanan }}";
+        const storageKey = 'kuesioner_done_' + jenisLayanan + '_' + orderId;
+        const isKuesionerDoneBackend = "{{ is_kuesioner_done }}" === "true";
+        if (isKuesionerDoneBackend || localStorage.getItem(storageKey)) {
+            const statusEl = document.getElementById('tab-list-lhu-status');
+            const actionsEl = document.getElementById('tab-list-lhu-actions');
+            const unduhBtn = document.getElementById('tab-btn-list-unduh-lhu');
+
+            if (statusEl) statusEl.innerHTML = '<span class="status-badge available">Tersedia</span>';
+            if (actionsEl) {
+                const kuesionerBtn = actionsEl.querySelector('a[onclick*="kuesioner"]');
+                if (kuesionerBtn) kuesionerBtn.style.display = 'none';
+            }
+            if (unduhBtn) unduhBtn.style.display = 'inline-flex';
+        }
+
+        // Auto-open download tab if coming from questionnaire
+        if (sessionStorage.getItem('open_download_tab') === 'true') {
+            sessionStorage.removeItem('open_download_tab');
+            const downloadTabBtn = document.querySelector('.tab-btn[onclick*="tab-download"]');
+            if (downloadTabBtn) {
+                setTimeout(() => downloadTabBtn.click(), 100);
+            }
+        }
+
+    })();
+</script>
+</div>
+
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/detailorder.css?v=11">

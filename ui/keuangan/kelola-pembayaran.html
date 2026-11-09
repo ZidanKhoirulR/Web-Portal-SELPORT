@@ -1,0 +1,203 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <div>
+        <h2 style="margin:0; font-size:1.5rem; color:#5a5c69;">Kelola Pembayaran</h2>
+        <p style="margin:5px 0 0 0; color:#858796; font-size:0.9rem;">Verifikasi bukti pembayaran yang diunggah
+            pelanggan.</p>
+    </div>
+</div>
+
+<div class="search-bar"
+    style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; align-items:center; background:#fff; padding:15px; border-radius:10px; border:1px solid #e3e6f0; box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.05);">
+
+    <!-- Search Input -->
+    <div style="flex:1; min-width:220px; position:relative;">
+        <i class="ri-search-line"
+            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#858796;"></i>
+        <input type="text" id="paymentsSearch" class="form-control"
+            placeholder="Cari nama perusahaan ...."
+            style="width:100%; padding-left:35px; height:40px; border-radius:8px; border:1px solid #d1d3e2; font-size:0.875rem; box-sizing:border-box;">
+    </div>
+
+    <!-- Filter Dropdowns -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+
+        <!-- Dropdown Bulan -->
+        <div class="admin-custom-select" id="dropdown-paymentsMonth" style="min-width:150px; flex-shrink:0;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+                <span class="selected-text">Semua Bulan</span>
+                <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+            </button>
+            <div class="select-options" style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px; max-height: 200px; overflow-y: auto; min-width:150px;">
+                <div class="option selected" data-value="all">Semua Bulan</div>
+                <div class="option" data-value="01">Januari</div>
+                <div class="option" data-value="02">Februari</div>
+                <div class="option" data-value="03">Maret</div>
+                <div class="option" data-value="04">April</div>
+                <div class="option" data-value="05">Mei</div>
+                <div class="option" data-value="06">Juni</div>
+                <div class="option" data-value="07">Juli</div>
+                <div class="option" data-value="08">Agustus</div>
+                <div class="option" data-value="09">September</div>
+                <div class="option" data-value="10">Oktober</div>
+                <div class="option" data-value="11">November</div>
+                <div class="option" data-value="12">Desember</div>
+            </div>
+            <input type="hidden" id="paymentsMonth" value="all">
+        </div>
+
+        <!-- Dropdown Tahun -->
+        <div class="admin-custom-select" id="dropdown-paymentsYear" style="min-width:140px; flex-shrink:0;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+                <span class="selected-text">Semua Tahun</span>
+                <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+            </button>
+            <div class="select-options" id="paymentsYearOptions" style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px; max-height: 200px; overflow-y: auto; min-width:140px;">
+                <div class="option selected" data-value="all">Semua Tahun</div>
+            </div>
+            <input type="hidden" id="paymentsYear" value="all">
+        </div>
+
+        <!-- Dropdown Status -->
+        <div class="admin-custom-select" id="dropdown-paymentsFilter" style="min-width:140px; flex-shrink:0;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+                <span class="selected-text">Pending</span>
+                <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+            </button>
+            <div class="select-options"
+                style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px; min-width:140px;">
+                <div class="option selected" data-value="Menunggu">Pending</div>
+                <div class="option" data-value="Diverifikasi">Disetujui</div>
+                <div class="option" data-value="Gagal">Perbaiki</div>
+            </div>
+            <input type="hidden" id="paymentsFilter" value="Menunggu">
+        </div>
+
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="paymentsTableFull">
+            <thead>
+                <tr>
+                    <th width="12%">Tanggal Upload</th>
+                    <th width="20%">Nama Perusahaan</th>
+                    <th width="18%">Keterangan</th>
+                    <th width="18%">Catatan</th>
+                    <th width="12%">Dikelola Oleh</th>
+                    <th width="10%" style="text-align:center">Status</th>
+                    <th width="10%" style="text-align:center"></th>
+                </tr>
+            </thead>
+            <tbody id="paymentsBodyFull">
+                <tr>
+                    <td colspan="7" style="text-align:center; padding:30px; color:#858796;">Memuat data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <style>
+        #paymentsTableFull .link-no-icon,
+        #paymentsTableFull .link-no-icon::before,
+        #paymentsTableFull .link-no-icon::after {
+            content: none !important;
+            display: inline-block !important;
+            background: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            width: auto !important;
+            height: auto !important;
+        }
+    </style>
+
+    <div
+        style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-top:1px solid #e3e6f0;">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:0.85rem; color:#858796;">
+            <span>Menampilkan <span id="paymentsStart">0</span> - <span id="paymentsEnd">0</span> dari <span
+                    id="paymentsTotal">0</span> data</span>
+      <label style="display:flex; align-items:center; gap:6px;">
+        Tampilkan
+        <select id="paymentsPageSize"
+          style="height:34px; border:1px solid #d1d3e2; border-radius:8px; color:#5a5c69; padding:0 8px; background:#fff;">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="all">Semua</option>
+        </select>
+      </label>
+        </div>
+        <div class="pagination-container" id="paymentsPagination"></div>
+    </div>
+</div>
+
+<!-- Modal Sunting Pembayaran (gaya Mitra) -->
+<div id="keuPaymentEditModal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center;">
+    <div
+        style="background:#fff; width:90%; max-width:520px; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; position:relative;">
+        <!-- Header modal -->
+        <div
+            style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #e2e8f0;">
+            <h3 style="margin:0; font-size:1rem; font-weight:700; color:#1e293b;">Kelola Status Pembayaran</h3>
+            <button onclick="closeKeuPaymentEditModal()"
+                style="background:none; border:none; cursor:pointer; font-size:1.3rem; color:#94a3b8; line-height:1;">&times;</button>
+        </div>
+        <!-- Body modal -->
+        <div style="padding:20px;">
+            <input type="hidden" id="keuPayEditId">
+            <input type="hidden" id="keuPayEditFileName">
+            <!-- Alasan / Catatan -->
+            <div style="margin-bottom:16px;">
+                <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+                    Alasan / Catatan <span style="color:#e74a3b;">*</span>
+                </label>
+                <textarea id="keuPayEditReason" rows="4" placeholder="Masukkan catatan atau alasan..."
+                    style="width:100%; padding:10px 12px; border:1px solid #d1d3e2; border-radius:8px; font-size:0.875rem; resize:vertical; font-family:inherit; box-sizing:border-box;"></textarea>
+            </div>
+            <!-- Status -->
+            <div style="margin-bottom:20px;">
+                <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+                    Status <span style="color:#e74a3b;">*</span>
+                </label>
+                <div class="admin-custom-select" id="dropdown-keuPayEditStatus" style="width:100%;">
+                    <button type="button" class="select-trigger"
+                        style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#374151; cursor:pointer; box-sizing:border-box;">
+                        <span class="selected-text" id="text-keuPayEditStatus">Pending</span>
+                        <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc;"></i>
+                    </button>
+                    <div class="select-options"
+                        style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px;">
+                        <div class="option selected" data-value="Menunggu">Pending</div>
+                        <div class="option" data-value="Diverifikasi">Disetujui</div>
+                        <div class="option" data-value="Gagal">Perbaiki</div>
+                    </div>
+                    <input type="hidden" id="keuPayEditStatus" value="Menunggu">
+                </div>
+            </div>
+            <!-- Preview Bukti -->
+            <div style="margin-bottom:20px;">
+                <a id="keuPayPreviewLink" href="#" target="_blank"
+                    style="display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:10px; border:1px solid #d1d3e2; border-radius:8px; font-size:0.875rem; color:#374151; text-decoration:none; font-weight:500; background:#f8fafc; box-sizing:border-box;">
+                    <i class="ri-file-search-line"></i> Preview Bukti
+                </a>
+            </div>
+            <!-- Tombol aksi -->
+            <div style="display:flex; gap:10px;">
+                <button type="button" onclick="closeKeuPaymentEditModal()"
+                    style="flex:1; padding:10px; background:#fff; color:#374151; border:1px solid #d1d3e2; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem;">
+                    Batal
+                </button>
+                <button type="button" id="keuPayBtnSimpan" onclick="keuPaySimpanPerubahan()"
+                    style="flex:2; padding:10px; background:#4e73df; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem;">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

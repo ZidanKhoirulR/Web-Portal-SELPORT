@@ -1,0 +1,2092 @@
+<div class="home-container">
+
+    <div class="header-section">
+        <h1>Permintaan Pengujian Pengecualian</h1>
+        <p class="header-desc">Isi data teknis, cetak untuk tanda tangan pelanggan, lalu unggah kembali berkasnya.</p>
+    </div>
+
+    <div id="pengecualian-list-container" class="content-card order-section">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Daftar Permohonan Pengecualian</h3>
+            <button type="button" class="btn-primary" onclick="showOrderForm()">+ Tambah Permohonan</button>
+        </div>
+
+        <div id="orders-empty-state" style="padding: 48px; text-align: center; color: #94a3b8;">
+            Belum ada data permohonan pengecualian
+        </div>
+
+        <div id="orders-table-wrapper" style="display: none;" class="table-responsive">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%" style="text-align: center;"></th>
+                        <th width="5%" style="text-align: center;">No</th>
+                        <th width="55%" style="text-align: center;">Lingkup</th>
+                        <th width="15%" style="text-align: center;">Tanggal</th>
+                        <th width="20%" style="text-align: center;"></th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div
+            style="display: flex; justify-content: flex-end; gap: 12px; padding: 20px 24px 0 24px; border-top: 1px solid #f1f5f9; margin-top: 20px;">
+            <button type="button" class="btn btn-primary"
+                style="background: transparent; color: #2C7BE5; border: 1px solid #2C7BE5; box-shadow: none;"
+                id="btn-cetak-massal" onclick="cetakMassalPengecualian()"
+                onmouseover="this.style.background='rgba(44, 123, 229, 0.05)'"
+                onmouseout="this.style.background='transparent'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Cetak Dokumen
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-upload-massal" onclick="openUploadModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload
+            </button>
+        </div>
+    </div>
+
+    <div id="pengecualian-detail-container" class="content-card order-section" style="display: none;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Detail Permohonan Pengecualian</h3>
+        </div>
+
+        <input type="hidden" id="current-order-id" value="">
+
+
+        <div style="margin-bottom: 24px;">
+            <h4
+                style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;">
+                Tabel Lingkup</h4>
+            <div class="table-responsive">
+                <table class="custom-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Lingkup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="detail-lingkup" style="font-weight: 600; color: #0f172a; text-align: center;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;">
+            <h4
+                style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
+                Tabel HS Code</h4>
+            <button type="button" class="btn-primary" onclick="showItemForm()"
+                style="padding: 8px 16px; font-size: 13px;">+ Tambah HS Code</button>
+        </div>
+
+        <div id="items-empty-state" style="padding: 24px; text-align: center; color: #94a3b8;">
+            Belum ada item HS Code
+        </div>
+
+        <div id="items-table-wrapper" style="display: none;">
+            <div class="table-responsive">
+                <table class="custom-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; width: 5%;">No</th>
+                            <th>HS Code</th>
+                            <th>Jenis Kertas</th>
+                            <th>Varian Gramatur</th>
+                            <th>Penggunaan Kertas</th>
+                            <th>Nama Pabrik</th>
+                            <th>Merk</th>
+                            <th>Negara Asal</th>
+                            <th>Spesifikasi</th>
+                            <th style="text-align: center;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+            <button type="button" class="btn-back" onclick="showList()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Kembali
+            </button>
+            <button type="button" id="btn-cetak-di-detail" class="btn-primary" onclick="cetakPdfPengecualian()"
+                style="display: none; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Cetak Dokumen
+            </button>
+        </div>
+    </div>
+
+    <div id="pengecualian-form-container" class="content-card order-section" style="display: none;">
+        <div class="card-header">
+            <h3>Pilih Lingkup Permenperin & Nama Penandatangan</h3>
+        </div>
+
+        <input type="hidden" id="pengecualian-edit-id" value="">
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;">
+            <div>
+                <label class="form-label">Lingkup Permenperin <span style="color: red">*</span></label>
+                <div class="custom-select" id="dropdown-lingkup">
+                    <button type="button" class="select-trigger">
+                        <span class="selected-text">Pilih Lingkup</span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options">
+                        <div class="option" data-value="">Pilih Lingkup</div>
+                        <div class="option" data-value="Permenperin No.63 Tahun 2024">Permenperin No.63 Tahun 2024</div>
+                        <div class="option" data-value="Permenperin No.6 Tahun 2025">Permenperin No.6 Tahun 2025</div>
+                    </div>
+                    <input type="hidden" id="inp-lingkup" value="">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <div>
+                <label class="form-label">Nama Penandatangan Surat <span style="color: red">*</span></label>
+                <input type="text" id="inp-nama-penanda-tangan" class="form-input"
+                    placeholder="Masukkan nama penandatangan">
+            </div>
+            <div>
+                <label class="form-label">Jabatan <span style="color: red">*</span></label>
+                <input type="text" id="inp-jabatan" class="form-input" placeholder="Masukkan jabatan penandatangan">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;">
+            <div>
+                <label class="form-label">Jenis Angka Pengenal Importir <span style="color: red">*</span></label>
+                <div class="custom-select" id="dropdown-jenis-api">
+                    <button type="button" class="select-trigger">
+                        <span class="selected-text">Pilih Jenis API</span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options">
+                        <div class="option" data-value="">Pilih Jenis API</div>
+                        <div class="option" data-value="API-U (Umum)">API-U (Umum)</div>
+                        <div class="option" data-value="API-P (Produsen)">API-P (Produsen)</div>
+                    </div>
+                    <input type="hidden" id="inp-jenis-api" value="">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" class="btn-outline" onclick="showList()">Batal</button>
+            <button type="button" id="btn-simpan-order" class="btn-primary">
+                Simpan Permohonan
+            </button>
+        </div>
+    </div>
+
+    <div id="pengecualian-item-form-container" class="content-card order-section" style="display: none;">
+        <div class="card-header">
+            <h3>Data HS Code Pengecualian</h3>
+        </div>
+
+        <input type="hidden" id="pengecualian-item-id" value="">
+
+
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Pos Tarif/HS Code <span style="color: red">*</span></label>
+            <div class="hs-search-wrapper" id="hs-search-wrapper">
+                <div class="hs-search-input-wrap">
+                    <svg class="hs-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="hs-search-input" class="hs-search-input"
+                        placeholder="Ketik atau pilih HS Code..." autocomplete="off" spellcheck="false">
+                    <button type="button" class="hs-clear-btn" id="hs-clear-btn" title="Hapus pilihan"
+                        style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                    <svg class="hs-arrow-icon" id="hs-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </div>
+                <div class="hs-dropdown-list" id="hs-code-options-list">
+                    <div class="hs-option hs-option-placeholder">Pilih Lingkup Dahulu</div>
+                </div>
+                <input type="hidden" id="inp-hs-code" value="">
+            </div>
+        </div>
+
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Jenis Kertas <span style="color: red">*</span></label>
+            <input type="text" id="inp-jenis-kertas" class="form-input" placeholder="Contoh: Kertas Tisu, Label">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Varian Gramatur <span style="color: red">*</span></label>
+            <input type="text" id="inp-varian-gramatur" class="form-input" placeholder="Contoh: 18 gsm">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Penggunaan Kertas <span style="color: red">*</span></label>
+            <input type="text" id="inp-penggunaan" class="form-input" placeholder="Contoh: Pembungkus Rokok">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Merk / Brand <span style="color: red">*</span></label>
+            <input type="text" id="inp-merk" class="form-input" placeholder="Contoh: Marlboro, Djarum">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Negara Asal <span style="color: red">*</span></label>
+            <input type="text" id="inp-negara-asal" class="form-input" placeholder="Contoh: Indonesia, Brasil">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Nama Pabrik Pembuat <span style="color: red">*</span></label>
+            <input type="text" id="inp-nama-pabrik" class="form-input" placeholder="Contoh: PT. Gudang Geram">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Spesifikasi <span style="color: red">*</span></label>
+            <div class="custom-select" id="dropdown-spesifikasi">
+                <button type="button" class="select-trigger">
+                    <span class="selected-text">Pilih Spesifikasi</span>
+                    <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="select-options">
+                    <div class="option" data-value="">Pilih Lingkup Dahulu</div>
+                </div>
+                <input type="hidden" id="inp-spesifikasi" value="">
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" class="btn-outline"
+                onclick="showDetail(document.getElementById('current-order-id').value)">Batal</button>
+            <button type="button" id="btn-simpan-item" class="btn-primary">
+                Simpan HS Code
+            </button>
+        </div>
+    </div>
+
+    <div id="pengecualian-doc-container" class="content-card order-section">
+        <div class="card-header"
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <h3 style="margin: 0;">Dokumen Permohonan Pengujian Pengecualian</h3>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+
+                    <div class="custom-select" id="dropdown-doc-status" style="min-width: 150px;">
+                        <button type="button" class="select-trigger"
+                            style="padding: 8px 12px; border-radius: 8px; font-size: 13px;">
+                            <span class="selected-text">Semua Status</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option selected" data-value="">Semua Status</div>
+                            <div class="option" data-value="pending">Pending</div>
+                            <div class="option" data-value="verified">Disetujui</div>
+                            <div class="option" data-value="rejected">Perbaikan</div>
+                        </div>
+                        <input type="hidden" id="doc-filter-status" value="">
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+
+                    <div class="custom-select" id="dropdown-doc-lingkup" style="min-width: 220px;">
+                        <button type="button" class="select-trigger"
+                            style="padding: 8px 12px; border-radius: 8px; font-size: 13px;">
+                            <span class="selected-text">Semua Lingkup</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option selected" data-value="">Semua Lingkup</div>
+                            <div class="option" data-value="Permenperin No.63 Tahun 2024">Permenperin No.63 Tahun 2024
+                            </div>
+                            <div class="option" data-value="Permenperin No.6 Tahun 2025">Permenperin No.6 Tahun 2025
+                            </div>
+                        </div>
+                        <input type="hidden" id="doc-filter-lingkup" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%" style="text-align: center;">No</th>
+                        <th width="15%" style="text-align: center;">Tanggal Upload</th>
+                        <th width="20%" style="text-align: center;">Lingkup</th>
+                        <th width="20%" style="text-align: center;">Nama Dokumen</th>
+                        <th width="12%" style="text-align: center;">Status</th>
+                        <th width="15%" style="text-align: center;">Alasan</th>
+                        <th width="13%" style="text-align: center;"></th>
+                    </tr>
+                </thead>
+                <tbody id="doc-tbody">
+                    <tr>
+                        <td colspan="7" style="padding: 48px; text-align: center; color: #94a3b8;">
+                            Belum ada dokumen yang diunggah
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="print-area" style="display: none;">
+    <div id="print-groups-container">
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/permohonanpengecualian.css?v=13">
+
+<script>
+    (function () {
+        const BASE = window.BASE_URL || '';
+
+        const spesifikasiData = {
+            'Permenperin No.63 Tahun 2024': [
+                'Sigaret < 20 gsm',
+                'Sigaret RCIP / LIP',
+                'Plugwrap < 20 gsm',
+                'Tipping Paper < 28 gsm',
+                'HTL < 28 gsm',
+                'Tidak Termasuk Lingkup Permenperin No.63 Tahun 2024'
+            ],
+            'Permenperin No.6 Tahun 2025': [
+                'Bahan Baku Kemasan Primer Untuk Non Pangan',
+                'Bahan Baku Kemasan Non Primer Untuk Pangan',
+                'Penggunaan Selain Untuk Kemasan Primer Untuk Pangan'
+            ]
+        };
+
+        // Init Custom Dropdowns
+        setupCustomDropdown('dropdown-lingkup', 'inp-lingkup', (val) => {
+            updateSpesifikasiOptions(val);
+            loadHsCodeOptions(val);
+        });
+        setupCustomDropdown('dropdown-jenis-api', 'inp-jenis-api');
+        setupCustomDropdown('dropdown-spesifikasi', 'inp-spesifikasi');
+
+        // Init Filter Dropdowns
+        setupCustomDropdown('dropdown-doc-status', 'doc-filter-status', () => {
+            if (typeof applyDocFilter === 'function') applyDocFilter();
+        });
+        setupCustomDropdown('dropdown-doc-lingkup', 'doc-filter-lingkup', () => {
+            if (typeof applyDocFilter === 'function') applyDocFilter();
+        });
+
+
+        // â”€â”€ Searchable HS Code Combobox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        let hsCodeCache = {};
+        let hsAllData = []; // full dataset for current lingkup
+        let hsSearchOpen = false;
+
+        const hsWrapper = document.getElementById('hs-search-wrapper');
+        const hsSearchInp = document.getElementById('hs-search-input');
+        const hsList = document.getElementById('hs-code-options-list');
+        const hsHidden = document.getElementById('inp-hs-code');
+        const hsClearBtn = document.getElementById('hs-clear-btn');
+        const hsArrow = document.getElementById('hs-arrow-icon');
+
+        function openHsDropdown() {
+            hsWrapper.classList.add('hs-open');
+            hsArrow.style.transform = 'rotate(180deg)';
+            hsArrow.style.color = '#62A0FD';
+            hsSearchOpen = true;
+        }
+
+        function closeHsDropdown() {
+            hsWrapper.classList.remove('hs-open');
+            hsArrow.style.transform = '';
+            hsArrow.style.color = '';
+            hsSearchOpen = false;
+        }
+
+        function renderHsItems(data, filterText) {
+            const q = (filterText || '').trim().toLowerCase();
+            const filtered = q ? data.filter(d => d.kode_hs.toLowerCase().includes(q)) : data;
+
+            if (data.length === 0) {
+                hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Belum ada data HS Code</div>';
+                return;
+            }
+            if (filtered.length === 0) {
+                hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Tidak ditemukan</div>';
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(item => {
+                const isSelected = (hsHidden.value === item.kode_hs);
+                const esc = item.kode_hs.replace(/"/g, '&quot;');
+                const highlight = q
+                    ? item.kode_hs.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark>$1</mark>')
+                    : item.kode_hs;
+                html += `<div class="hs-option${isSelected ? ' hs-selected' : ''}" data-value="${esc}">${highlight}</div>`;
+            });
+            hsList.innerHTML = html;
+        }
+
+        // Open dropdown on input focus / click
+        hsSearchInp.addEventListener('focus', () => {
+            openHsDropdown();
+            renderHsItems(hsAllData, hsSearchInp.value);
+        });
+
+        hsSearchInp.addEventListener('input', () => {
+            const q = hsSearchInp.value;
+            if (!hsSearchOpen) openHsDropdown();
+            renderHsItems(hsAllData, q);
+            // If user is typing, clear the hidden value (no confirmed pick yet)
+            if (q !== hsHidden.value) {
+                hsHidden.value = '';
+                hsClearBtn.style.display = q ? 'flex' : 'none';
+            }
+        });
+
+        // Click on a list item
+        hsList.addEventListener('click', (e) => {
+            const opt = e.target.closest('.hs-option');
+            if (!opt || opt.classList.contains('hs-option-placeholder')) return;
+            const val = opt.dataset.value;
+            hsHidden.value = val;
+            hsSearchInp.value = val;
+            hsClearBtn.style.display = val ? 'flex' : 'none';
+            // Mark selected
+            hsList.querySelectorAll('.hs-option').forEach(o => o.classList.remove('hs-selected'));
+            opt.classList.add('hs-selected');
+            closeHsDropdown();
+        });
+
+        // Clear button
+        hsClearBtn.addEventListener('click', () => {
+            hsHidden.value = '';
+            hsSearchInp.value = '';
+            hsClearBtn.style.display = 'none';
+            renderHsItems(hsAllData, '');
+            hsSearchInp.focus();
+        });
+
+        // Toggle on arrow click
+        hsArrow.addEventListener('click', () => {
+            if (hsSearchOpen) { closeHsDropdown(); } else { hsSearchInp.focus(); }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!hsWrapper.contains(e.target)) closeHsDropdown();
+        });
+
+        async function loadHsCodeOptions(lingkupVal) {
+            // Reset UI
+            hsHidden.value = '';
+            hsSearchInp.value = '';
+            hsClearBtn.style.display = 'none';
+            hsAllData = [];
+
+            if (!lingkupVal) {
+                hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Pilih Lingkup Dahulu</div>';
+                return;
+            }
+
+            if (hsCodeCache[lingkupVal]) {
+                hsAllData = hsCodeCache[lingkupVal];
+                renderHsItems(hsAllData, '');
+                return;
+            }
+
+            hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Memuat data...</div>';
+
+            try {
+                const response = await fetch(BASE + '/dashboard/pengecualian/hs-code?permenperin=' + encodeURIComponent(lingkupVal));
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.length > 0) {
+                    hsCodeCache[lingkupVal] = result.data;
+                    hsAllData = result.data;
+                    renderHsItems(hsAllData, '');
+                } else {
+                    hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Tidak ada data HS Code</div>';
+                }
+            } catch (e) {
+                hsList.innerHTML = '<div class="hs-option hs-option-placeholder">Gagal memuat data</div>';
+            }
+        }
+
+        function setupCustomDropdown(dropdownId, inputId, onChange = null) {
+            const dropdown = document.getElementById(dropdownId);
+            const input = document.getElementById(inputId);
+            const trigger = dropdown.querySelector('.select-trigger');
+            const optionsContainer = dropdown.querySelector('.select-options');
+            const selectedText = dropdown.querySelector('.selected-text');
+
+            // Toggle dropdown
+            trigger.addEventListener('click', (e) => {
+                document.querySelectorAll('.custom-select').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+                e.stopPropagation();
+            });
+
+            // Use Event Delegation for options
+            optionsContainer.addEventListener('click', (e) => {
+                const option = e.target.closest('.option');
+                if (!option) return;
+
+                const val = option.dataset.value;
+                input.value = val;
+                selectedText.textContent = option.textContent;
+
+                // Visual selection state
+                optionsContainer.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+
+                dropdown.classList.remove('open');
+
+                if (onChange) onChange(val);
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+        }
+
+        function updateSpesifikasiOptions(lingkupVal) {
+            const specDropdown = document.getElementById('dropdown-spesifikasi');
+            const optionsContainer = specDropdown.querySelector('.select-options');
+            const selectedText = specDropdown.querySelector('.selected-text');
+            const input = document.getElementById('inp-spesifikasi');
+
+            // Reset
+            optionsContainer.innerHTML = '';
+            input.value = '';
+            selectedText.textContent = 'Pilih Spesifikasi';
+
+            if (!lingkupVal || !spesifikasiData[lingkupVal]) {
+                optionsContainer.innerHTML = '<div class="option" data-value="">Pilih Lingkup Dahulu</div>';
+                return;
+            }
+
+            // Populate
+            const options = spesifikasiData[lingkupVal];
+            let html = '<div class="option" data-value="">Pilih Spesifikasi</div>';
+            options.forEach(opt => {
+                html += `<div class="option" data-value="${opt}">${opt}</div>`;
+            });
+            optionsContainer.innerHTML = html;
+        }
+
+        // Helper to programmatically set dropdown value
+        function setDropdownValue(dropdownId, value) {
+            // Special handling for the HS Code searchable combobox
+            if (dropdownId === 'dropdown-hs-code') {
+                hsHidden.value = value || '';
+                hsSearchInp.value = value || '';
+                hsClearBtn.style.display = value ? 'flex' : 'none';
+                // Re-mark selected in list if open
+                hsList.querySelectorAll('.hs-option').forEach(o => {
+                    o.classList.toggle('hs-selected', o.dataset.value === value);
+                });
+                return;
+            }
+
+            const dropdown = document.getElementById(dropdownId);
+            const input = dropdown.querySelector('input[type="hidden"]');
+            const selectedText = dropdown.querySelector('.selected-text');
+
+            // Trigger updates if it's lingkup
+            if (dropdownId === 'dropdown-lingkup') {
+                updateSpesifikasiOptions(value);
+                loadHsCodeOptions(value);
+            }
+
+            input.value = value;
+
+            setTimeout(() => {
+                const options = dropdown.querySelectorAll('.option');
+                let foundText = 'Pilih';
+                options.forEach(opt => {
+                    if (opt.dataset.value === value) {
+                        foundText = opt.textContent;
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                });
+                selectedText.textContent = foundText;
+            }, 50);
+        }
+
+        // Load data on init
+        loadPengecualianData();
+
+        // Initialize global variables
+        window.ordersData = [];
+        window.currentOrdersPage = 1;
+        window.ordersPerPage = 5;
+        window.editingOrderIds = null; // Store IDs being edited from document section
+
+        // Save Order handler
+        document.getElementById('btn-simpan-order').addEventListener('click', function () {
+            const editId = document.getElementById('pengecualian-edit-id').value;
+            const lingkup = document.getElementById('inp-lingkup').value;
+            const jenisApi = document.getElementById('inp-jenis-api').value;
+            const namaPenandaTangan = (document.getElementById('inp-nama-penanda-tangan').value || '').trim();
+            const jabatan = (document.getElementById('inp-jabatan').value || '').trim();
+
+            if (!lingkup) {
+                showMessage('Peringatan', 'Lingkup wajib diisi', 'warning');
+                return;
+            }
+            if (!jenisApi) {
+                showMessage('Peringatan', 'Jenis Angka Pengenal Importir wajib diisi', 'warning');
+                return;
+            }
+            if (!namaPenandaTangan || !jabatan) {
+                showMessage('Peringatan', 'Nama Penandatangan Surat dan Jabatan wajib diisi', 'warning');
+                return;
+            }
+
+            showConfirm('Simpan permohonan?', async function () {
+                try {
+                    const formData = new FormData();
+                    if (editId) formData.append('id', editId);
+                    formData.append('lingkup', lingkup);
+                    formData.append('jenis_api', jenisApi);
+                    formData.append('nama_penanda_tangan', namaPenandaTangan);
+                    formData.append('jabatan', jabatan);
+
+                    const response = await fetch(BASE + '/dashboard/pengecualian/order/save', { method: 'POST', body: formData });
+                    const result = await response.json();
+                    if (result.success) {
+                        showMessage('Berhasil', result.message, 'success', async function () {
+                            // Reload data to refresh the list
+                            await loadPengecualianData();
+
+                            // After saving, navigate appropriately
+                            if (result.id) {
+                                // If new order, load with includeAll to get complete data including items
+                                await loadPengecualianData(true);
+                                showDetail(result.id);
+                            } else {
+                                // If edit, just show list
+                                showList();
+                            }
+                        });
+                    } else { showMessage('Gagal', result.message, 'error'); }
+                } catch (e) { showMessage('Error', 'Terjadi kesalahan', 'error'); }
+            }, 'warning');
+        });
+
+        // Save Item handler
+        document.getElementById('btn-simpan-item').addEventListener('click', function () {
+            const editId = document.getElementById('pengecualian-item-id').value;
+            const orderId = document.getElementById('current-order-id').value;
+
+            const fields = ['spesifikasi', 'hs-code', 'jenis-kertas', 'varian-gramatur', 'penggunaan', 'merk', 'negara-asal', 'nama-pabrik'];
+            const data = { permintaan_id: orderId };
+            let missing = false;
+
+            fields.forEach(f => {
+                const val = (document.getElementById('inp-' + f).value || '').trim();
+                if (!val) missing = true;
+                data[f.replace('-', '_')] = val;
+            });
+
+            if (missing) { showMessage('Peringatan', 'Semua data HS Code wajib diisi', 'warning'); return; }
+
+            showConfirm('Simpan item?', async function () {
+                try {
+                    const formData = new FormData();
+                    if (editId) formData.append('id', editId);
+                    Object.keys(data).forEach(k => formData.append(k, data[k]));
+
+                    const response = await fetch(BASE + '/dashboard/pengecualian/item/save', { method: 'POST', body: formData });
+                    const result = await response.json();
+                    if (result.success) {
+                        showMessage('Berhasil', result.message, 'success', function () {
+                            // Load with includeAll to get updated items data
+                            loadPengecualianData(true).then(() => {
+                                showDetail(orderId);
+                            });
+                        });
+                    } else { showMessage('Gagal', result.message, 'error'); }
+                } catch (e) { showMessage('Error', 'Terjadi kesalahan', 'error'); }
+            }, 'warning');
+        });
+
+        async function loadPengecualianData(includeAll = false, forceRenderList = false) {
+            try {
+                const url = includeAll
+                    ? BASE + '/dashboard/pengecualian/list?include_all=1'
+                    : BASE + '/dashboard/pengecualian/list';
+                const response = await fetch(url);
+                const result = await response.json();
+
+                const emptyState = document.getElementById('orders-empty-state');
+                const tableContainer = document.getElementById('orders-table-wrapper');
+                const tbody = document.getElementById('orders-tbody');
+
+                // Handle data merging for includeAll mode
+                if (result.success && result.data) {
+                    if (includeAll && !forceRenderList) {
+                        // Merge: add items not already in ordersData
+                        result.data.forEach(order => {
+                            if (!window.ordersData.find(o => o.id == order.id)) {
+                                window.ordersData.push(order);
+                            } else {
+                                // Update existing
+                                const idx = window.ordersData.findIndex(o => o.id == order.id);
+                                window.ordersData[idx] = order;
+                            }
+                        });
+                        return; // Don't re-render the list table when includeAll without forceRenderList
+                    }
+                }
+
+                // Render the list table
+                if (result.success && result.data && result.data.length > 0) {
+                    window.ordersData = result.data;
+
+                    // Initialize pagination variables if not exists
+                    if (!window.currentOrdersPage) {
+                        window.currentOrdersPage = 1;
+                    }
+                    window.ordersPerPage = 5;
+
+                    emptyState.style.display = 'none';
+                    tableContainer.style.display = 'block';
+
+                    console.log('Loading data, total:', result.data.length);
+                    renderOrdersPage();
+                } else {
+                    window.ordersData = [];
+                    emptyState.style.display = 'block';
+                    tableContainer.style.display = 'none';
+                    tbody.innerHTML = '';
+
+                    // Hide pagination if exists
+                    const paginationEl = document.getElementById('orders-pagination');
+                    if (paginationEl) paginationEl.style.display = 'none';
+                }
+            } catch (error) { console.error('Error loading data:', error); }
+        }
+
+        function renderOrdersPage() {
+            const tbody = document.getElementById('orders-tbody');
+
+            if (!window.ordersData || window.ordersData.length === 0) {
+                console.log('No orders data to render');
+                return;
+            }
+
+            // Filter data if editing from document section
+            let dataToRender = window.ordersData;
+            if (window.editingOrderIds && window.editingOrderIds.length > 0) {
+                dataToRender = window.ordersData.filter(order => window.editingOrderIds.includes(parseInt(order.id)));
+            }
+
+            const totalPages = Math.ceil(dataToRender.length / window.ordersPerPage);
+            const startIdx = (window.currentOrdersPage - 1) * window.ordersPerPage;
+            const endIdx = startIdx + window.ordersPerPage;
+            const pageData = dataToRender.slice(startIdx, endIdx);
+
+            console.log('Rendering page:', window.currentOrdersPage, 'Total pages:', totalPages, 'Data count:', pageData.length);
+
+            let html = '';
+            pageData.forEach((order, idx) => {
+                const globalIdx = startIdx + idx + 1;
+                html += `
+                    <tr data-order-id="${order.id}">
+                        <td style="text-align: center;">
+                            <label class="order-radio-label">
+                                <input type="radio" name="order-select" class="order-checkbox" value="${order.id}" onchange="updateSelectionState()">
+                                <span class="order-radio-box">
+                                    <svg class="order-radio-check" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 12 12" fill="none">
+                                        <polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </label>
+                        </td>
+                        <td style="text-align: center;">${globalIdx}</td>
+                        <td style="font-weight: 600; text-align: center;">${order.lingkup || '-'}</td>
+                        <td style="text-align: center;">${(() => { if (!order.created_at) return '-'; const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']; const p = order.created_at.split(' ')[0].split('-'); return `${p[2]} ${months[parseInt(p[1]) - 1]} ${p[0]}`; })()}</td>
+                        <td>
+                            <div style="display: flex; gap: 6px; justify-content: center; align-items: center;">
+                                <button onclick="showDetail(${order.id})" class="btn-action icon-btn manage">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                    Kelola HS Code
+                                </button>
+                                <button onclick="deletePengecualianOrder(${order.id})" class="btn-action icon-btn danger">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            // Render pagination
+            renderOrdersPagination(totalPages);
+        }
+
+        function renderOrdersPagination(totalPages) {
+            let paginationEl = document.getElementById('orders-pagination');
+            if (!paginationEl) {
+                // Create pagination container after table
+                const tableWrapper = document.getElementById('orders-table-wrapper');
+                paginationEl = document.createElement('div');
+                paginationEl.id = 'orders-pagination';
+                paginationEl.className = 'order-pagination-container';
+                tableWrapper.parentNode.insertBefore(paginationEl, tableWrapper.nextSibling);
+            }
+
+            if (totalPages <= 1) {
+                paginationEl.style.display = 'none';
+                return;
+            }
+
+            paginationEl.style.display = 'flex';
+            let html = '';
+
+            // Previous button
+            html += `<button onclick="changeOrdersPage(${window.currentOrdersPage - 1})" 
+                ${window.currentOrdersPage === 1 ? 'disabled' : ''} 
+                class="order-page-btn">
+                Prev
+            </button>`;
+
+            // Page numbers with smart range
+            let startPage = Math.max(1, window.currentOrdersPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const isActive = i === window.currentOrdersPage;
+                html += `<button onclick="changeOrdersPage(${i})" 
+                    class="order-page-btn ${isActive ? 'active' : ''}">
+                    ${i}
+                </button>`;
+            }
+
+            // Next button
+            html += `<button onclick="changeOrdersPage(${window.currentOrdersPage + 1})" 
+                ${window.currentOrdersPage === totalPages ? 'disabled' : ''} 
+                class="order-page-btn">
+                Next
+            </button>`;
+
+            paginationEl.innerHTML = html;
+        }
+
+        window.changeOrdersPage = function (page) {
+            // Calculate total pages based on filtered data
+            let dataToRender = window.ordersData;
+            if (window.editingOrderIds && window.editingOrderIds.length > 0) {
+                dataToRender = window.ordersData.filter(order => window.editingOrderIds.includes(parseInt(order.id)));
+            }
+            const totalPages = Math.ceil(dataToRender.length / window.ordersPerPage);
+            if (page < 1 || page > totalPages) return;
+            window.currentOrdersPage = page;
+            renderOrdersPage();
+        }
+
+        // View Transitions
+        function hideAllSections() {
+            document.getElementById('pengecualian-list-container').style.display = 'none';
+            document.getElementById('pengecualian-detail-container').style.display = 'none';
+            document.getElementById('pengecualian-form-container').style.display = 'none';
+            document.getElementById('pengecualian-item-form-container').style.display = 'none';
+        }
+
+        window.showList = async function () {
+            hideAllSections();
+            document.getElementById('pengecualian-list-container').style.display = 'block';
+
+            // Reset to page 1 when showing list
+            window.currentOrdersPage = 1;
+
+            // Reload data from server to ensure fresh data
+            await loadPengecualianData();
+
+            // Tampilkan kembali semua baris di doc-tbody
+            const docTbody = document.getElementById('doc-tbody');
+            if (docTbody) {
+                Array.from(docTbody.querySelectorAll('tr')).forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            // Re-enable all edit buttons when returning to list
+            const allEditButtons = document.querySelectorAll('.btn-edit-doc');
+            allEditButtons.forEach(btn => {
+                btn.disabled = false;
+                btn.style.removeProperty('background');
+                btn.style.removeProperty('background-color');
+                btn.style.removeProperty('border-color');
+                btn.style.removeProperty('color');
+                btn.style.cursor = 'pointer';
+                btn.style.opacity = '';
+                btn.style.pointerEvents = '';
+                // Restore original blue color
+                btn.style.setProperty('background', '#f8fafc');
+                btn.style.setProperty('color', '#3b82f6');
+                btn.style.setProperty('border', '1px solid #bfdbfe');
+            });
+
+            // Clear editing filter when returning to normal list view
+            window.editingOrderIds = null;
+            window.isEditFromDoc = false;
+            renderOrdersPage();
+        }
+
+        window.showOrderForm = function (orderId = null) {
+            hideAllSections();
+            const titleEl = document.querySelector('#pengecualian-form-container .card-header h3');
+
+            document.getElementById('pengecualian-edit-id').value = orderId || '';
+
+            if (orderId) {
+                if (titleEl) titleEl.textContent = 'Edit Permohonan Pengecualian';
+                const order = window.ordersData.find(o => o.id == orderId);
+                if (order) {
+                    setDropdownValue('dropdown-lingkup', order.lingkup || '');
+                    setDropdownValue('dropdown-jenis-api', order.jenis_api || '');
+                    document.getElementById('inp-nama-penanda-tangan').value = order.nama_penanda_tangan || '';
+                    document.getElementById('inp-jabatan').value = order.jabatan || '';
+                }
+            } else {
+                if (titleEl) titleEl.textContent = 'Tambah Permohonan Pengecualian';
+                setDropdownValue('dropdown-lingkup', '');
+                setDropdownValue('dropdown-jenis-api', '');
+                document.getElementById('inp-nama-penanda-tangan').value = '';
+                document.getElementById('inp-jabatan').value = '';
+            }
+
+            document.getElementById('pengecualian-form-container').style.display = 'block';
+        }
+
+        window.editPengecualianOrder = function (id) {
+            showOrderForm(id);
+        }
+
+        window.showDetail = async function (orderId) {
+            hideAllSections();
+            let order = window.ordersData.find(o => o.id == orderId);
+
+            // If order not found or doesn't have items data, load with includeAll
+            if (!order || !order.items) {
+                await loadPengecualianData(true);
+                order = window.ordersData.find(o => o.id == orderId);
+                if (!order) return showList();
+            }
+
+            document.getElementById('current-order-id').value = order.id;
+            document.getElementById('detail-lingkup').textContent = order.lingkup;
+
+            const emptyState = document.getElementById('items-empty-state');
+            const tableContainer = document.getElementById('items-table-wrapper');
+            const tbody = document.getElementById('items-tbody');
+
+            if (order.items && order.items.length > 0) {
+                emptyState.style.display = 'none';
+                tableContainer.style.display = 'block';
+                let html = '';
+                order.items.forEach((item, idx) => {
+                    html += `
+                        <tr>
+                            <td style="text-align: center;">${idx + 1}</td>
+                            <td style="font-weight: 600; color: #0f172a;">${item.hs_code || '-'}</td>
+                            <td style="color: #334155;">${item.jenis_kertas || '-'}</td>
+                            <td style="font-weight: 600; color: #0f172a;">${item.varian_gramatur || '-'}</td>
+                            <td style="color: #334155;">${item.penggunaan || '-'}</td>
+                            <td style="font-weight: 600; color: #0f172a;">${item.nama_pabrik || '-'}</td>
+                            <td style="color: #334155;">${item.merk || '-'}</td>
+                            <td style="font-weight: 600; text-align: center;">${item.negara_asal || '-'}</td>
+                            <td style="color: #334155;">${item.spesifikasi || '-'}</td>
+                            <td>
+                                <div style="display: flex; gap: 8px; justify-content: center;">
+                                    <button onclick="editPengecualianItem(${item.id})" class="btn-action btn-text kelola">
+                                        Edit
+                                    </button>
+                                    <button onclick="deletePengecualianItem(${item.id})" class="btn-action btn-text delete">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } else {
+                emptyState.style.display = 'block';
+                tableContainer.style.display = 'none';
+                tbody.innerHTML = '';
+            }
+
+            // Tampilkan/sembunyikan tombol Cetak sesuai mode
+            const btnCetak = document.getElementById('btn-cetak-di-detail');
+            if (btnCetak) {
+                if (window.isEditFromDoc) {
+                    btnCetak.style.display = 'flex';
+                } else {
+                    btnCetak.style.display = 'none';
+                }
+            }
+
+            document.getElementById('pengecualian-detail-container').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.showItemForm = function () {
+            hideAllSections();
+            document.getElementById('pengecualian-item-id').value = '';
+
+            const orderId = document.getElementById('current-order-id').value;
+            const order = window.ordersData.find(o => o.id == orderId);
+            if (order && order.lingkup) {
+                updateSpesifikasiOptions(order.lingkup);
+                loadHsCodeOptions(order.lingkup);
+            } else {
+                updateSpesifikasiOptions('');
+                loadHsCodeOptions('');
+            }
+
+            setDropdownValue('dropdown-spesifikasi', '');
+            setDropdownValue('dropdown-hs-code', '');
+            const fields = ['jenis-kertas', 'varian-gramatur', 'penggunaan', 'merk', 'negara-asal', 'nama-pabrik'];
+            fields.forEach(f => document.getElementById('inp-' + f).value = '');
+
+            document.getElementById('pengecualian-item-form-container').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.editPengecualianItem = async function (itemId) {
+            const orderId = document.getElementById('current-order-id').value;
+            const order = window.ordersData.find(o => o.id == orderId);
+            if (!order) return;
+            const item = order.items.find(i => i.id == itemId);
+            if (!item) return;
+
+            hideAllSections();
+            document.getElementById('pengecualian-item-id').value = item.id;
+
+            // Load HS code options first if needed
+            if (order && order.lingkup) {
+                updateSpesifikasiOptions(order.lingkup);
+                await loadHsCodeOptions(order.lingkup);
+            }
+
+            // Now set all values after data is loaded
+            setDropdownValue('dropdown-spesifikasi', item.spesifikasi || '');
+            setDropdownValue('dropdown-hs-code', item.hs_code || '');
+            document.getElementById('inp-jenis-kertas').value = item.jenis_kertas || '';
+            document.getElementById('inp-varian-gramatur').value = item.varian_gramatur || '';
+            document.getElementById('inp-penggunaan').value = item.penggunaan || '';
+            document.getElementById('inp-merk').value = item.merk || '';
+            document.getElementById('inp-negara-asal').value = item.negara_asal || '';
+            document.getElementById('inp-nama-pabrik').value = item.nama_pabrik || '';
+
+            document.getElementById('pengecualian-item-form-container').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.deletePengecualianOrder = async function (id) {
+            showConfirm('Yakin hapus permohonan ini beserta isinya?', async function () {
+                const formData = new FormData(); formData.append('id', id);
+                const response = await fetch(BASE + '/dashboard/pengecualian/order/delete', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (result.success) loadPengecualianData();
+                else showMessage('Gagal', result.message, 'error');
+            });
+        };
+
+        window.deletePengecualianItem = async function (id) {
+            showConfirm('Yakin hapus HS Code ini?', async function () {
+                const formData = new FormData(); formData.append('id', id);
+                const response = await fetch(BASE + '/dashboard/pengecualian/item/delete', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (result.success) {
+                    // Load with includeAll to get updated items data
+                    await loadPengecualianData(true);
+                    showDetail(document.getElementById('current-order-id').value);
+                }
+                else showMessage('Gagal', result.message, 'error');
+            });
+        };
+
+        window.cetakPdfPengecualian = async function (explicitId = null) {
+            try {
+                // Ensure print-area is direct child of body so print CSS works
+                const printArea = document.getElementById('print-area');
+                if (printArea && printArea.parentNode !== document.body) {
+                    document.body.appendChild(printArea);
+                }
+
+                const orderId = explicitId || document.getElementById('current-order-id').value;
+                if (!orderId) { alert('Order tidak ditemukan'); return; }
+
+                // Find relevant button for loading state
+                let btnSelector = 'button[onclick="cetakPdfPengecualian()"]';
+                if (explicitId) btnSelector = `button[onclick="cetakPdfPengecualian(${explicitId})"]`;
+
+                const btn = document.querySelector(btnSelector);
+                const originalText = btn ? btn.innerHTML : '';
+                if (btn) {
+                    btn.innerHTML = '<span style="font-size: 10px;">...</span>';
+                    btn.disabled = true;
+                }
+
+                const response = await fetch(BASE + '/dashboard/pengecualian/cetak-pdf?id=' + orderId);
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    alert('Gagal mengambil data untuk cetak.');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+
+                const data = result.data;
+                const cust = data.customer;
+                const groups = data.groups;
+                const tanggalCetak = data.tanggal_cetak;
+
+                const groupsContainer = document.getElementById('print-groups-container');
+                let fullHTML = '';
+
+                if (groups && groups.length > 0) {
+                    groups.forEach((group, groupIdx) => {
+                        let items = group.items || [];
+                        let chunks = [];
+                        if (items.length === 0) {
+                            chunks.push([]);
+                        } else {
+                            const is63 = group.lingkup && group.lingkup.includes('63');
+                            const firstPageMax = is63 ? 4 : 2;
+                            const nextPageMax = is63 ? 10 : 5;
+                            chunks.push(items.slice(0, firstPageMax));
+                            let remaining = items.slice(firstPageMax);
+                            while (remaining.length > 0) {
+                                chunks.push(remaining.slice(0, nextPageMax));
+                                remaining = remaining.slice(nextPageMax);
+                            }
+                        }
+
+                        let localIndex = 1;
+
+                        chunks.forEach((chunk, chunkIdx) => {
+                            const isFirstPage = chunkIdx === 0;
+                            const isLastPage = chunkIdx === chunks.length - 1;
+                            const isLastGroup = groupIdx === groups.length - 1;
+                            const pageBreakStyle = (isLastGroup && isLastPage) ? 'page-break-after: avoid !important; break-after: avoid !important;' : 'page-break-after: always !important; break-after: page !important;';
+
+                            fullHTML += `
+                            <div class="pengecualian-document-print" style="${pageBreakStyle}">`;
+
+                            if (isFirstPage) {
+                                fullHTML += `
+                                <div style="width: 100%; text-align: center; margin-bottom: 24px; margin-top: 4cm;">
+                                    <h1 style="text-align: center; width: 100%; font-size: 13pt; font-weight: 700; color: #0f172a; margin: 0; text-transform: uppercase;">PERMOHONAN PENGUJIAN PENGECUALIAN PERMENPERIN SNI WAJIB</h1>
+                                </div>
+                                <div class="divider" style="margin-bottom: 16px;"></div>
+                                
+                                <div class="customer-section" style="padding: 8px 0 16px 0;">
+                                    <p style="margin: 0 0 4px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Kepada Yth.</p>
+                                    <p style="margin: 0 0 16px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Balai Besar Standardisasi dan Pelayanan Jasa Industri Selulosa</p>
+                                    <p style="margin: 0 0 16px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Mohon untuk dilakukan pengujian berikut untuk keperluan Pengecualian ${group.lingkup || '-'}</p>
+                                    <div class="customer-info">
+
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Nama Importir</span><span>:</span></span><span class="value" style="color:#000000;">${cust.nama_lengkap || '-'}</span></div>
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Alamat Lengkap</span><span>:</span></span><span class="value" style="color:#000000;">${cust.alamat_perusahaan || '-'}, ${cust.lokasi_perusahaan || '-'}, ${cust.kodepos_perusahaan || '-'}</span></div>
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Jenis Angka Pengenal Importir</span><span>:</span></span><span class="value" style="color:#000000;">${group.jenis_api || '-'}</span></div>
+
+                                    </div>
+                                </div>`;
+                            } else {
+                                fullHTML += `<div style="margin-top: 2cm;"></div>`;
+                            }
+
+                            fullHTML += `
+                                <div class="pengecualian-section">
+                                    <table class="table-print">
+                                        <colgroup><col style="width:4%"><col style="width:11%"><col style="width:11%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:9%"><col style="width:9%"><col style="width:24%"></colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>HS Code</th>
+                                                <th>Jenis Kertas</th>
+                                                <th>Varian Gramatur</th>
+                                                <th>Penggunaan Kertas</th>
+                                                <th>Nama Pabrik Pembuat</th>
+                                                <th>Merk</th>
+                                                <th>Negara Asal</th>
+                                                <th>Spesifikasi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                            if (chunk && chunk.length > 0) {
+                                chunk.forEach(item => {
+                                    fullHTML += `
+                                        <tr>
+                                            <td style="text-align: center; font-size: 13px; color: #000000;">${localIndex++}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.hs_code || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.jenis_kertas || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.varian_gramatur || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.penggunaan || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.nama_pabrik || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.merk || '-'}</td>
+                                            <td style="text-align: center; font-size: 13px; color: #000000;">${item.negara_asal || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.spesifikasi || '-'}</td>
+                                        </tr>`;
+                                });
+                            } else {
+                                fullHTML += `<tr><td colspan="9" style="text-align:center; padding: 20px;">Belum ada item HS Code</td></tr>`;
+                            }
+
+                            fullHTML += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                            if (isLastPage) {
+                                fullHTML += `
+                                <div class="signature-section" style="margin-top: auto; padding-top: 36px; display: flex; justify-content: flex-end; padding-right: 10mm; padding-left: 0; padding-bottom: 0;">
+                                    <div style="text-align: center; min-width: 200px;">
+                                        <p style="margin: 0 0 4px 0; font-weight: 700; font-size: 13px; color: #0f172a;">Yang Bertanda Tangan,</p>
+                                        <div style="margin: 60px 0 4px 0; border-top: 1px solid #334155;"></div>
+                                        <p style="margin: 0; font-weight: 700; font-size: 13px; color: #0f172a;">${group.nama_penanda_tangan || '_____________________'}</p>
+                                        <p style="margin: 2px 0 0 0; font-weight: 700; font-size: 13px; color: #0f172a;">${group.jabatan || ''}</p>
+                                    </div>
+                                </div>`;
+                            }
+
+                            fullHTML += `
+                            </div>`;
+                        });
+                    });
+                } else {
+                    fullHTML = '<div style="padding: 48px; text-align: center; color: #94a3b8;">Belum ada data pengecualian</div>';
+                }
+
+                groupsContainer.innerHTML = fullHTML;
+
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+
+                setTimeout(() => { window.print(); }, 100);
+
+            } catch (error) {
+                console.error('Print Error:', error);
+                alert('Terjadi kesalahan saat memuat data cetak.');
+                const btn = document.querySelector('button[onclick="cetakPdfPengecualian()"]');
+                if (btn) btn.disabled = false;
+            }
+        };
+
+        // --- NEW UPLOAD MODAL LOGIC ---
+
+        // Elements
+        const modalTerms = document.getElementById('modal-upload-terms');
+        const modalConfirm = document.getElementById('modal-upload-confirm');
+        const checkboxTerms = document.getElementById('terms-checkbox');
+        const btnNextTerms = document.getElementById('btn-next-terms');
+
+        // Existing Upload Button Handler
+        window.openUploadModal = function () {
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) {
+                showMessage('Peringatan', 'Pilih minimal satu permohonan untuk diunggah.', 'warning');
+                return;
+            }
+
+            // Reset state
+            checkboxTerms.checked = false;
+            btnNextTerms.disabled = true;
+            // Show Terms Modal
+            modalTerms.style.display = 'flex';
+        };
+
+        // Checkbox Handler
+        if (checkboxTerms) {
+            checkboxTerms.addEventListener('change', function () {
+                btnNextTerms.disabled = !this.checked;
+            });
+        }
+
+        // Close Modals
+        window.closeModal = function (modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        };
+
+        // Next Button Handler
+        if (btnNextTerms) {
+            btnNextTerms.addEventListener('click', function () {
+                modalTerms.style.display = 'none';
+                // Trigger hidden file input directly after terms
+                document.getElementById('hidden-upload-input').click();
+            });
+        }
+
+        // Confirm Yes Handler (Final Action)
+        window.confirmUpload = async function () {
+            modalConfirm.style.display = 'none';
+            const fileInput = document.getElementById('hidden-upload-input');
+            if (fileInput.files && fileInput.files.length > 0) {
+                const formData = new FormData();
+                formData.append('document', fileInput.files[0]);
+
+                const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+                if (selectedIds.length > 0) {
+                    formData.append('permintaan_ids', selectedIds.join(','));
+                }
+
+                // Tandai bahwa pelanggan sudah menyetujui syarat & ketentuan
+                formData.append('konfirmasi_syarat', 'y');
+
+                try {
+                    const response = await fetch(BASE + '/dashboard/pengecualian/dokumen/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        document.getElementById('modal-upload-success').style.display = 'flex';
+                        loadUploadedDocuments();
+                        // Refresh dan kembali ke layout "Daftar Permohonan Pengecualian"
+                        showList();
+                        // Reset file input
+                        fileInput.value = '';
+                    } else {
+                        alert('Gagal mengunggah dokumen: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Terjadi kesalahan saat mengunggah dokumen');
+                }
+            }
+        };
+
+        // Store all doc data for client-side filtering
+        window.allDocsData = [];
+
+        window.loadUploadedDocuments = async function () {
+            try {
+                const response = await fetch(BASE + '/dashboard/pengecualian/dokumen/list');
+                const result = await response.json();
+
+                if (result.success) {
+                    window.allDocsData = result.data || [];
+                    window.serverDebug = result.debug_info || 'none';
+                    renderDocTable(window.allDocsData);
+                }
+            } catch (error) {
+                console.error('Error loading documents:', error);
+            }
+        };
+
+        function renderDocTable(data) {
+            const tbody = document.getElementById('doc-tbody');
+            if (!tbody) return;
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="padding: 48px; text-align: center; color: #94a3b8;">
+                            Tidak ada dokumen
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = data.map((doc, index) => {
+                const statusLabel = getStatusLabel(doc.status, doc.revision_count);
+                const statusStyle = getStatusStyle(doc.status);
+
+                // Use secure preview_token if available (no direct file access)
+                const finalUrl = doc.preview_token ? `${BASE}/dokumen/view/${doc.preview_token}` : null;
+
+                let aksiHtml = '<span style="color: #94a3b8; font-size: 12px;">-</span>';
+                if (doc.status === 'rejected') {
+                    aksiHtml = `
+                        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                            <button onclick="editPermohonanFromDoc(${doc.id}, '${(doc.permintaan_ids || '').replace(/'/g, "\\'")}')" 
+                                id="edit-doc-btn-${doc.id}"
+                                class="btn-edit-doc"
+                                title="Edit Form Permohonan"
+                                style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #f8fafc; color: #3b82f6; border: 1px solid #bfdbfe; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Edit Data
+                            </button>
+                            <button onclick="openReuploadModal(${doc.id})" 
+                                title="Upload Ulang Dokumen PDF"
+                                style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #3b82f6; color: white; border: 1px solid #3b82f6; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                Upload Ulang
+                            </button>
+                        </div>
+                    `;
+                } else if (doc.status === 'verified') {
+                    if (finalUrl) {
+                        aksiHtml = `
+                            <div style="display: flex; justify-content: center;">
+                                <a href="${finalUrl}" target="_blank"
+                                    title="Lihat Dokumen"
+                                    style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #62A0FD; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; box-shadow: 0 2px 4px rgba(98, 160, 253, 0.2); transition: all 0.2s;">
+                                    Lihat File
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
+
+                const fileNameHtml = finalUrl
+                    ? `<a href="${finalUrl}" target="_blank"
+                            style="color: #3b82f6; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 5px;"
+                            onmouseover="this.style.textDecoration='underline'"
+                            onmouseout="this.style.textDecoration='none'"
+                            title="${doc.original_name || 'Lihat dokumen PDF'}">
+                            Lihat File
+                        </a>`
+                    : `<span style="color: #94a3b8;">-</span>`;
+                let mitraDokHtml = '';
+                if (doc.surat_penawaran_token) {
+                    mitraDokHtml += `
+                        <div style="margin-top: 6px;">
+                            <a href="${BASE}/dokumen/view/${doc.surat_penawaran_token}" target="_blank"
+                               style="color:#059669; font-size:12px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;"
+                               title="Surat Penawaran dari Mitra">
+                               📄 Surat Penawaran
+                            </a>
+                        </div>`;
+                }
+                if (doc.invoice_token) {
+                    mitraDokHtml += `
+                        <div style="margin-top: 4px;">
+                            <a href="${BASE}/dokumen/view/${doc.invoice_token}" target="_blank"
+                               style="color:#7c3aed; font-size:12px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;"
+                               title="Invoice dari Mitra">
+                               🧾 Invoice
+                            </a>
+                        </div>`;
+                }
+
+                // Append mitra docs to Aksi column (under the buttons)
+                if (mitraDokHtml !== '') {
+                    aksiHtml = `<div style="display: flex; flex-direction: column; align-items: center;">
+                                   ${aksiHtml}
+                                   ${mitraDokHtml}
+                                </div>`;
+                }
+
+                return `
+                    <tr data-doc-id="${doc.id}">
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td style="white-space: nowrap;">${doc.created_at_formatted}</td>
+                        <td style="font-weight: 600; color: #0f172a;">${doc.lingkup || '-'}</td>
+                        <td>${fileNameHtml}</td>
+                        <td style="text-align: center; white-space: nowrap;">
+                            <span style="${statusStyle}">${statusLabel}</span>
+                        </td>
+                        <td style="color: #1e293b; font-weight: 500;">${doc.alasan || '-'}</td>
+                        <td style="text-align: center;">${aksiHtml}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.applyDocFilter = function () {
+            const filterStatus = document.getElementById('doc-filter-status').value;
+            const filterLingkup = document.getElementById('doc-filter-lingkup').value;
+
+            let filtered = window.allDocsData;
+
+            if (filterStatus) {
+                filtered = filtered.filter(doc => doc.status === filterStatus);
+            }
+            if (filterLingkup) {
+                filtered = filtered.filter(doc => (doc.lingkup || '') === filterLingkup);
+            }
+
+            renderDocTable(filtered);
+        };
+
+        function getStatusStyle(status) {
+            switch (status) {
+                case 'pending': return 'color: #d97706; font-weight: 500;';
+                case 'verified': return 'color: #059669; font-weight: 500;';
+                case 'rejected': return 'color: #dc2626; font-weight: 500;';
+                default: return 'color: #64748b; font-weight: 500;';
+            }
+        }
+
+        function getStatusLabel(status, revisionCount) {
+            switch (status) {
+                case 'pending': return 'Pending';
+                case 'verified': return 'Disetujui';
+                case 'rejected':
+                    const count = parseInt(revisionCount) || 1;
+                    return 'Perbaiki ' + count;
+                default: return status;
+            }
+        }
+
+        // Edit permohonan from document section
+        window.editPermohonanFromDoc = function (docId, permintaanIdsStr) {
+            if (!permintaanIdsStr) {
+                showMessage('Info', 'Tidak ada data permohonan terkait.', 'warning');
+                return;
+            }
+
+            // Disable the edit button that was clicked
+            const editBtn = document.getElementById('edit-doc-btn-' + docId);
+            if (editBtn) {
+                editBtn.disabled = true;
+                editBtn.style.setProperty('background', '#6b7280', 'important');
+                editBtn.style.setProperty('border-color', '#6b7280', 'important');
+                editBtn.style.setProperty('color', '#d1d5db', 'important');
+                editBtn.style.cursor = 'not-allowed';
+                editBtn.style.opacity = '0.7';
+                editBtn.style.pointerEvents = 'none';
+            }
+
+            // Sembunyikan baris doc lain yang tidak diedit
+            const docTbody = document.getElementById('doc-tbody');
+            if (docTbody) {
+                Array.from(docTbody.querySelectorAll('tr[data-doc-id]')).forEach(row => {
+                    if (row.dataset.docId != docId) {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            const ids = permintaanIdsStr.split(',').map(s => s.trim()).filter(Boolean);
+            if (ids.length > 0) {
+                // Mark as coming from doc edit â€” tombol Cetak akan muncul di detail
+                window.isEditFromDoc = true;
+                // Store the IDs being edited for filtering
+                window.editingOrderIds = ids.map(id => parseInt(id));
+
+                // Load fresh data with includeAll=true to get items data
+                loadPengecualianData(true, true).then(() => {
+                    // Hide all sections first
+                    hideAllSections();
+
+                    if (window.editingOrderIds.length === 1) {
+                        // Jika hanya 1 permohonan, langsung buka halaman kelola HS Code
+                        showDetail(window.editingOrderIds[0]);
+                    } else {
+                        // Jika lebih dari 1, tampilkan daftar tabel untuk dipilih
+                        document.getElementById('pengecualian-list-container').style.display = 'block';
+
+                        // Reset to page 1
+                        window.currentOrdersPage = 1;
+
+                        // Render the filtered list
+                        renderOrdersPage();
+
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            }
+        };
+
+        // Re-upload modal
+        let currentReuploadDocId = null;
+        window.openReuploadModal = function (docId) {
+            currentReuploadDocId = docId;
+            // Reset state popup S&K reupload
+            const cb = document.getElementById('reupload-terms-checkbox');
+            const btn = document.getElementById('btn-next-reupload-terms');
+            if (cb) cb.checked = false;
+            if (btn) btn.disabled = true;
+            document.getElementById('modal-reupload-terms').style.display = 'flex';
+        };
+
+        // Reupload Terms Checkbox Handler
+        const reuploadCheckbox = document.getElementById('reupload-terms-checkbox');
+        const btnNextReupload = document.getElementById('btn-next-reupload-terms');
+        if (reuploadCheckbox) {
+            reuploadCheckbox.addEventListener('change', function () {
+                btnNextReupload.disabled = !this.checked;
+            });
+        }
+
+        // Reupload Terms Next Button Handler
+        if (btnNextReupload) {
+            btnNextReupload.addEventListener('click', function () {
+                document.getElementById('modal-reupload-terms').style.display = 'none';
+                // Trigger hidden file input untuk reupload
+                document.getElementById('hidden-reupload-input').click();
+            });
+        }
+
+        // Re-upload file input handler
+        document.getElementById('hidden-reupload-input').addEventListener('change', async function (e) {
+            if (!this.files || this.files.length === 0) return;
+
+            const file = this.files[0];
+            const maxSize = 10 * 1024 * 1024;
+
+            if (!file.name.toLowerCase().endsWith('.pdf') || file.type !== 'application/pdf') {
+                showMessage('Peringatan', 'Format file tidak valid. Hanya file PDF yang diperbolehkan.', 'warning');
+                this.value = '';
+                return;
+            }
+
+            if (file.size > maxSize) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                showMessage('Peringatan', 'Ukuran file terlalu besar (' + sizeMB + ' MB). Maksimal 10 MB.', 'warning');
+                this.value = '';
+                return;
+            }
+
+            showConfirm('Upload ulang dokumen ini?', async () => {
+                try {
+                    const formData = new FormData();
+                    formData.append('document', file);
+                    formData.append('doc_id', currentReuploadDocId);
+                    formData.append('konfirmasi_syarat', 'y');
+
+                    const response = await fetch(BASE + '/dashboard/pengecualian/dokumen/reupload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showMessage('Berhasil', result.message, 'success', function () {
+                            loadUploadedDocuments();
+                            // Refresh dan kembali ke layout "Daftar Permohonan Pengecualian"
+                            showList();
+                        });
+                    } else {
+                        showMessage('Gagal', result.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Reupload error:', error);
+                    showMessage('Error', 'Terjadi kesalahan saat upload ulang', 'error');
+                }
+            });
+
+            this.value = '';
+        });
+
+        // Call on load
+        loadUploadedDocuments();
+
+        // File Input Handler - Show confirmation after selection
+        document.getElementById('hidden-upload-input').addEventListener('change', function (e) {
+            if (this.files && this.files.length > 0) {
+                const file = this.files[0];
+                const maxSize = 10 * 1024 * 1024; // 10 MB
+
+                // Validate file type (PDF only)
+                if (!file.name.toLowerCase().endsWith('.pdf') || file.type !== 'application/pdf') {
+                    showMessage('Peringatan', 'Format file tidak valid. Hanya file PDF yang diperbolehkan.', 'warning');
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file size (max 10MB)
+                if (file.size > maxSize) {
+                    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    showMessage('Peringatan', 'Ukuran file terlalu besar (' + sizeMB + ' MB). Maksimal ukuran file adalah 10 MB.', 'warning');
+                    this.value = '';
+                    return;
+                }
+
+                // Show Confirmation Modal after file is selected
+                modalConfirm.style.display = 'flex';
+            }
+        });
+
+        // --- SINGLE SELECTION LOGIC ---
+        window.toggleAllOrders = function (source) {
+            // Not used for radio buttons, kept for compatibility
+        };
+
+        window.updateSelectionState = function () {
+            // Radio buttons handle single selection natively
+        };
+
+        window.cetakMassalPengecualian = async function () {
+            // Ensure print-area is direct child of body so print CSS works
+            const printArea = document.getElementById('print-area');
+            if (printArea && printArea.parentNode !== document.body) {
+                document.body.appendChild(printArea);
+            }
+
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) {
+                showMessage('Peringatan', 'Pilih minimal satu permohonan untuk dicetak.', 'warning');
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('btn-cetak-massal');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = 'Memuat...';
+                btn.disabled = true;
+
+                const response = await fetch(BASE + '/dashboard/pengecualian/cetak-pdf?ids=' + selectedIds.join(','));
+                const result = await response.json();
+
+                if (!result.success || !result.data) {
+                    showMessage('Error', 'Gagal memuat data PDF.', 'error');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Render PDF elements exactly like cetakPdfPengecualian
+                const data = result.data;
+                const cust = data.customer;
+                const groups = data.groups;
+                const tanggalCetak = data.tanggal_cetak;
+
+                const groupsContainer = document.getElementById('print-groups-container');
+                let fullHTML = '';
+
+                if (groups && groups.length > 0) {
+                    groups.forEach((group, groupIdx) => {
+                        let items = group.items || [];
+                        let chunks = [];
+                        if (items.length === 0) {
+                            chunks.push([]);
+                        } else {
+                            const is63 = group.lingkup && group.lingkup.includes('63');
+                            const firstPageMax = is63 ? 4 : 2;
+                            const nextPageMax = is63 ? 10 : 5;
+                            chunks.push(items.slice(0, firstPageMax));
+                            let remaining = items.slice(firstPageMax);
+                            while (remaining.length > 0) {
+                                chunks.push(remaining.slice(0, nextPageMax));
+                                remaining = remaining.slice(nextPageMax);
+                            }
+                        }
+
+                        let localIndex = 1;
+
+                        chunks.forEach((chunk, chunkIdx) => {
+                            const isFirstPage = chunkIdx === 0;
+                            const isLastPage = chunkIdx === chunks.length - 1;
+                            const isLastGroup = groupIdx === groups.length - 1;
+                            const pageBreakStyle = (isLastGroup && isLastPage) ? 'page-break-after: avoid !important; break-after: avoid !important;' : 'page-break-after: always !important; break-after: page !important;';
+
+                            fullHTML += `
+                            <div class="pengecualian-document-print" style="${pageBreakStyle}">`;
+
+                            if (isFirstPage) {
+                                fullHTML += `
+                                <div style="width: 100%; text-align: center; margin-bottom: 24px; margin-top: 4cm;">
+                                    <h1 style="text-align: center; width: 100%; font-size: 13pt; font-weight: 700; color: #0f172a; margin: 0; text-transform: uppercase;">PERMOHONAN PENGUJIAN PENGECUALIAN PERMENPERIN SNI WAJIB</h1>
+                                </div>
+                                <div class="divider" style="margin-bottom: 16px;"></div>
+                                
+                                <div class="customer-section" style="padding: 8px 0 16px 0;">
+                                    <p style="margin: 0 0 4px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Kepada Yth.</p>
+                                    <p style="margin: 0 0 16px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Balai Besar Standardisasi dan Pelayanan Jasa Industri Selulosa</p>
+                                    <p style="margin: 0 0 16px 0; font-size: 11pt !important; color: #000000; line-height: 1.5; font-family: inherit;">Mohon untuk dilakukan pengujian berikut untuk keperluan Pengecualian ${group.lingkup || '-'}</p>
+                                    <div class="customer-info">
+
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Nama Importir</span><span>:</span></span><span class="value" style="color:#000000;">${cust.nama_lengkap || '-'}</span></div>
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Alamat Lengkap</span><span>:</span></span><span class="value" style="color:#000000;">${cust.alamat_perusahaan || '-'}, ${cust.lokasi_perusahaan || '-'}, ${cust.kodepos_perusahaan || '-'}</span></div>
+                                        <div class="info-row"><span class="label" style="color:#000000; display: flex; justify-content: space-between;"><span>Jenis Angka Pengenal Importir</span><span>:</span></span><span class="value" style="color:#000000;">${group.jenis_api || '-'}</span></div>
+
+                                    </div>
+                                </div>`;
+                            } else {
+                                fullHTML += `<div style="margin-top: 2cm;"></div>`;
+                            }
+
+                            fullHTML += `
+                                <div class="pengecualian-section">
+                                    <table class="table-print">
+                                        <colgroup><col style="width:4%"><col style="width:11%"><col style="width:11%"><col style="width:8%"><col style="width:12%"><col style="width:12%"><col style="width:9%"><col style="width:9%"><col style="width:24%"></colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>HS Code</th>
+                                                <th>Jenis Kertas</th>
+                                                <th>Varian Gramatur</th>
+                                                <th>Penggunaan Kertas</th>
+                                                <th>Nama Pabrik Pembuat</th>
+                                                <th>Merk</th>
+                                                <th>Negara Asal</th>
+                                                <th>Spesifikasi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+
+                            if (chunk && chunk.length > 0) {
+                                chunk.forEach(item => {
+                                    fullHTML += `
+                                        <tr>
+                                            <td style="text-align: center; font-size: 13px; color: #000000;">${localIndex++}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.hs_code || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.jenis_kertas || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.varian_gramatur || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.penggunaan || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.nama_pabrik || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.merk || '-'}</td>
+                                            <td style="text-align: center; font-size: 13px; color: #000000;">${item.negara_asal || '-'}</td>
+                                            <td style="font-size: 13px; color: #000000;">${item.spesifikasi || '-'}</td>
+                                        </tr>`;
+                                });
+                            } else {
+                                fullHTML += `<tr><td colspan="9" style="text-align:center; padding: 20px;">Belum ada item HS Code</td></tr>`;
+                            }
+
+                            fullHTML += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                            if (isLastPage) {
+                                fullHTML += `
+                                <div class="signature-section" style="margin-top: auto; padding-top: 36px; display: flex; justify-content: flex-end; padding-right: 10mm; padding-left: 0; padding-bottom: 0;">
+                                    <div style="text-align: center; min-width: 200px;">
+                                        <p style="margin: 0 0 4px 0; font-weight: 700; font-size: 13px; color: #0f172a;">Yang Bertanda Tangan,</p>
+                                        <div style="margin: 60px 0 4px 0; border-top: 1px solid #334155;"></div>
+                                        <p style="margin: 0; font-weight: 700; font-size: 13px; color: #0f172a;">${group.nama_penanda_tangan || '_____________________'}</p>
+                                        <p style="margin: 2px 0 0 0; font-weight: 700; font-size: 13px; color: #0f172a;">${group.jabatan || ''}</p>
+                                    </div>
+                                </div>`;
+                            }
+
+                            fullHTML += `
+                            </div>`;
+                        });
+                    });
+                } else {
+                    fullHTML = '<div style="padding: 48px; text-align: center; color: #94a3b8;">Belum ada data pengecualian</div>';
+                }
+
+                groupsContainer.innerHTML = fullHTML;
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+
+                setTimeout(() => {
+                    const originalTitle = document.title;
+                    document.title = "";
+                    window.print();
+                    setTimeout(() => { document.title = originalTitle; }, 100);
+                }, 100);
+
+            } catch (error) {
+                console.error('Print Error:', error);
+                showMessage('Error', 'Terjadi kesalahan saat memuat data cetak', 'error');
+                const btn = document.getElementById('btn-cetak-massal');
+                if (btn) btn.disabled = false;
+            }
+        }; // End of cetakMassalPengecualian function
+
+    })(); // End of IIFE
+</script>
+
+<div id="modal-upload-terms" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal-content">
+        <div class="modal-header">
+            <h3>Syarat dan Ketentuan Upload</h3>
+            <button class="close-modal" onclick="closeModal('modal-upload-terms')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ol style="padding-left: 20px; color: #334155; margin-bottom: 20px; line-height: 1.6;">
+                <li>Pastikan data yang akan diupload sudah baik dan benar tidak ada kesalahan dalam pengetikan.</li>
+                <li>Segala konsekuensi hukum yang timbul akibat data yang tidak valid sepenuhnya menjadi tanggung jawab
+                    pemohon.</li>
+                <li>Dokumen harus dicap basah dengan stempel dan diberi tanda tangan dengan yang bersangkutan.</li>
+                <li>Dokumen yang telah ditandatangani dan diunggah bersifat final dan tidak dapat direvisi ketika
+                    Lembar Hasil Uji telah diterbitkan.</li>
+            </ol>
+            <div
+                style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.5;">
+                    <strong>Ketentuan File:</strong><br>
+                    &#8226; Format file yang diterima: <strong>PDF</strong> saja<br>
+                    &#8226; Ukuran maksimal file: <strong>10 MB</strong>
+                </div>
+            </div>
+            <div class="checkbox-container" style="display: flex; gap: 10px; align-items: flex-start;">
+                <input type="checkbox" id="terms-checkbox" style="margin-top: 4px;">
+                <label for="terms-checkbox" style="font-size: 13px; color: #0f172a; cursor: pointer;">Saya telah membaca
+                    dan menyetujui syarat dan ketentuan yang berlaku.</label>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="padding-top: 20px; margin-top: 20px; border-top: 1px solid #e2e8f0; text-align: right;">
+            <button id="btn-next-terms" class="btn-primary" disabled>Berikutnya</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-reupload-terms" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal-content">
+        <div class="modal-header">
+            <h3>Syarat dan Ketentuan Upload Ulang</h3>
+            <button class="close-modal" onclick="closeModal('modal-reupload-terms')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ol style="padding-left: 20px; color: #334155; margin-bottom: 20px; line-height: 1.6;">
+                <li>Pastikan data yang akan diupload sudah baik dan benar tidak ada kesalahan dalam pengetikan.</li>
+                <li>Segala konsekuensi hukum yang timbul akibat data yang tidak valid sepenuhnya menjadi tanggung jawab
+                    pemohon.</li>
+                <li>Dokumen harus dicap basah dengan stempel dan diberi tanda tangan dengan yang bersangkutan.</li>
+                <li>Dokumen yang telah ditandatangani dan diunggah bersifat final dan tidak dapat direvisi ketika
+                    Lembar Hasil Uji telah diterbitkan.</li>
+            </ol>
+            <div
+                style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.5;">
+                    <strong>Ketentuan File:</strong><br>
+                    &#8226; Format file yang diterima: <strong>PDF</strong> saja<br>
+                    &#8226; Ukuran maksimal file: <strong>10 MB</strong>
+                </div>
+            </div>
+            <div class="checkbox-container" style="display: flex; gap: 10px; align-items: flex-start;">
+                <input type="checkbox" id="reupload-terms-checkbox" style="margin-top: 4px;">
+                <label for="reupload-terms-checkbox" style="font-size: 13px; color: #0f172a; cursor: pointer;">Saya
+                    telah membaca
+                    dan menyetujui syarat dan ketentuan yang berlaku.</label>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="padding-top: 20px; margin-top: 20px; border-top: 1px solid #e2e8f0; text-align: right;">
+            <button id="btn-next-reupload-terms" class="btn-primary" disabled>Berikutnya</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-upload-confirm" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal-content small-modal">
+        <div class="modal-body text-center" style="text-align: center; padding: 20px;">
+            <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                    stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <p style="font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 24px;">Apakah anda sudah yakin
+                dengan dokumen yang diupload?</p>
+            <div class="modal-actions" style="display: flex; gap: 12px; justify-content: center;">
+                <button id="btn-confirm-no" class="btn-outline"
+                    onclick="closeModal('modal-upload-confirm')">Tidak</button>
+                <button id="btn-confirm-yes" class="btn-outline" onclick="confirmUpload()">Iya</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-upload-success" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal-content small-modal">
+        <div class="modal-body text-center" style="text-align: center; padding: 20px;">
+            <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none">
+                    <polyline points="12,38 28,54 60,20" stroke="#10b981" stroke-width="7" stroke-linecap="round"
+                        stroke-linejoin="round" fill="none" />
+                </svg>
+            </div>
+            <p style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 12px;">Upload Berhasil!</p>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 24px;">Dokumen anda telah berhasil diunggah ke
+                sistem.</p>
+            <div class="modal-actions" style="display: flex; justify-content: center;">
+                <button id="btn-confirm-ok" class="btn-outline" onclick="closeModal('modal-upload-success')">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="hidden-upload-input" style="display: none;" accept=".pdf">
+<input type="file" id="hidden-reupload-input" style="display: none;" accept=".pdf">

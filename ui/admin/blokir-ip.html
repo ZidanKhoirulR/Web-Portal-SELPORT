@@ -1,0 +1,25 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <h2>Pemblokiran IP</h2>
+</div>
+<div class="search-bar" style="justify-content: space-between;">
+    <input type="text" id="ipSearch" placeholder="Cari IP, alasan, diblokir oleh..." class="form-control"
+        >
+    <button class="btn btn-primary" onclick="showBlockModal()">+ Blokir IP</button>
+</div>
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="ipTable">
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Alasan</th>
+                    <th>Diblokir Oleh</th>
+                    <th>Waktu</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="ipPagination" class="pagination-container"></div>
+</div>

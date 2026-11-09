@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemberitahuan Status Registrasi Akun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #62A0FD;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .reason-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 20px;
+            margin: 32px 0;
+            border-radius: 8px;
+        }
+
+        .reason-box strong {
+            color: #b91c1c;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .reason-text {
+            color: #7f1d1d;
+            font-style: italic;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Status Registrasi Akun</h1>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                Halo, {NAME}!
+            </div>
+
+            <div class="message">
+                Terima kasih telah melakukan pendaftaran di <strong>Portal SELPORT</strong>.
+                <br><br>
+                Kami telah meninjau pengajuan pendaftaran akun Anda. Mohon maaf, berdasarkan kebijakan kami, pendaftaran
+                akun Anda <strong>tidak dapat kami setujui</strong> untuk saat ini.
+            </div>
+
+            <div class="reason-box">
+                <strong>Alasan Penolakan:</strong>
+                <div class="reason-text">
+                    {REJECTION_REASON}
+                </div>
+            </div>
+
+            <div class="message">
+                Jika Anda memiliki pertanyaan lebih lanjut atau ingin memberikan klarifikasi, silakan hubungi tim
+                administrasi kami melalui email di bawah ini.
+            </div>
+
+            <div class="message" style="margin-top: 30px; font-size: 14px; color: #999;">
+                <em>Mohon jangan membalas email otomatis ini.</em>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Balai Besar Standardisasi dan Pelayanan Jasa Industri Selulosa</strong></p>
+            <p>Jl. Raya Dayeuhkolot No. 132, Bandung 40258</p>
+            <p>Email: <a href="mailto:bbs@kemenperin.go.id"
+                    style="color: #62A0FD; text-decoration: none;">bbs@kemenperin.go.id</a></p>
+            <div
+                style="font-size: 11px; color: #cccccc; border-top: 1px dashed #efefef; padding-top: 15px; margin-top: 15px;">
+                © 2026 Portal SELPORT BBSPJIS. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

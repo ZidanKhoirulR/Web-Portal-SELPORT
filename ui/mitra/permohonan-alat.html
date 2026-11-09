@@ -1,0 +1,537 @@
+<link rel="stylesheet" href="{{ @BASE }}/public/css/mitra/permohonan-alat.css">
+
+<div class="page-header" style="margin-bottom: 20px;">
+    <h2>Permohonan Alat</h2>
+</div>
+
+<!-- TABS NAVIGATION -->
+<div class="tabs-container" style="display: flex; gap: 20px; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;">
+    <button class="tab-btn active" onclick="switchTab('daftar-permohonan')"
+        style="background: none; border: none; padding: 10px 15px; font-weight: 600; color: #1e40af; border-bottom: 2px solid #2563eb; cursor: pointer; font-size: 15px;">
+        Daftar Permohonan Alat
+    </button>
+    <button class="tab-btn" onclick="switchTab('kelola-template')"
+        style="background: none; border: none; padding: 10px 15px; font-weight: 500; color: #64748b; border-bottom: 2px solid transparent; cursor: pointer; font-size: 15px;">
+        Kelola Template Upload
+    </button>
+</div>
+
+<!-- TAB CONTENT 1: DAFTAR PERMOHONAN -->
+<div id="tab-daftar-permohonan" class="tab-content" style="display: block;">
+    <div class="card"
+        style="margin-bottom: 20px; padding: 15px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 15px;">
+        <input type="text" id="search-docs" placeholder="Cari Nama Perusahaan..." class="form-control"
+            style="width: 300px;">
+        <div class="admin-custom-select" id="dropdown-statusFilter" style="width: 200px;">
+            <button type="button" class="select-trigger">
+                <span class="selected-text">Pending</span>
+                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="select-options">
+                <div class="option selected" data-value="pending">Pending</div>
+                <div class="option" data-value="verified">Disetujui</div>
+                <div class="option" data-value="rejected">Perbaiki</div>
+            </div>
+            <input type="hidden" id="filter-status" value="pending">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive table-scroller">
+            <table class="table" id="permohonanAlatTable">
+                <thead>
+                    <tr>
+                        <th>Tanggal Upload</th>
+                        <th>Nama Perusahaan</th>
+                        <th>Proses Input</th>
+                        <th>Catatan Perusahaan</th>
+                        <th>Alasan</th>
+                        <th style="text-align: center;">Status</th>
+                        <th>Dikelola Oleh</th>
+                        <th style="text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="permohonanPagination" class="pagination-container"></div>
+    </div>
+</div>
+
+<!-- TAB CONTENT 2: KELOLA TEMPLATE -->
+<div id="tab-kelola-template" class="tab-content" style="display: none;">
+    <div class="card" style="padding: 24px;">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; color: #0f172a;">Template Permohonan Alat</h3>
+
+        <div id="template-info-container"
+            style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+            <!-- Content will be loaded via JS -->
+            <div style="color: #64748b; font-size: 14px;">Memuat informasi template...</div>
+        </div>
+
+        <div style="border-top: 1px solid #e2e8f0; padding-top: 20px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #334155;">Upload / Update Template Baru</h4>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <input type="file" id="template-file-input" accept=".xlsx,.xls,.doc,.docx,.pdf" class="form-control"
+                    style="max-width: 400px; padding: 8px;">
+                <button type="button" class="btn-primary" onclick="uploadTemplate()" id="btn-upload-template"
+                    style="padding: 10px 16px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Upload Template Baru
+                </button>
+            </div>
+            <p style="margin: 8px 0 0 0; font-size: 12px; color: #94a3b8;">Format file yang diizinkan: .xlsx, .xls,
+                .doc, .docx, .pdf (Maks. 10MB)</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    (function () {
+        const tableBody = document.querySelector('#permohonanAlatTable tbody');
+        const searchInput = document.getElementById('search-docs');
+        const statusHiddenInput = document.getElementById('filter-status');
+        let searchTimeout;
+
+        function loadDocuments() {
+            const search = searchInput ? searchInput.value : '';
+            const status = statusHiddenInput ? statusHiddenInput.value : '';
+
+            tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">Memuat data...</td></tr>';
+
+            const url = new URL('{{ @BASE }}/mitra/api/permohonan-alat/all', window.location.origin);
+            if (search) url.searchParams.append('search', search);
+            if (status) url.searchParams.append('status', status);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        window.allPermohonanData = result.data || [];
+                        window.currentPermohonanPage = 1;
+                        renderTable();
+                    } else {
+                        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: red;">Error: ${result.message}</td></tr>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching documents:', error);
+                    tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: red;">Gagal memuat data dari server</td></tr>';
+                });
+        }
+
+        // Event Listeners
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(loadDocuments, 500);
+            });
+        }
+
+        function renderTable() {
+            const data = window.allPermohonanData || [];
+            const paginationContainer = document.getElementById('permohonanPagination');
+            const perPage = window.itemsPerPage || 5;
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #94a3b8;">Belum ada dokumen permohonan alat</td></tr>';
+                if (paginationContainer) paginationContainer.innerHTML = '';
+                return;
+            }
+
+            const totalPages = Math.ceil(data.length / perPage);
+            window.currentPermohonanPage = Math.min(Math.max(window.currentPermohonanPage || 1, 1), totalPages);
+
+            const start = (window.currentPermohonanPage - 1) * perPage;
+            const end = start + perPage;
+            const pageData = data.slice(start, end);
+
+            tableBody.innerHTML = pageData.map(item => {
+                let tglFormat = '-';
+                if (item.dibuat_pada) {
+                    const dateObj = new Date(item.dibuat_pada);
+                    tglFormat = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+                return `
+            <tr>
+                <td style="white-space: nowrap;">${tglFormat}</td>
+                <td>
+                    <div style="color: #334155;">${item.nama_perusahaan || '-'}</div>
+                </td>
+                <td>${item.proses_input || '-'}</td>
+                <td style="color: #334155; font-size: 13px;">${item.catatan || '-'}</td>
+                <td style="color: #1e293b; font-weight: 500;">${item.status === 'rejected' && item.alasan_penolakan ? item.alasan_penolakan : '-'}</td>
+                <td style="text-align: center; white-space: nowrap;">
+                    <span style="${getStatusStyle(item.status)}">${getStatusLabel(item.status, item.jumlah_revisi)}</span>
+                </td>
+                <td style="color: #334155;">${item.handled_by_name || '-'}</td>
+                <td style="text-align: center;">
+                    <button type="button" class="btn btn-sm btn-primary" onclick='openEditModal(${JSON.stringify(item)})' title="Kelola" style="display: inline-flex; align-items: center; gap: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Kelola
+                    </button>
+                </td>
+            </tr>
+            `;
+            }).join('');
+
+            if (typeof renderPagination === 'function') {
+                renderPagination(window.currentPermohonanPage, totalPages, paginationContainer, 'Permohonan');
+            }
+        }
+
+        window.changePermohonanPage = function (page) {
+            window.currentPermohonanPage = page;
+            renderTable();
+        };
+
+        function getStatusStyle(status) {
+            switch (status) {
+                case 'pending': return 'color: #d97706; font-weight: 500;';
+                case 'verified': return 'color: #059669; font-weight: 500;';
+                case 'rejected': return 'color: #dc2626; font-weight: 500;';
+                default: return 'color: #64748b; font-weight: 500;';
+            }
+        }
+
+        function getStatusLabel(status, revisionCount) {
+            switch (status) {
+                case 'pending': return 'Pending';
+                case 'verified': return 'Disetujui';
+                case 'rejected':
+                    const count = parseInt(revisionCount) || 1;
+                    return 'Perbaiki ' + count;
+                default: return status;
+            }
+        }
+
+        window.openEditModal = function (item) {
+            document.getElementById('edit-doc-id').value = item.id;
+            document.getElementById('edit-status').value = item.status;
+
+            const dropdownEditStatus = document.getElementById('dropdown-editStatus');
+            if (dropdownEditStatus) {
+                const options = dropdownEditStatus.querySelectorAll('.option');
+                options.forEach(opt => {
+                    if (opt.dataset.value === item.status) {
+                        opt.classList.add('selected');
+                        dropdownEditStatus.querySelector('.selected-text').textContent = opt.textContent;
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                });
+            }
+
+            document.getElementById('edit-alasan').value = item.alasan_penolakan || '';
+
+            // Build dynamic preview buttons (oldest to newest)
+            const previewContainer = document.getElementById('preview-buttons-container');
+            previewContainer.innerHTML = '';
+
+            const btnStyle = 'display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;border:1px solid #bfdbfe;background:#f0f7ff;color:#2563eb;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;';
+
+            // Slot history 1-5 = file lama (oldest first)
+            for (let i = 1; i <= 5; i++) {
+                const token = item['preview_token_' + i];
+                if (token) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.style.cssText = btnStyle;
+                    btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> ${i === 1 ? 'Preview PDF (Asli)' : 'Preview PDF Perbaikan ' + (i - 1)}`;
+                    btn.onclick = () => window.open(`{{ @BASE }}/dokumen/view/${token}`, '_blank');
+                    previewContainer.appendChild(btn);
+                }
+            }
+
+            // File aktif saat ini = yang terbaru
+            if (item.preview_token) {
+                const hasHistory = Array.from({length: 5}, (_, i) => item['preview_token_' + (i + 1)]).some(Boolean);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.style.cssText = btnStyle.replace('#f0f7ff', '#eff6ff').replace('#2563eb', '#1d4ed8');
+                const latestLabel = hasHistory
+                    ? 'Preview PDF (Terbaru)'
+                    : 'Preview PDF';
+                btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> ${latestLabel}`;
+                btn.onclick = () => window.open(`{{ @BASE }}/dokumen/view/${item.preview_token}`, '_blank');
+                previewContainer.appendChild(btn);
+            }
+
+            if (previewContainer.children.length === 0) {
+                previewContainer.innerHTML = '<span style="color:#94a3b8;font-size:13px;font-style:italic;">File tidak tersedia</span>';
+            }
+
+
+
+            document.getElementById('editStatusModal').style.display = 'flex';
+        };
+
+        window.closeEditModal = function () {
+            document.getElementById('editStatusModal').style.display = 'none';
+        };
+
+        window.saveStatus = async function () {
+            const id = document.getElementById('edit-doc-id').value;
+            const status = document.getElementById('edit-status').value;
+            const alasan = document.getElementById('edit-alasan').value;
+            const btn = document.getElementById('btn-save-status');
+
+            if (!alasan.trim()) {
+                alert('Alasan harus diisi.');
+                return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Menyimpan...';
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('id', id);
+                formData.append('status', status);
+                formData.append('alasan', alasan);
+
+                const response = await fetch('{{ @BASE }}/mitra/api/permohonan-alat/update', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: result.message || 'Status berhasil diperbarui',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            closeEditModal();
+                            loadDocuments();
+                        });
+                    } else if (typeof showSuccessModal === 'function') {
+                        showSuccessModal(result.message, () => {
+                            closeEditModal();
+                            loadDocuments();
+                        });
+                    } else {
+                        alert(result.message);
+                        closeEditModal();
+                        loadDocuments();
+                    }
+                } else {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({ icon: 'error', title: 'Gagal', text: result.message });
+                    } else {
+                        alert('Gagal: ' + result.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menghubungi server' });
+                } else {
+                    alert('Terjadi kesalahan saat menghubungi server');
+                }
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        // --- TAB MANAGEMENT ---
+        window.switchTab = function (tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.fontWeight = '500';
+                btn.style.color = '#64748b';
+                btn.style.borderBottom = '2px solid transparent';
+            });
+
+            document.getElementById('tab-' + tabId).style.display = 'block';
+
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.style.fontWeight = '600';
+                activeBtn.style.color = '#1e40af';
+                activeBtn.style.borderBottom = '2px solid #2563eb';
+            }
+        };
+
+        // --- TEMPLATE MANAGEMENT ---
+        window.loadTemplateInfo = function () {
+            const container = document.getElementById('template-info-container');
+            container.innerHTML = '<div style="color: #64748b; font-size: 14px;">Memuat informasi...</div>';
+
+            fetch('{{ @BASE }}/mitra/api/template-permohonan-alat')
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        const t = result.data;
+                        container.innerHTML = `
+                            <div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 14px; color: #0f172a;">Template Aktif</h4>
+                                <div style="font-size: 13px; color: #475569; margin-bottom: 4px;"><strong>Nama File:</strong> ${t.file_name}</div>
+                                <div style="font-size: 13px; color: #475569; margin-bottom: 4px;"><strong>Diunggah Oleh:</strong> ${t.uploaded_by_name || '-'}</div>
+                                <div style="font-size: 13px; color: #475569;"><strong>Waktu Upload:</strong> ${t.created_at_formatted}</div>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div style="color: #94a3b8; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                Belum ada template yang diunggah. Silakan unggah template baru.
+                            </div>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = '<div style="color: #dc2626; font-size: 14px;">Gagal memuat informasi template.</div>';
+                });
+        };
+
+        window.uploadTemplate = function () {
+            const fileInput = document.getElementById('template-file-input');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                Swal.fire('Error', 'Pilih file terlebih dahulu.', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const allowedExts = ['xlsx', 'xls', 'doc', 'docx', 'pdf'];
+            const fileExt = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExts.includes(fileExt)) {
+                Swal.fire('Error', 'Format file tidak diizinkan. Gunakan: .xlsx, .xls, .doc, .docx, atau .pdf', 'error');
+                fileInput.value = '';
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                Swal.fire('Error', 'Ukuran file maksimal 10MB.', 'error');
+                fileInput.value = '';
+                return;
+            }
+
+            Swal.fire({
+                title: 'Mengunggah...',
+                html: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('{{ @BASE }}/mitra/api/template-permohonan-alat/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        Swal.fire('Berhasil', result.message, 'success').then(() => {
+                            fileInput.value = '';
+                            loadTemplateInfo();
+                        });
+                    } else {
+                        Swal.fire('Error', result.message || 'Gagal mengunggah template.', 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
+                });
+        };
+
+        // Initialize dropdown filter
+        if (typeof initAdminCustomSelects === 'function') {
+            initAdminCustomSelects(function (val, input) {
+                if (input && input.id === 'filter-status') {
+                    loadDocuments();
+                }
+            });
+        }
+
+        // Search input listener
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => loadDocuments(), 300);
+            });
+        }
+
+        loadDocuments();
+        loadTemplateInfo();
+    })();
+</script>
+
+<div id="editStatusModal" class="custom-modal-overlay"
+    style="display: none; position: fixed; z-index: 1050; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div class="custom-modal-content"
+        style="background: white; border-radius: 12px; max-width: 500px; width: 90%; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="modal-header"
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 16px;">
+            <h3 style="margin: 0; font-size: 18px; color: #0f172a;">Sunting Status Permohonan Alat</h3>
+            <button class="close-modal" onclick="closeEditModal()"
+                style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-doc-id">
+
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="display: block; margin-bottom: 8px; font-weight: 600;">Alasan /
+                    Catatan <span style="color: red">*</span></label>
+                <textarea id="edit-alasan" class="form-input"
+                    style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; min-height: 100px;"
+                    placeholder="Masukkan alasan penolakan atau catatan tambahan..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="display: block; margin-bottom: 8px; font-weight: 600;">Status <span
+                        style="color: red">*</span></label>
+                <div class="admin-custom-select" id="dropdown-editStatus" style="width: 100%;">
+                    <button type="button" class="select-trigger"
+                        style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; justify-content: space-between; height: 42px; display: flex; align-items: center; background: white;">
+                        <span class="selected-text">Pending</span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options" style="width: 100%;">
+                        <div class="option" data-value="pending">Pending</div>
+                        <div class="option" data-value="verified">Disetujui</div>
+                        <div class="option" data-value="rejected">Perbaiki</div>
+                    </div>
+                    <input type="hidden" id="edit-status" value="pending">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="padding-top: 12px; border-top: 1px solid #f1f5f9; margin-top: 16px; display: flex; flex-direction: column; align-items: center;">
+            <div id="preview-buttons-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;width:100%;"></div>
+            <div style="display: flex; gap: 12px; justify-content: center; width: 100%;">
+                <button class="btn btn-outline" style="width: 100%; justify-content: center;"
+                    onclick="closeEditModal()">Batal</button>
+                <button id="btn-save-status" class="btn btn-primary" style="width: 100%; justify-content: center;"
+                    onclick="saveStatus()">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</div>

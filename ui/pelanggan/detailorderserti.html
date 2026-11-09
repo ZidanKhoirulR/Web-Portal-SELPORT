@@ -1,0 +1,1011 @@
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <button onclick="loadSection('beranda')" class="back-btn-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <div class="header-text-group">
+            <span class="header-subtitle">DETAIL ORDER SERTIFIKASI</span>
+            <h1 class="header-order-id">{{ order_id }}</h1>
+        </div>
+    </div>
+
+    <!-- STEPPER_HTML -->
+
+    <div class="order-tabs-wrapper">
+        <div class="order-tabs-header">
+            <button class="tab-btn active" onclick="switchOrderTab(event, 'serti-tab-biaya')">Informasi Biaya</button>
+            <button class="tab-btn" onclick="switchOrderTab(event, 'serti-tab-upload')">Upload Berkas
+                Pendaftaran</button>
+            <button class="tab-btn" onclick="switchOrderTab(event, 'serti-tab-upload-verifikasi')">Upload Berkas
+                Verifikasi Tindakan Perbaikan</button>
+            <button class="tab-btn" onclick="switchOrderTab(event, 'serti-tab-download')">Download Berkas</button>
+        </div>
+
+        <div class="order-tabs-content">
+
+            <!-- TAB: Informasi Biaya -->
+            <div id="serti-tab-biaya" class="tab-pane active">
+                <div class="content-card-modern">
+                    <div class="info-details-list">
+                        <!-- BIAYA_ROWS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Upload Berkas -->
+            <!-- hidden arsip ID injected by server -->
+            <input type="hidden" id="arsip-sertifikasi-id" value="{{ id_arsip_sertifikasi }}">
+            <div id="serti-tab-upload" class="tab-pane">
+
+                <style>
+                    #serti-tab-upload .upload-doc-item {
+                        padding: 14px 0;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    #serti-tab-upload .upload-doc-item:last-child {
+                        border-bottom: none;
+                    }
+
+                    #serti-tab-upload .upload-doc-label {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: #1e293b;
+                        margin-bottom: 8px;
+                        display: block;
+                    }
+
+                    #serti-tab-upload .upload-file-box {
+                        border: 1px dashed #cbd5e1;
+                        border-radius: 8px;
+                        padding: 10px 14px;
+                        background: #f8fafc;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    #serti-tab-upload .upload-file-box input[type="file"] {
+                        font-size: 13px;
+                        flex: 1;
+                    }
+                </style>
+
+                <!-- Banner Pemberitahuan dari Admin Sertifikasi -->
+                <div id="serti-pemberitahuan-banner" style="display:none; margin-bottom:16px;">
+                    <div
+                        style="background:linear-gradient(135deg,#eff6ff,#dbeafe); border:1px solid #bfdbfe; border-left:4px solid #3b82f6; border-radius:10px; padding:16px 20px; position:relative;">
+                        <div style="display:flex; gap:12px; align-items:flex-start;">
+                            <i class="ri-information-line"
+                                style="font-size:1.3rem; color:#3b82f6; margin-top:1px; flex-shrink:0;"></i>
+                            <div style="flex:1; min-width:0;">
+                                <div id="serti-pb-judul"
+                                    style="font-weight:700; color:#1e3a8a; font-size:0.9rem; margin-bottom:6px;"></div>
+                                <div id="serti-pb-isi"
+                                    style="color:#1e40af; font-size:0.85rem; line-height:1.6; white-space:pre-line;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. Surat Permohonan -->
+                <div class="content-card-modern" style="margin-bottom: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Surat Permohonan</h3>
+
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">Surat Permohonan SPPT SNI</span>
+                            <div class="upload-file-box"><input type="file" id="inp_surat_permohonan"
+                                    name="file_surat_permohonan" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_surat_permohonan"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Persyaratan Administrasi -->
+                <div class="content-card-modern" style="margin-bottom: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Persyaratan Administrasi</h3>
+
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.1 &nbsp; Permohonan Sertifikasi Produk (F.7.1.0.1)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_permohonan_sertifikasi"
+                                    name="file_permohonan_sertifikasi" accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_permohonan_sertifikasi_produk"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.2 &nbsp; Informasi Sertifikasi Produk (F.7.1.0.2)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_informasi_sertifikasi"
+                                    name="file_informasi_sertifikasi" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_informasi_sertifikasi_produk"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.3 &nbsp; Akte Perusahaan</span>
+                            <div class="upload-file-box"><input type="file" id="inp_akte_perusahaan"
+                                    name="file_akte_perusahaan" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_akte_perusahaan"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.4 &nbsp; Izin Usaha Industri</span>
+                            <div class="upload-file-box"><input type="file" id="inp_izin_usaha" name="file_izin_usaha"
+                                    accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_izin_usaha_industri"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.5 &nbsp; Sertifikat Merek/Surat Pendaftaran Merek dari
+                                Dirjen HAKI atau</span>
+                            <div class="upload-file-box"><input type="file" id="inp_sertifikat_merek"
+                                    name="file_sertifikat_merek" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_sertifikat_merek"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">Surat Pelimpahan Merek antara pemilik merek dengan
+                                pihak-pihak lain yang terkait terhadap penggunaan merek tersebut (Produsen atau
+                                Importir)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_surat_pelimpahan_merek"
+                                    name="file_surat_pelimpahan_merek" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_sertifikat_merek_2"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.6 &nbsp; Alur Proses Produksi</span>
+                            <div class="upload-file-box"><input type="file" id="inp_alur_proses_produksi"
+                                    name="file_alur_proses_produksi" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_alur_proses_produksi"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.7 &nbsp; Ilustrasi dan Cara Pembubuhan Tanda SNI</span>
+                            <div class="upload-file-box"><input type="file" id="inp_ilustrasi_tanda_sni"
+                                    name="file_ilustrasi_tanda_sni" accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_ilustrasi_cara_pembubuhan_tanda_sni"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.8 &nbsp; Struktur Organisasi Perusahaan</span>
+                            <div class="upload-file-box"><input type="file" id="inp_struktur_organisasi"
+                                    name="file_struktur_organisasi" accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_struktur_organisasi_perusahaan"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.9 &nbsp; Daftar Peralatan Inspeksi/Pengujian</span>
+                            <div class="upload-file-box"><input type="file" id="inp_daftar_peralatan"
+                                    name="file_daftar_peralatan" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_daftar_peralatan_pengujian"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">2.10 &nbsp; Kopi Laporan atau Sertifikat Kalibrasi Peralatan
+                                Inspeksi/Pengujian (untuk AMDK)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_kopi_laporan_kalibrasi"
+                                    name="file_kopi_laporan_kalibrasi" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_kopi_laporan_sertifikat"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Persyaratan Sistem Manajemen Mutu -->
+                <div class="content-card-modern" style="margin-bottom: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Persyaratan Sistem Manajemen Mutu</h3>
+
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">3.1 &nbsp; Pedoman Mutu</span>
+                            <div class="upload-file-box"><input type="file" id="inp_pedoman_mutu"
+                                    name="file_pedoman_mutu" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_pedoman_mutu"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">3.2 &nbsp; Daftar Dokumentasi SMM (Daftar seluruh Prosedur,
+                                Instruksi Kerja dan Formulir)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_daftar_dokumentasi_smm"
+                                    name="file_daftar_dokumentasi_smm" accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="b7104_nama_berkas_daftar_dokumentasi_smm"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">3.3 &nbsp; Kopi Sertifikat Sistem Manajemen Mutu atau
+                                Pernyataan Kesesuaian</span>
+                            <div class="upload-file-box"><input type="file" id="inp_kopi_sertifikat_smm"
+                                    name="file_kopi_sertifikat_smm" accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_kopi_sertifikat_sistem_manajemen_mutu"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Persyaratan Khusus -->
+                <div class="content-card-modern" style="margin-bottom: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Persyaratan Khusus</h3>
+
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">4.1 &nbsp; SIPA atau yang setara atau Surat Keterangan
+                                Kerjasama dengan Pemiliknya (untuk AMDK)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_sipa" name="file_sipa"
+                                    accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_sipa_surat_keterangan_kerjasama"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">4.2 &nbsp; Sertifikat Hasil Uji Air Baku terhadap Permenkes
+                                Nomor 416/Menkes/PER/IX/1996 (untuk AMDK)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_hasil_uji_air_baku"
+                                    name="file_hasil_uji_air_baku" accept=".pdf"></div>
+                            <span class="existing-file-name"
+                                data-field="b7104_nama_berkas_sertifikat_hasil_uji_air_baku"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Kirim -->
+                <div
+                    style="display: flex; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                    <button type="button" id="btn-kirim-berkas-pendaftaran" onclick="openUploadPendaftaranModal()"
+                        style="display: inline-flex; align-items: center; padding: 12px 28px; background: #62A0FD; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(98,160,253,0.3); transition: all 0.2s ease;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(98,160,253,0.4)';"
+                        onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 12px rgba(98,160,253,0.3)';">
+                        Kirim
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- TAB: Upload Berkas Verifikasi Tindakan Perbaikan -->
+            <div id="serti-tab-upload-verifikasi" class="tab-pane">
+
+                <style>
+                    #serti-tab-upload-verifikasi .upload-doc-item {
+                        padding: 14px 0;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    #serti-tab-upload-verifikasi .upload-doc-item:last-child {
+                        border-bottom: none;
+                    }
+
+                    #serti-tab-upload-verifikasi .upload-doc-label {
+                        font-size: 13px;
+                        font-weight: 600;
+                        color: #1e293b;
+                        margin-bottom: 8px;
+                        display: block;
+                    }
+
+                    #serti-tab-upload-verifikasi .upload-file-box {
+                        border: 1px dashed #cbd5e1;
+                        border-radius: 8px;
+                        padding: 10px 14px;
+                        background: #f8fafc;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    #serti-tab-upload-verifikasi .upload-file-box input[type="file"] {
+                        font-size: 13px;
+                        flex: 1;
+                    }
+                </style>
+
+                <!-- 5. Setelah Audit -->
+                <div class="content-card-modern" id="card-vtp-1">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Upload Tindakan Perbaikan 1</h3>
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">Upload Tindakan Perbaikan 1</span>
+                            <span style="font-size: 12px; color: #64748b; display:block; margin-bottom: 8px;">Dokumen
+                                tindakan perbaikan hasil temuan audit</span>
+                            <div class="upload-file-box"><input type="file" id="inp_vtp_1" name="file_vtp_1"
+                                    accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="formulir_verifikasi_tindakan_perbaikan"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                    <div class="vtp-kirim-container" id="container-btn-vtp-1"
+                        style="display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+                        <button type="button" class="btn-kirim-vtp" onclick="kirimVTP(1)"
+                            style="display: inline-flex; align-items: center; padding: 10px 24px; background: #62A0FD; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(98,160,253,0.3); transition: all 0.2s ease;">
+                            Kirim Tindakan Perbaikan 1
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card-modern" id="card-vtp-2" style="margin-top: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Upload Tindakan Perbaikan 2</h3>
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">Upload Tindakan Perbaikan 2</span>
+                            <span style="font-size: 12px; color: #64748b; display:block; margin-bottom: 8px;">Dokumen
+                                tindakan perbaikan tahap 2 (jika diperlukan)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_vtp_2" name="file_vtp_2"
+                                    accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="formulir_verifikasi_tindakan_perbaikan_2"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                    <div class="vtp-kirim-container" id="container-btn-vtp-2"
+                        style="display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+                        <button type="button" class="btn-kirim-vtp" onclick="kirimVTP(2)"
+                            style="display: inline-flex; align-items: center; padding: 10px 24px; background: #62A0FD; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(98,160,253,0.3); transition: all 0.2s ease;">
+                            Kirim Tindakan Perbaikan 2
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card-modern" id="card-vtp-3" style="margin-top: 16px;">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Upload Tindakan Perbaikan 3</h3>
+                    </div>
+                    <div style="padding: 0 4px;">
+                        <div class="upload-doc-item">
+                            <span class="upload-doc-label">Upload Tindakan Perbaikan 3</span>
+                            <span style="font-size: 12px; color: #64748b; display:block; margin-bottom: 8px;">Dokumen
+                                tindakan perbaikan tahap 3 (jika diperlukan)</span>
+                            <div class="upload-file-box"><input type="file" id="inp_vtp_3" name="file_vtp_3"
+                                    accept=".pdf"></div>
+                            <span class="existing-file-name" data-field="formulir_verifikasi_tindakan_perbaikan_3"
+                                style="font-size:11px;color:#64748b;display:none;margin-top:4px;"></span>
+                        </div>
+                    </div>
+                    <div class="vtp-kirim-container" id="container-btn-vtp-3"
+                        style="display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
+                        <button type="button" class="btn-kirim-vtp" onclick="kirimVTP(3)"
+                            style="display: inline-flex; align-items: center; padding: 10px 24px; background: #62A0FD; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(98,160,253,0.3); transition: all 0.2s ease;">
+                            Kirim Tindakan Perbaikan 3
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- TAB: Download Berkas -->
+            <div id="serti-tab-download" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Dokumen Tersedia</h3>
+                    </div>
+
+                    <div id="download-berkas-list" class="document-list-simple">
+                        <div style="text-align:center; padding:30px; color:#94a3b8; font-size:0.875rem;">
+                            <i class="ri-loader-4-line"></i> Memuat daftar dokumen...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    
+
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Syarat & Ketentuan Upload Berkas Pendaftaran -->
+<div id="modal-upload-pendaftaran"
+    style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10000; align-items:flex-start; justify-content:center; backdrop-filter:blur(2px); overflow-y:auto; padding: 40px 10px;">
+    <div
+        style="background:white; width:100%; max-width:560px; margin:auto; border-radius:16px; padding:32px; box-shadow:0 20px 25px -5px rgba(0,0,0,0.15); position:relative; font-family:'Inter',sans-serif; animation: modalFadeIn 0.2s ease-out;">
+        <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid #f1f5f9;">
+            <h3 style="font-size:18px; font-weight:700; color:#0f172a; margin:0;">Syarat &amp; Ketentuan Upload</h3>
+            <button onclick="closeUploadPendaftaranModal()"
+                style="background:none; border:none; font-size:22px; color:#94a3b8; cursor:pointer; line-height:1; padding:0;"
+                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+        </div>
+
+        <div
+            style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:12px; padding:16px 20px; display:flex; flex-direction:column; gap:14px;">
+
+            <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5;">
+                Saya Bertanggung Jawab dan Menyetujui atas keabsahan dan kebenaran seluruh dokumen yang diunggah
+                adalah dokumen yang sah dan sesuai dengan aslinya.
+            </p>
+            <hr style="border:none; border-top:1px solid #e2e8f0; margin: 4px 0;">
+            <label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer;">
+                <input type="checkbox" class="upload-pendaftaran-check"
+                    style="margin-top:2px; width:16px; height:16px; accent-color:#62A0FD; flex-shrink:0; cursor:pointer;">
+                <span style="font-size:13px; color:#334155; line-height:1.5; font-weight: 600;">Saya menyetujui syarat
+                    dan ketentuan yang berlaku</span>
+            </label>
+
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+            <button onclick="closeUploadPendaftaranModal()"
+                style="padding:11px 22px; border-radius:10px; border:1px solid #e2e8f0; background:white; color:#334155; font-size:13px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;"
+                onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">Batal</button>
+            <button id="btn-konfirmasi-kirim-pendaftaran" onclick="konfirmasiKirimBerkasPendaftaran()" disabled
+                style="padding:11px 22px; border-radius:10px; border:none; background:#cbd5e1; color:#94a3b8; font-size:13px; font-weight:600; cursor:not-allowed; font-family:'Inter',sans-serif; transition:all 0.2s;">
+                Kirim Berkas
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var BASE = (typeof window.BASE_URL !== 'undefined') ? window.BASE_URL : '';
+
+        /* ── tab switching ─────────────────────────────────── */
+        var _downloadBerkasLoaded = false;
+        window.switchOrderTab = function (evt, tabId) {
+            document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+            document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            if (tabId === 'serti-tab-upload' || tabId === 'serti-tab-upload-verifikasi') loadExistingBerkas();
+            if (tabId === 'serti-tab-upload') loadPemberitahuan();
+            if (tabId === 'serti-tab-download' && !_downloadBerkasLoaded) {
+                _downloadBerkasLoaded = true;
+                loadDownloadBerkas();
+            }
+        };
+
+        /* ── load download berkas sertifikasi ──────────────── */
+        function loadDownloadBerkas() {
+            var idArsip = document.getElementById('arsip-sertifikasi-id');
+            if (!idArsip || !idArsip.value) return;
+
+            var container = document.getElementById('download-berkas-list');
+            if (!container) return;
+
+            fetch(BASE + '/api/sertifikasi/download-berkas?id_arsip_sertifikasi=' + encodeURIComponent(idArsip.value), {
+                credentials: 'same-origin'
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    if (!res.success) {
+                        container.innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.85rem;">Gagal memuat dokumen.</div>';
+                        return;
+                    }
+
+                    var html = '';
+                    (res.data || []).forEach(function (doc) {
+                        var isLhu = doc.is_lhu === true;
+                        var tersedia = doc.url && doc.file;
+
+                        var statusHtml = '';
+                        var actionHtml = '';
+
+                        if (isLhu) {
+                            statusHtml = '<span class="doc-status-simple pending serti-lhu-kuesioner-status" style="text-transform:none!important;font-size:14px;">Wajib kuesioner</span>';
+                            actionHtml = '<div class="doc-list-action serti-lhu-kuesioner-action"><a href="javascript:void(0)" onclick="loadSection(\'kuesioner\',\'Sertifikasi\',\'{{ order_id }}\')" class="link-text-action">Isi Kuesioner</a></div>';
+                        } else if (tersedia) {
+                            statusHtml = '<span class="doc-status-simple" style="color:#16a34a;font-weight:500;text-transform:none!important;font-size:14px;">Tersedia</span>';
+                            actionHtml = '<div class="doc-list-action"><a href="' + doc.url + '" target="_blank" class="link-text-action" style="font-weight:600;">Unduh</a></div>';
+                        } else {
+                            statusHtml = '<span class="doc-status-simple" style="color:#64748b;font-weight:500;text-transform:none!important;font-size:14px;">Belum tersedia</span>';
+                            actionHtml = '<div class="doc-list-action"><span class="link-text-action" style="color:#cbd5e1;cursor:not-allowed;">Unduh</span></div>';
+                        }
+
+                        html += '<div class="document-list-item">'
+                            + '<div class="doc-list-info">'
+                            + '<div class="doc-list-text">'
+                            + '<span class="doc-list-title">' + doc.label + '</span>'
+                            + '<span class="doc-list-desc">' + doc.desc + '</span>'
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="doc-list-status">' + statusHtml + '</div>'
+                            + actionHtml
+                            + '</div>';
+                    });
+
+                    container.innerHTML = html || '<div style="text-align:center;padding:20px;color:#94a3b8;">Tidak ada dokumen.</div>';
+                })
+                .catch(function () {
+                    var c = document.getElementById('download-berkas-list');
+                    if (c) c.innerHTML = '<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.85rem;">Gagal memuat dokumen.</div>';
+                });
+        }
+
+        /* ── load pemberitahuan dari admin sertifikasi ──────── */
+        var _pbLoaded = false;
+        function loadPemberitahuan() {
+            if (_pbLoaded) return;
+            _pbLoaded = true;
+            fetch(BASE + '/api/serti-pemberitahuan', { credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    if (res.success && res.data && res.data.aktif == 1 && res.data.judul && res.data.isi) {
+                        var banner = document.getElementById('serti-pemberitahuan-banner');
+                        var judulEl = document.getElementById('serti-pb-judul');
+                        var isiEl = document.getElementById('serti-pb-isi');
+                        if (banner && judulEl && isiEl) {
+                            judulEl.textContent = res.data.judul;
+                            isiEl.textContent = res.data.isi;
+                            banner.style.display = 'block';
+                        }
+                    }
+                })
+                .catch(function () { });
+        }
+
+        /* ── load existing berkas from server ──────────────── */
+        function loadExistingBerkas() {
+            var arsipId = document.getElementById('arsip-sertifikasi-id');
+            if (!arsipId || !arsipId.value) {
+                // Tidak ada arsip ID, tetap evaluasi UI VTP dengan data kosong
+                if (document.getElementById('card-vtp-1')) updateVtpUI({});
+                return;
+            }
+            fetch(BASE + '/api/sertifikasi/berkas?id_arsip_sertifikasi=' + encodeURIComponent(arsipId.value), {
+                credentials: 'same-origin'
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (res) {
+                    // Gunakan data kosong jika belum ada upload sama sekali
+                    var data = (res.success && res.data) ? res.data : {};
+                    var dataSerti = res.data_serti || {};
+                    document.querySelectorAll('#serti-tab-upload .existing-file-name, #serti-tab-upload-verifikasi .existing-file-name').forEach(function (span) {
+                        var field = span.getAttribute('data-field');
+                        if (data[field]) {
+                            var isVtp = field.indexOf('formulir_verifikasi_tindakan_perbaikan') !== -1;
+                            var dir = isVtp ? 'berkas-verifikasi-perbaikan' : 'berkas-pendaftaran';
+                            var fileUrl = BASE + '/public/uploads/sertifikasi/' + dir + '/' + data[field];
+                            var container = span.previousElementSibling;
+                            if (container && container.classList.contains('upload-file-box')) {
+                                // Hapus indikator lama jika ada (saat reload)
+                                var oldIndicator = container.querySelector('.server-file-indicator');
+                                if (oldIndicator) oldIndicator.remove();
+
+                                // Input file tetap di DOM (untuk form submission), tapi disembunyikan
+                                var inp = container.querySelector('input[type="file"]');
+                                if (inp) {
+                                    // Sembunyikan input asli sepenuhnya
+                                    inp.style.cssText = 'position:absolute; opacity:0; width:1px; height:1px; overflow:hidden;';
+
+                                    // Hapus custom button lama jika ada (saat reload)
+                                    var oldBtn = container.querySelector('.custom-choose-btn');
+                                    if (oldBtn) oldBtn.remove();
+
+                                    // Hapus link lihat lama jika ada
+                                    var oldLihat = container.querySelector('.server-file-lihat');
+                                    if (oldLihat) oldLihat.remove();
+
+                                    // Buat custom "Choose File" button yang meniru tampilan native
+                                    var chooseBtn = document.createElement('button');
+                                    chooseBtn.type = 'button';
+                                    chooseBtn.className = 'custom-choose-btn';
+                                    chooseBtn.textContent = 'Choose File';
+                                    chooseBtn.style.cssText = 'cursor:pointer; padding:1px 4px; font-size:13.3333px; font-family:sans-serif; border:1px solid #aaa; border-radius:3px; background:linear-gradient(#f8f8f8, #e8e8e8); white-space:nowrap; flex-shrink:0;';
+                                    chooseBtn.addEventListener('click', function () { inp.click(); });
+
+                                    // Tampilkan nama file lengkap tepat di sebelah tombol
+                                    var indicator = document.createElement('span');
+                                    indicator.className = 'server-file-indicator';
+                                    indicator.textContent = data[field];
+                                    indicator.title = data[field];
+                                    indicator.style.cssText = 'color:#1e293b; font-size:13px; font-family:sans-serif; white-space:nowrap; display:inline-block; margin-left:-4px;';
+
+                                    // Buat link "Lihat" untuk melihat file yang sudah terupload
+                                    var lihatLink = document.createElement('a');
+                                    lihatLink.className = 'server-file-lihat';
+                                    lihatLink.href = fileUrl;
+                                    lihatLink.target = '_blank';
+                                    lihatLink.rel = 'noopener noreferrer';
+                                    lihatLink.textContent = 'Lihat';
+                                    lihatLink.style.cssText = 'font-size:12px; font-family:sans-serif; color:#3b82f6; text-decoration:underline; cursor:pointer; margin-left:auto; white-space:nowrap; flex-shrink:0;';
+
+                                    // Sisipkan button, indicator, dan lihat link ke container
+                                    container.insertBefore(chooseBtn, inp);
+                                    container.insertBefore(indicator, inp);
+                                    container.insertBefore(lihatLink, inp);
+
+                                    if (!isVtp) {
+                                        var docItem = container.closest('.upload-doc-item');
+                                        if (docItem) {
+                                            var oldBadge = docItem.querySelector('.pendaftaran-status-badge');
+                                            if (oldBadge) oldBadge.remove();
+
+                                            // Gunakan status dari status_berkas_pendaftaran (bukan perbandingan file)
+                                            var isVerified = (res && res.data && res.data.status_berkas_pendaftaran === 'diverifikasi');
+
+                                            var badge = document.createElement('div');
+                                            badge.className = 'pendaftaran-status-badge';
+                                            badge.style.marginTop = '10px';
+                                            badge.style.padding = '6px 14px';
+                                            badge.style.borderRadius = '6px';
+                                            badge.style.fontSize = '13px';
+                                            badge.style.fontWeight = '500';
+                                            badge.style.display = 'inline-block';
+                                            badge.style.textAlign = 'center';
+
+                                            if (isVerified) {
+                                                badge.style.backgroundColor = '#ecfdf5';
+                                                badge.style.color = '#059669';
+                                                badge.style.border = '1px solid #a7f3d0';
+                                                badge.innerText = 'Telah Diterima';
+                                            } else {
+                                                badge.style.backgroundColor = '#fdf2f8';
+                                                badge.style.color = '#db2777';
+                                                badge.style.border = '1px solid #fbcfe8';
+                                                badge.innerText = 'Belum Diverifikasi';
+                                            }
+                                            docItem.appendChild(badge);
+                                        }
+                                    }
+
+                                    // Saat user memilih file baru: tampilkan nama file baru & sembunyikan link Lihat
+                                    inp.addEventListener('change', function () {
+                                        var badge = container.closest('.upload-doc-item') ? container.closest('.upload-doc-item').querySelector('.pendaftaran-status-badge') : null;
+                                        if (this.files && this.files.length > 0) {
+                                            indicator.textContent = this.files[0].name;
+                                            indicator.title = this.files[0].name;
+                                            indicator.style.color = '#1e293b';
+                                            lihatLink.style.display = 'none';
+                                            if (badge) badge.style.display = 'none';
+                                        } else {
+                                            indicator.textContent = data[field];
+                                            indicator.title = data[field];
+                                            lihatLink.style.display = 'inline';
+                                            if (badge) badge.style.display = 'inline-block';
+                                        }
+                                    });
+                                }
+                            }
+                            // Sembunyikan span indikator lama
+                            span.style.display = 'none';
+                        }
+                    });
+
+
+                    if (document.getElementById('card-vtp-1')) {
+                        updateVtpUI(data);
+                    }
+                })
+                .catch(function () { });
+        }
+
+        function updateVtpUI(data) {
+            var vtp1 = data.formulir_verifikasi_tindakan_perbaikan;
+            var vtp2 = data.formulir_verifikasi_tindakan_perbaikan_2;
+            var vtp3 = data.formulir_verifikasi_tindakan_perbaikan_3;
+            var tglValidasi = data.tanggal_validasi_vtp;
+            var isDisetujui = tglValidasi && tglValidasi !== '0000-00-00' && tglValidasi !== null;
+
+            var statusVtp = data.status_vtp || 'pending';
+
+            // Helper function to append status indicator
+            function setStatusIndicator(cardId, isUploaded, currentStatusVtp) {
+                var card = document.getElementById(cardId);
+                if (!card) return;
+                var existingBadge = card.querySelector('.vtp-status-badge');
+                if (existingBadge) existingBadge.remove();
+
+                if (isUploaded) {
+                    var badge = document.createElement('div');
+                    badge.className = 'vtp-status-badge';
+                    badge.style.marginTop = '10px';
+                    badge.style.padding = '6px 14px';
+                    badge.style.borderRadius = '6px';
+                    badge.style.fontSize = '13px';
+                    badge.style.fontWeight = '500';
+                    badge.style.display = 'inline-block';
+                    badge.style.textAlign = 'center';
+
+                    if (currentStatusVtp === 'diverifikasi') {
+                        badge.style.backgroundColor = '#ecfdf5';
+                        badge.style.color = '#059669';
+                        badge.style.border = '1px solid #a7f3d0';
+                        badge.innerText = 'Memenuhi';
+                    } else if (currentStatusVtp === 'belum_memenuhi') {
+                        badge.style.backgroundColor = '#fdf2f8';
+                        badge.style.color = '#db2777';
+                        badge.style.border = '1px solid #fbcfe8';
+                        badge.innerText = 'Belum Memenuhi (Tahap Ini)';
+                    } else {
+                        badge.style.backgroundColor = '#fffbeb';
+                        badge.style.color = '#d97706';
+                        badge.style.border = '1px solid #fde68a';
+                        badge.innerText = 'Pending';
+                    }
+
+                    var uploadItem = card.querySelector('.upload-doc-item');
+                    if (uploadItem) uploadItem.appendChild(badge);
+                }
+            }
+
+            var vtp1Status = vtp1 ? (data.status_vtp_1 || 'pending') : 'pending';
+            var vtp2Status = vtp2 ? (data.status_vtp_2 || 'pending') : 'pending';
+            var vtp3Status = vtp3 ? (data.status_vtp_3 || 'pending') : 'pending';
+
+            setStatusIndicator('card-vtp-1', !!vtp1, vtp1Status);
+            setStatusIndicator('card-vtp-2', !!vtp2, vtp2Status);
+            setStatusIndicator('card-vtp-3', !!vtp3, vtp3Status);
+
+            // Helper function to disable input and its custom button
+            function setInputState(inputId, disabledState) {
+                var inp = document.getElementById(inputId);
+                if (inp) {
+                    inp.disabled = disabledState;
+                    // Jika mengaktifkan input dan input tersembunyi (karena pernah ada file server),
+                    // pastikan input bisa dilihat/diklik kembali
+                    if (!disabledState) {
+                        // Restore visibility jika input saat ini disembunyikan
+                        var currentStyle = inp.style.cssText || '';
+                        if (currentStyle.indexOf('opacity:0') !== -1 || currentStyle.indexOf('opacity: 0') !== -1) {
+                            inp.style.cssText = '';
+                        }
+                    }
+                    var container = inp.closest('.upload-file-box');
+                    if (container) {
+                        var customBtn = container.querySelector('.custom-choose-btn');
+                        if (customBtn) {
+                            customBtn.disabled = disabledState;
+                            if (disabledState) {
+                                customBtn.style.opacity = '0.6';
+                                customBtn.style.cursor = 'not-allowed';
+                                customBtn.style.background = '#f1f5f9';
+                            } else {
+                                customBtn.style.opacity = '1';
+                                customBtn.style.cursor = 'pointer';
+                                customBtn.style.background = 'linear-gradient(#f8f8f8, #e8e8e8)';
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Card selalu muncul (tidak disembunyikan)
+            document.getElementById('card-vtp-1').style.display = 'block';
+            document.getElementById('card-vtp-2').style.display = 'block';
+            document.getElementById('card-vtp-3').style.display = 'block';
+
+            // Disable semua input secara default
+            setInputState('inp_vtp_1', true);
+            setInputState('inp_vtp_2', true);
+            setInputState('inp_vtp_3', true);
+
+            // Sembunyikan semua tombol kirim secara default
+            document.getElementById('container-btn-vtp-1').style.display = 'none';
+            document.getElementById('container-btn-vtp-2').style.display = 'none';
+            document.getElementById('container-btn-vtp-3').style.display = 'none';
+
+            // Logika kemunculan sekuensial tombol dan input
+
+            // 1. VTP 1: Muncul jika belum ada file VTP 1.
+            // Jika belum ada file, selalu izinkan upload terlepas dari isDisetujui
+            if (!vtp1) {
+                setInputState('inp_vtp_1', false);
+                document.getElementById('container-btn-vtp-1').style.display = 'flex';
+            } 
+            // Jika VTP 1 sudah diupload tapi statusnya 'belum_memenuhi', beri kesempatan untuk upload di VTP 2
+            else if (vtp1 && !vtp2 && !isDisetujui && vtp1Status === 'belum_memenuhi') {
+                setInputState('inp_vtp_2', false);
+                document.getElementById('container-btn-vtp-2').style.display = 'flex';
+            }
+            // Jika VTP 2 sudah diupload tapi statusnya 'belum_memenuhi', beri kesempatan untuk upload di VTP 3
+            else if (vtp2 && !vtp3 && !isDisetujui && vtp2Status === 'belum_memenuhi') {
+                setInputState('inp_vtp_3', false);
+                document.getElementById('container-btn-vtp-3').style.display = 'flex';
+            }
+        }
+
+        /* ── modal helpers ─────────────────────────────────── */
+        window.openUploadPendaftaranModal = function () {
+            document.querySelectorAll('.upload-pendaftaran-check').forEach(function (cb) { cb.checked = false; });
+            updateKirimBtn();
+            var modal = document.getElementById('modal-upload-pendaftaran');
+            modal.style.display = 'flex';
+
+            // Auto-scroll dengan memfokuskan kotak putih modal ke tengah layar
+            setTimeout(function () {
+                var modalBox = modal.firstElementChild;
+                if (modalBox) {
+                    modalBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 50);
+        };
+
+        window.closeUploadPendaftaranModal = function () {
+            document.getElementById('modal-upload-pendaftaran').style.display = 'none';
+        };
+
+        function updateKirimBtn() {
+            var allChecked = Array.from(document.querySelectorAll('.upload-pendaftaran-check')).every(function (cb) { return cb.checked; });
+            var btn = document.getElementById('btn-konfirmasi-kirim-pendaftaran');
+            if (allChecked) {
+                btn.disabled = false;
+                btn.style.background = '#62A0FD';
+                btn.style.color = 'white';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.disabled = true;
+                btn.style.background = '#cbd5e1';
+                btn.style.color = '#94a3b8';
+                btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        document.addEventListener('change', function (e) {
+            if (e.target.classList.contains('upload-pendaftaran-check')) updateKirimBtn();
+        });
+
+        /* ── submit upload via AJAX ────────────────────────── */
+        window.konfirmasiKirimBerkasPendaftaran = function () {
+            closeUploadPendaftaranModal();
+
+            var arsipId = document.getElementById('arsip-sertifikasi-id');
+            if (!arsipId || !arsipId.value) {
+                showMessage('Peringatan', 'ID arsip sertifikasi tidak ditemukan. Silakan muat ulang halaman.', 'warning');
+                return;
+            }
+
+            showConfirm('Kirim berkas pendaftaran ini?', function () {
+
+                var kirimBtn = document.getElementById('btn-kirim-berkas-pendaftaran');
+                if (kirimBtn) {
+                    kirimBtn.disabled = true;
+                    kirimBtn.innerHTML = 'Mengirim…';
+                    kirimBtn.style.background = '#94a3b8';
+                    kirimBtn.style.cursor = 'default';
+                }
+
+                var formData = new FormData();
+                formData.append('id_arsip_sertifikasi', arsipId.value);
+
+                var fileInputs = [
+                    'inp_surat_permohonan', 'inp_permohonan_sertifikasi', 'inp_informasi_sertifikasi',
+                    'inp_akte_perusahaan', 'inp_izin_usaha', 'inp_sertifikat_merek',
+                    'inp_surat_pelimpahan_merek', 'inp_alur_proses_produksi', 'inp_ilustrasi_tanda_sni',
+                    'inp_struktur_organisasi', 'inp_daftar_peralatan', 'inp_kopi_laporan_kalibrasi',
+                    'inp_pedoman_mutu', 'inp_daftar_dokumentasi_smm', 'inp_kopi_sertifikat_smm',
+                    'inp_sipa', 'inp_hasil_uji_air_baku'
+                ];
+                fileInputs.forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el && el.files && el.files.length > 0) {
+                        formData.append(el.name, el.files[0]);
+                    }
+                });
+
+                fetch(BASE + '/dashboard/sertifikasi/berkas/upload', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.success) {
+                            if (kirimBtn) {
+                                kirimBtn.disabled = false;
+                                kirimBtn.innerHTML = 'Kirim';
+                                kirimBtn.style.background = '#62A0FD';
+                                kirimBtn.style.cursor = 'pointer';
+                            }
+                            /* Refresh existing-file labels */
+                            loadExistingBerkas();
+                            showMessage('Berhasil', res.message || 'Berkas pendaftaran berhasil dikirim.', 'success');
+                        } else {
+                            showMessage('Gagal', res.message || 'Terjadi kesalahan saat mengirim berkas.', 'error');
+                            if (kirimBtn) {
+                                kirimBtn.disabled = false;
+                                kirimBtn.innerHTML = 'Kirim';
+                                kirimBtn.style.background = '#62A0FD';
+                                kirimBtn.style.cursor = 'pointer';
+                            }
+                        }
+                    })
+                    .catch(function () {
+                        showMessage('Error', 'Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
+                        if (kirimBtn) {
+                            kirimBtn.disabled = false;
+                            kirimBtn.innerHTML = 'Kirim';
+                            kirimBtn.style.background = '#62A0FD';
+                            kirimBtn.style.cursor = 'pointer';
+                        }
+                    });
+
+            }, 'warning');
+        };
+
+        window.kirimVTP = function (level) {
+            var arsipId = document.getElementById('arsip-sertifikasi-id');
+            if (!arsipId || !arsipId.value) {
+                showMessage('Peringatan', 'ID arsip sertifikasi tidak ditemukan.', 'warning');
+                return;
+            }
+
+            var inpId = 'inp_vtp_' + level;
+            var el = document.getElementById(inpId);
+            if (!el || !el.files || el.files.length === 0) {
+                showMessage('Peringatan', 'Silakan pilih file tindakan perbaikan terlebih dahulu.', 'warning');
+                return;
+            }
+
+            showConfirm('Kirim dokumen tindakan perbaikan tahap ' + level + ' ini?', function () {
+                var formData = new FormData();
+                formData.append('id_arsip_sertifikasi', arsipId.value);
+                formData.append(el.name, el.files[0]);
+
+                fetch(BASE + '/dashboard/sertifikasi/berkas/upload', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                })
+                    .then(function (r) { return r.json(); })
+                    .then(function (res) {
+                        if (res.success) {
+                            loadExistingBerkas();
+                            showMessage('Berhasil', 'Dokumen tindakan perbaikan berhasil dikirim.', 'success');
+                        } else {
+                            showMessage('Gagal', res.message || 'Terjadi kesalahan.', 'error');
+                        }
+                    })
+                    .catch(function () {
+                        showMessage('Error', 'Terjadi kesalahan jaringan.', 'error');
+                    });
+            }, 'warning');
+        };
+
+        /* ── close modal on outside click ──────────────────── */
+        document.getElementById('modal-upload-pendaftaran').addEventListener('click', function (e) {
+            if (e.target === this) closeUploadPendaftaranModal();
+        });
+
+        /* ── auto-load berkas when tab is first shown ──────── */
+        loadExistingBerkas();
+
+        // Handle Questionnaire Logic for Download Tab (Sertifikasi)
+        const orderId = "{{ order_id }}";
+        const storageKey = 'kuesioner_done_Sertifikasi_' + orderId;
+        const isKuesionerDoneBackend = "{{ is_kuesioner_done }}" === "true";
+
+        if (isKuesionerDoneBackend || localStorage.getItem(storageKey)) {
+            document.querySelectorAll('.serti-lhu-kuesioner-status').forEach(function (el) {
+                el.className = 'doc-status-simple';
+                el.style.color = '#64748b';
+                el.innerHTML = 'Belum tersedia'; // Revert to Belum tersedia
+            });
+            document.querySelectorAll('.serti-lhu-kuesioner-action').forEach(function (el) {
+                el.innerHTML = '<span class="link-text-action" style="color:#cbd5e1; cursor:not-allowed;">Unduh</span>';
+            });
+        }
+
+        // Auto-open download tab if coming from questionnaire
+        if (sessionStorage.getItem('open_download_tab') === 'true') {
+            sessionStorage.removeItem('open_download_tab');
+            const downloadTabBtn = document.querySelector('.tab-btn[onclick*="serti-tab-download"]');
+            if (downloadTabBtn) {
+                setTimeout(function () { downloadTabBtn.click(); }, 100);
+            }
+        }
+
+    })();
+</script>
+
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/detailorder.css?v=15">

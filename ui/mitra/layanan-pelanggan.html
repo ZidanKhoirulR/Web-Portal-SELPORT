@@ -1,0 +1,746 @@
+<!-- SweetAlert2 for Premium Modals -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="page-header" style="margin-bottom: 20px;">
+    <h2>Inbox Layanan Pelanggan</h2>
+</div>
+
+<div class="inbox-container">
+    <!-- Sidebar: Chat List -->
+    <div class="inbox-sidebar">
+        <div class="inbox-header">
+            <div class="inbox-search">
+                <i class="ri-search-line"></i>
+                <input type="text" id="searchInput" placeholder="Cari pelanggan ....">
+            </div>
+            <div class="type-filter-tabs">
+                <button class="type-filter-tab active active-all" onclick="setTypeFilter('all')">Semua</button>
+                <button class="type-filter-tab" onclick="setTypeFilter('keluhan')">Keluhan</button>
+                <button class="type-filter-tab" onclick="setTypeFilter('layanan')">Layanan</button>
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active active-all" onclick="setFilter('all')">Semua</button>
+                <button class="filter-tab" onclick="setFilter('active')">Aktif</button>
+                <button class="filter-tab" onclick="setFilter('resolved')">Selesai</button>
+            </div>
+        </div>
+        <ul class="chat-list" id="servicesList">
+            <li class="chat-item" style="justify-content: center; color: #94a3b8; pointer-events: none;">
+                <div class="spinner"></div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content: Active Chat -->
+    <div class="inbox-main" id="inboxMainArea">
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <i class="ri-customer-service-2-line"></i>
+            <h3>Inbox Layanan Pelanggan</h3>
+        </div>
+
+        <!-- Active Chat Interface -->
+        <div id="activeChatInterface" style="display: none; flex-direction: column; height: 100%;">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar" id="activeAvatar" style="background: #10b981; color: white;">A</div>
+                    <div class="chat-header-text">
+                        <h3 id="activeCustomerName">Nama Pelanggan</h3>
+                        <p>
+                            <span id="activeTicketId">#---</span>
+                            <span>•</span>
+                            <span id="activeCategory"><i class="ri-price-tag-3-line"></i> Kategori</span>
+                            <span>•</span>
+                            <span id="activeStatus" class="status-badge">Status</span>
+                        </p>
+                        <div id="resolveButtonContainer">
+                            <button class="btn btn-success btn-sm" onclick="selesaikanLayanan(currentServiceId)">
+                                <i class="ri-check-double-line"></i> Tandai Selesai
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-messages" id="chatArea"></div>
+
+            <!-- File Preview Area -->
+            <div id="filePreviewContainer">
+                <div class="preview-item">
+                    <i class="ri-file-line"></i>
+                    <span id="previewFileName">filename.jpg</span>
+                    <i class="ri-close-line remove-file" onclick="clearFileSelection()"></i>
+                </div>
+            </div>
+
+            <!-- Reply Preview Area -->
+            <div id="replyPreviewContainer"
+                style="display: none; padding: 8px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; border-left: 4px solid #2C7BE5; align-items: flex-start; justify-content: space-between; font-size: 13px;">
+                <div style="flex: 1; overflow: hidden;">
+                    <div style="font-weight: 600; color: #2C7BE5; margin-bottom: 2px;" id="replyPreviewName">Name</div>
+                    <div style="color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                        id="replyPreviewText">Text</div>
+                </div>
+                <button onclick="cancelReply()"
+                    style="background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 18px;"><i
+                        class="ri-close-line"></i></button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area" id="chatInputArea">
+                <input type="file" id="chatFileInput" style="display: none;" onchange="handleFileSelect(this)"
+                    accept=".jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx">
+                <button class="btn-attach" onclick="document.getElementById('chatFileInput').click()"
+                    title="Upload file (JPG, PDF, Word, Excel)">
+                    <i class="ri-attachment-2"></i>
+                </button>
+                <input type="text" id="replyMessage" placeholder="Ketik balasan pesan Anda..." autocomplete="off"
+                    onkeypress="if(event.key === 'Enter') sendReply()">
+                <button class="btn-send" onclick="sendReply()">
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+            <div class="file-type-hint">
+                <i class="ri-information-line"></i> File yang diizinkan: JPG, PDF, Word, Excel
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.currentServiceId = null;
+    if (window.serviceCheckInterval) clearInterval(window.serviceCheckInterval);
+    window.serviceCheckInterval = null;
+    window.currentFilter = 'all';
+    window.currentTypeFilter = 'all'; // 'all', 'keluhan', 'layanan'
+    window.allServices = window.allServices || [];
+    window.allComplaints = window.allComplaints || [];
+
+    loadAllData();
+
+    if (window.refreshInterval) clearInterval(window.refreshInterval);
+    window.refreshInterval = setInterval(() => {
+        if (document.getElementById('servicesList')) {
+            loadAllData(true);
+        } else {
+            clearInterval(window.refreshInterval);
+        }
+    }, 15000);
+
+    const layananSearchInput = document.getElementById('searchInput');
+    if (layananSearchInput) {
+        layananSearchInput.oninput = function (e) {
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(() => {
+                loadAllData();
+            }, 500);
+        };
+    }
+
+    function setFilter(filter) {
+        window.currentFilter = filter;
+        const colorMap = { 'all': 'active-all', 'active': 'active-active', 'resolved': 'active-resolved' };
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active', 'active-all', 'active-active', 'active-resolved');
+        });
+        event.target.classList.add('active', colorMap[filter] || 'active-all');
+        renderList();
+    }
+
+    function setTypeFilter(type) {
+        window.currentTypeFilter = type;
+        const colorMap = { 'all': 'active-all', 'keluhan': 'active-keluhan', 'layanan': 'active-layanan' };
+        document.querySelectorAll('.type-filter-tab').forEach(tab => {
+            tab.classList.remove('active', 'active-all', 'active-keluhan', 'active-layanan');
+        });
+        event.target.classList.add('active', colorMap[type] || 'active-all');
+        renderList();
+    }
+
+    async function loadAllData(silent = false) {
+        const search = document.getElementById('searchInput').value;
+        const listEl = document.getElementById('servicesList');
+
+        if (!silent && (window.allServices.length > 0 || window.allComplaints.length > 0)) {
+            // Optimistic rendering (Cache First)
+            renderList();
+        } else if (!silent) {
+            listEl.innerHTML = '<li class="chat-item" style="justify-content: center; color: #94a3b8; pointer-events: none;"><div class="spinner"></div></li>';
+        }
+
+        try {
+            // Load both Layanan and Keluhan data
+            const ts = Date.now();
+            const searchParam = search ? '&search=' + encodeURIComponent(search) : '';
+            const [layananRes, keluhanRes] = await Promise.all([
+                fetch(`${BASE_URL}/mitra/api/layanan?_t=${ts}${searchParam}`),
+                fetch(`${BASE_URL}/mitra/api/keluhan?_t=${ts}${searchParam}`)
+            ]);
+
+            const layananData = await layananRes.json();
+            const keluhanData = await keluhanRes.json();
+
+            // Mark data with type
+            window.allServices = (Array.isArray(layananData.data) ? layananData.data : []).map(s => ({ ...s, chat_type: 'layanan' }));
+            window.allComplaints = (Array.isArray(keluhanData.data) ? keluhanData.data : []).map(c => ({ ...c, chat_type: 'keluhan' }));
+
+            if (layananData.error) {
+                console.error('[Mitra Layanan] Server error:', layananData.error);
+            }
+            if (keluhanData.error) {
+                console.error('[Mitra Keluhan] Server error:', keluhanData.error);
+            }
+
+            renderList();
+        } catch (error) {
+            console.error('Error fetching services:', error);
+            listEl.innerHTML = '<li style="padding: 16px; text-align: center; color: #ef4444;">Gagal memuat daftar layanan</li>';
+        }
+    }
+
+    function renderList() {
+        const listEl = document.getElementById('servicesList');
+
+        // Combine both services and complaints
+        let allItems = [...window.allServices, ...window.allComplaints];
+
+        // Apply type filter
+        if (window.currentTypeFilter === 'keluhan') {
+            allItems = allItems.filter(item => item.chat_type === 'keluhan');
+        } else if (window.currentTypeFilter === 'layanan') {
+            allItems = allItems.filter(item => item.chat_type === 'layanan');
+        }
+
+        // Apply status filter
+        if (window.currentFilter === 'active') {
+            allItems = allItems.filter(item => item.status !== 'Resolved');
+        } else if (window.currentFilter === 'resolved') {
+            allItems = allItems.filter(item => item.status === 'Resolved');
+        }
+
+        // Sort by updated_at (most recent first)
+        allItems.sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at));
+
+        if (allItems.length === 0) {
+            const emptyText = currentTypeFilter === 'keluhan' ? 'Tidak ada keluhan' :
+                currentTypeFilter === 'layanan' ? 'Tidak ada layanan' : 'Tidak ada data';
+            listEl.innerHTML = `
+                <li style="padding: 30px 16px; text-align: center; color: #94a3b8;">
+                    <i class="ri-inbox-line" style="font-size: 32px; display: block; margin-bottom: 8px;"></i>
+                    ${emptyText}
+                </li>`;
+            return;
+        }
+
+        let html = '';
+        allItems.forEach(item => {
+            const isActive = window.currentServiceId == item.id && window.currentChatType === item.chat_type ? 'active' : '';
+            const unreadHtml = (item.unread_count > 0) ? `<span class="unread-badge">${item.unread_count}</span>` : '';
+
+            const dateObj = new Date(item.updated_at || item.created_at);
+            const isToday = new Date().toDateString() === dateObj.toDateString();
+            const timeStr = isToday
+                ? dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')
+                : dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+
+            let statusBadge = '';
+            if (item.status === 'Pending') {
+                statusBadge = '<span style="background: #fef3c7; color: #d97706; padding: 1px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px;">Menunggu</span>';
+            } else if (item.status === 'Resolved') {
+                statusBadge = '<span style="background: #d1fae5; color: #059669; padding: 1px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px;">Selesai</span>';
+            }
+
+            const initials = (item.nama_lengkap || 'P').substring(0, 1).toUpperCase();
+
+            // Type badge
+            const typeBadge = item.chat_type === 'keluhan'
+                ? '<span class="chat-type-badge keluhan">KELUHAN</span>'
+                : '<span class="chat-type-badge layanan">LAYANAN</span>';
+
+            // Get appropriate label
+            if (item.chat_type === 'keluhan') {
+                categoryLabel = item.topic_name || 'Keluhan Umum';
+            } else {
+                categoryLabel = getCategoryLabel(item.category);
+            }
+
+            const orderBadge = item.order_no ? `<span style="background: #fef3c7; color: #d97706; padding: 1px 6px; border-radius: 4px; font-size: 10px; margin-left: 6px;"><i class="ri-file-list-line"></i> ${item.order_no}</span>` : '';
+            const ticketId = item.no_layanan || item.no_pengaduan || `${item.chat_type === 'keluhan' ? 'KLH' : 'LYN'}-${item.id}`;
+
+            html += `
+                <li class="chat-item ${isActive}" onclick="viewItem(${item.id}, '${categoryLabel}', '${item.status}', '${item.nama_lengkap}', '${item.created_at}', '${ticketId}', '${item.order_name || ''}', '${item.chat_type}')">
+                    <div class="chat-avatar">${initials}</div>
+                    <div class="chat-info">
+                        <div class="chat-name-row">
+                            <div class="chat-name" title="${item.nama_lengkap}">${item.nama_lengkap}${orderBadge}${statusBadge}${typeBadge}</div>
+                            <div class="chat-time">${timeStr}</div>
+                        </div>
+                        <div class="chat-preview">#${ticketId} • ${categoryLabel}</div>
+                    </div>
+                    ${unreadHtml}
+                </li>
+            `;
+        });
+
+        listEl.innerHTML = html;
+    }
+
+    function getCategoryLabel(category) {
+        const labels = {
+            'info': 'Informasi Umum',
+            'konsultasi': 'Konsultasi Teknis',
+            'permintaan': 'Permintaan Data',
+            'dokumen': 'Permintaan Dokumen',
+            'lainnya': 'Lainnya'
+        };
+        return labels[category] || category || 'Umum';
+    }
+
+    // Unified view function that routes to appropriate handler based on chat type
+    async function viewItem(id, category, status, name, dateStr, ticketId, orderName, chatType) {
+        if (chatType === 'keluhan') {
+            // Store current type for loading correct data
+            window.currentChatType = 'keluhan';
+            await viewComplaint(id, category, status, name, dateStr, ticketId, orderName);
+        } else {
+            window.currentChatType = 'layanan';
+            await viewService(id, category, status, name, dateStr, ticketId, orderName, '');
+        }
+    }
+
+    window.currentChatType = 'layanan'; // Track current chat type
+
+    async function viewService(id, category, status, name, dateStr, ticketId, orderName, subcategory) {
+        window.currentServiceId = id;
+
+        document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+        loadAllData(true);
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('activeChatInterface').style.display = 'flex';
+
+        document.getElementById('activeAvatar').textContent = (name || 'P').substring(0, 1).toUpperCase();
+        document.getElementById('activeCustomerName').textContent = name;
+        document.getElementById('activeTicketId').textContent = `#${ticketId}`;
+
+        let catDisplay = `<i class="ri-price-tag-3-line"></i> ${category}`;
+        if (subcategory) {
+            catDisplay += ` <span style="margin-left: 4px; color: #64748b;">(${subcategory})</span>`;
+        }
+        if (orderName) {
+            catDisplay += ` <span style="margin-left: 8px; background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;"><i class="ri-file-list-line"></i> ${orderName}</span>`;
+        }
+        document.getElementById('activeCategory').innerHTML = catDisplay;
+
+        const statusEl = document.getElementById('activeStatus');
+        statusEl.className = 'status-badge';
+        if (status === 'Pending') {
+            statusEl.classList.add('pending');
+            statusEl.innerHTML = '<i class="ri-time-line"></i> Menunggu';
+        } else if (status === 'Resolved') {
+            statusEl.classList.add('resolved');
+            statusEl.innerHTML = '<i class="ri-checkbox-circle-line"></i> Selesai';
+        } else {
+            statusEl.classList.add('in-progress');
+            statusEl.innerHTML = '<i class="ri-refresh-line"></i> Diproses';
+        }
+
+        const isResolved = status === 'Resolved';
+        document.getElementById('resolveButtonContainer').style.display = isResolved ? 'none' : 'block';
+        const hintDiv = document.getElementById('chatInputArea')?.nextElementSibling;
+        if (isResolved) {
+            document.getElementById('chatInputArea').style.display = 'none';
+            if (hintDiv) hintDiv.style.display = 'none';
+        } else {
+            document.getElementById('chatInputArea').style.display = 'flex';
+            if (hintDiv) hintDiv.style.display = 'block';
+        }
+
+        const replyMessage = document.getElementById('replyMessage');
+        if (replyMessage) replyMessage.value = '';
+
+        await loadMessages(id);
+
+        if (window.serviceCheckInterval) clearInterval(window.serviceCheckInterval);
+        window.serviceCheckInterval = setInterval(() => {
+            if (window.currentServiceId === id) {
+                loadMessages(id, true);
+            } else {
+                clearInterval(window.serviceCheckInterval);
+            }
+        }, 5000);
+    }
+
+    async function viewComplaint(id, topic, status, name, dateStr, ticketId, orderName) {
+        window.currentServiceId = id; // Reuse same ID tracker
+
+        document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+        loadAllData(true);
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('activeChatInterface').style.display = 'flex';
+
+        document.getElementById('activeAvatar').textContent = (name || 'P').substring(0, 1).toUpperCase();
+        document.getElementById('activeCustomerName').textContent = name;
+        document.getElementById('activeTicketId').textContent = `#${ticketId}`;
+
+        let topicDisplay = `<i class="ri-price-tag-3-line"></i> ${topic || 'Keluhan Umum'}`;
+        if (orderName) {
+            topicDisplay += ` <span style="margin-left: 8px; background: #fef3c7; color: #d97706; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;"><i class="ri-file-list-line"></i> ${orderName}</span>`;
+        }
+        document.getElementById('activeCategory').innerHTML = topicDisplay;
+
+        const statusEl = document.getElementById('activeStatus');
+        statusEl.className = 'status-badge';
+        if (status && status.toLowerCase() === 'pending') {
+            statusEl.classList.add('pending');
+            statusEl.innerHTML = '<i class="ri-time-line"></i> Menunggu';
+        } else if (status && status.toLowerCase() === 'resolved') {
+            statusEl.classList.add('resolved');
+            statusEl.innerHTML = '<i class="ri-checkbox-circle-line"></i> Selesai';
+        } else {
+            statusEl.classList.add('in-progress');
+            statusEl.innerHTML = '<i class="ri-refresh-line"></i> Diproses';
+        }
+
+        const isResolved = status && status.toLowerCase() === 'resolved';
+        document.getElementById('resolveButtonContainer').style.display = isResolved ? 'none' : 'block';
+        const hintDiv = document.getElementById('chatInputArea')?.nextElementSibling;
+        if (isResolved) {
+            document.getElementById('chatInputArea').style.display = 'none';
+            if (hintDiv) hintDiv.style.display = 'none';
+        } else {
+            document.getElementById('chatInputArea').style.display = 'flex';
+            if (hintDiv) hintDiv.style.display = 'block';
+        }
+
+        const replyMessage = document.getElementById('replyMessage');
+        if (replyMessage) replyMessage.value = '';
+
+        await loadMessages(id);
+
+        if (window.serviceCheckInterval) clearInterval(window.serviceCheckInterval);
+        window.serviceCheckInterval = setInterval(() => {
+            if (window.currentServiceId === id) {
+                loadMessages(id, true);
+            } else {
+                clearInterval(window.serviceCheckInterval);
+            }
+        }, 5000);
+    }
+
+    async function loadMessages(id, silent = false) {
+        const chatArea = document.getElementById('chatArea');
+
+        if (!silent) {
+            chatArea.innerHTML = '<div style="text-align:center; padding: 20px;"><div class="spinner"></div></div>';
+        }
+
+        try {
+            // Use correct endpoint based on chat type
+            const endpoint = window.currentChatType === 'keluhan' ? 'keluhan' : 'layanan';
+            const response = await fetch(`${BASE_URL}/mitra/api/${endpoint}?id=${id}&_t=${Date.now()}`);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+
+            if (data.data) {
+                const service = Array.isArray(data.data) ? data.data[0] : data.data;
+                if (!service) throw new Error('Data layanan tidak ditemukan');
+
+                const inputArea = document.getElementById('chatInputArea');
+                const hintDiv = inputArea?.nextElementSibling;
+                const statusEl = document.getElementById('activeStatus');
+                const resolveContainer = document.getElementById('resolveButtonContainer');
+
+                let isResolved = false;
+
+                if (service.status === 'Pending') {
+                    if (statusEl) {
+                        statusEl.className = 'status-badge pending';
+                        statusEl.innerHTML = '<i class="ri-time-line"></i> Menunggu';
+                    }
+                    if (resolveContainer) resolveContainer.style.display = 'block';
+                } else if (service.status === 'Resolved') {
+                    isResolved = true;
+                    if (statusEl) {
+                        statusEl.className = 'status-badge resolved';
+                        statusEl.innerHTML = '<i class="ri-checkbox-circle-line"></i> Selesai';
+                    }
+                    if (resolveContainer) resolveContainer.style.display = 'none';
+                } else {
+                    if (statusEl) {
+                        statusEl.className = 'status-badge in-progress';
+                        statusEl.innerHTML = '<i class="ri-refresh-line"></i> Diproses';
+                    }
+                    if (resolveContainer) resolveContainer.style.display = 'block';
+                }
+
+                if (inputArea) {
+                    if (isResolved) {
+                        inputArea.style.display = 'none';
+                        if (hintDiv) hintDiv.style.display = 'none';
+                    } else {
+                        inputArea.style.display = 'flex';
+                        if (hintDiv) hintDiv.style.display = 'block';
+                    }
+                }
+
+                let html = '';
+                let lastDateLabel = null;
+
+                function getDateLabel(dateObj) {
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+                    if (dateObj.toDateString() === today.toDateString()) return 'Hari Ini';
+                    if (dateObj.toDateString() === yesterday.toDateString()) return 'Kemarin';
+                    return dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                }
+
+                function checkDateDivider(dateStr) {
+                    const dateObj = new Date(dateStr);
+                    const label = getDateLabel(dateObj);
+                    if (label !== lastDateLabel) {
+                        lastDateLabel = label;
+                        return `<div class="date-divider"><span>${label}</span></div>`;
+                    }
+                    return '';
+                }
+
+                if (service.messages && service.messages.length > 0) {
+                    service.messages.forEach(msg => {
+                        const dateObj = new Date(msg.created_at);
+                        const time = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':');
+
+                        html += checkDateDivider(msg.created_at);
+
+                        const isCustomer = msg.is_admin == 0;
+                        const bubbleClass = isCustomer ? 'customer' : 'admin';
+                        const senderName = msg.nama_pengirim || (isCustomer ? (service.nama_lengkap || service.username || 'Pelanggan') : 'Admin');
+
+                        let fileHtml = '';
+                        if (msg.file_path) {
+                            const uploadDir = window.currentChatType === 'keluhan' ? 'complaints' : 'services';
+                            const fileUrl = `${BASE_URL}/public/uploads/${uploadDir}/chats/${msg.file_path}`;
+                            const ext = msg.file_path.split('.').pop().toLowerCase();
+                            const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+
+                            if (isImage) {
+                                fileHtml = `<div class="chat-file-preview"><img src="${fileUrl}" alt="Attachment" onclick="window.open(this.src)"></div>`;
+                            } else {
+                                fileHtml = `<a href="${fileUrl}" target="_blank" class="chat-file-link"><i class="ri-file-text-line"></i><span>${msg.original_filename || 'Unduh File'}</span></a>`;
+                            }
+                        }
+
+                        // Exclude existing reply box from preview text if it exists
+                        let cleanMsg = msg.message || '';
+                        let previewText = cleanMsg.replace(/<div class="reply-box"[\s\S]*?<\/div>\s*<\/div>/g, '').replace(/<[^>]*>?/gm, ' ').trim().substring(0, 60);
+                        if (previewText.length === 60) previewText += '...';
+                        if (!previewText && msg.file_path) previewText = 'Lampiran File';
+
+                        const safeName = senderName.replace(/'/g, "\\'");
+                        const safeText = previewText.replace(/`/g, '\\`').replace(/'/g, "\\'");
+
+                        const replyBtnHtml = `
+                            <div class="chat-actions">
+                                <button class="btn-reply-action" onclick="prepareReply('${msg.id}', '${safeName}', '${safeText}')" title="Balas pesan ini"><i class="ri-reply-line"></i></button>
+                            </div>
+                        `;
+
+                        html += `
+                            <div class="chat-row ${bubbleClass}">
+                                ${!isCustomer ? replyBtnHtml : ''}
+                                <div class="chat-bubble ${bubbleClass}">
+                                    ${cleanMsg ? cleanMsg.replace(/\n/g, '<br>') : ''}
+                                    ${fileHtml}
+                                    <div class="chat-meta">${senderName} — ${time}</div>
+                                </div>
+                                ${isCustomer ? replyBtnHtml : ''}
+                            </div>
+                        `;
+                    });
+                }
+
+                if (isResolved) {
+                    html += `
+                        <div style="text-align: center; margin-top: 16px; margin-bottom: 16px;">
+                            <span style="background: #e5e7eb; color: #4b5563; padding: 6px 12px; border-radius: 12px; font-size: 12px;">
+                                <i class="ri-lock-line"></i> Layanan ini telah selesai dan ditutup.
+                            </span>
+                        </div>
+                    `;
+                }
+
+                if (!silent || chatArea.innerHTML !== html) {
+                    chatArea.innerHTML = html;
+                    chatArea.scrollTop = chatArea.scrollHeight;
+                    setTimeout(() => {
+                        chatArea.scrollTop = chatArea.scrollHeight;
+                    }, 100);
+                    setTimeout(() => {
+                        chatArea.scrollTop = chatArea.scrollHeight;
+                    }, 300);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+            if (!silent) chatArea.innerHTML = '<div class="text-danger text-center">Gagal memuat pesan</div>';
+        }
+    }
+
+    function handleFileSelect(input) {
+        const file = input.files[0];
+        if (file) {
+            const allowedExts = ['jpg', 'jpeg', 'pdf', 'doc', 'docx', 'xls', 'xlsx'];
+            const ext = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExts.includes(ext)) {
+                Swal.fire('Format File Tidak Diizinkan', 'Hanya file JPG, PDF, Word, dan Excel yang diperbolehkan.', 'error');
+                input.value = '';
+                return;
+            }
+
+            document.getElementById('previewFileName').textContent = file.name;
+            document.getElementById('filePreviewContainer').style.display = 'flex';
+        }
+    }
+
+    function clearFileSelection() {
+        document.getElementById('chatFileInput').value = '';
+        document.getElementById('filePreviewContainer').style.display = 'none';
+    }
+
+    window.activeReply = null;
+    function prepareReply(id, name, text) {
+        window.activeReply = { id, name, text };
+        document.getElementById('replyPreviewName').textContent = name;
+        document.getElementById('replyPreviewText').textContent = text;
+        document.getElementById('replyPreviewContainer').style.display = 'flex';
+        document.getElementById('replyMessage').focus();
+    }
+    function cancelReply() {
+        window.activeReply = null;
+        document.getElementById('replyPreviewContainer').style.display = 'none';
+    }
+
+    async function sendReply() {
+        if (!window.currentServiceId) return;
+
+        const input = document.getElementById('replyMessage');
+        const fileInput = document.getElementById('chatFileInput');
+        let text = input.value.trim();
+        const file = fileInput.files[0];
+
+        if (!text && !file) return;
+
+        if (window.activeReply) {
+            const replyHtml = `<div class="reply-box" style="background: rgba(0,0,0,0.05); padding: 8px 12px; border-left: 3px solid #2C7BE5; border-radius: 6px; margin-bottom: 8px; font-size: 12px; color: #475569;">
+                <div style="font-weight: 600; color: #2C7BE5; margin-bottom: 4px;"><i class="ri-reply-line"></i> Membalas ${window.activeReply.name}</div>
+                <div>${window.activeReply.text}</div>
+            </div>`;
+            text = replyHtml + text;
+        }
+
+        input.disabled = true;
+        const btn = document.querySelector('.btn-send');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>';
+
+        try {
+            const isKeluhan = window.currentChatType === 'keluhan';
+            const idField = isKeluhan ? 'complaint_id' : 'service_id';
+
+            const fd = new FormData();
+            fd.append(idField, window.currentServiceId);
+            fd.append('reply_text', text);
+            if (file) {
+                fd.append('chat_file', file);
+            }
+
+            // Use correct endpoint based on chat type
+            const replyEndpoint = isKeluhan ? 'keluhan/reply' : 'layanan/reply';
+            const res = await fetch(`${BASE_URL}/mitra/api/${replyEndpoint}`, {
+                method: 'POST',
+                body: fd
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                input.value = '';
+                clearFileSelection();
+                cancelReply();
+                await loadMessages(window.currentServiceId);
+                loadAllData(true);
+            } else {
+                Swal.fire('Gagal', data.message || 'Gagal mengirim pesan', 'error');
+            }
+        } catch (e) {
+            console.error(e);
+            Swal.fire('Error', 'Terjadi kesalahan koneksi', 'error');
+        } finally {
+            input.disabled = false;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-send-plane-fill"></i>';
+            input.focus();
+        }
+    }
+
+    async function selesaikanLayanan(id) {
+        if (!id) return;
+
+        const isKeluhan = window.currentChatType === 'keluhan';
+        const titleText = isKeluhan ? 'Tandai Keluhan Selesai?' : 'Tandai Layanan Selesai?';
+        const successText = isKeluhan ? 'Keluhan telah diselesaikan.' : 'Layanan telah diselesaikan.';
+
+        const result = await Swal.fire({
+            title: titleText,
+            text: 'Percakapan akan dikunci dan tidak bisa dibalas lagi.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#10b981',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Selesaikan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const formData = new FormData();
+                const endpoint = isKeluhan ? 'keluhan/resolve' : 'layanan/resolve';
+                const idField = isKeluhan ? 'complaint_id' : 'service_id';
+                formData.append(idField, id);
+
+                const response = await fetch(`${BASE_URL}/mitra/api/${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const resData = await response.json();
+                if (resData.success) {
+                    await Swal.fire({
+                        title: 'Berhasil!',
+                        text: successText,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    loadAllData();
+                    if (isKeluhan) {
+                        viewComplaint(id, '', 'resolved', '', '', '', '');
+                    } else {
+                        viewService(id, '', 'resolved', '', '', '', '', '');
+                    }
+                } else {
+                    Swal.fire('Gagal', resData.message || 'Terjadi kesalahan', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Error', 'Terjadi kesalahan koneksi', 'error');
+            }
+        }
+    }
+</script>

@@ -1,0 +1,39 @@
+# =========================================================================
+# Git Ignore Configuration for SELPORT Web Portal
+# =========================================================================
+
+# Environment and sensitive configuration files
+.env
+.env.*
+!.env.example
+index.env
+index.local.php
+*.local.cfg
+*.local.ini
+
+# Cache and temporary directories
+tmp/*
+!tmp/.gitkeep
+cache/
+logs/
+*.log
+
+# Screenshots directory (excluded from git as requested)
+screenshoot/
+screenshots/
+
+# User uploads and confidential documents
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Composer vendor dependencies
+vendor/
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace

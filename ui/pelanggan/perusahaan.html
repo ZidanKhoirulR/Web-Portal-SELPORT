@@ -1,0 +1,301 @@
+<div class="company-section-container" style="max-width: 980px; margin: 0 auto; padding-top: 20px;">
+
+    <div class="unified-card"
+        style="background: white; border-radius: 16px; box-shadow: 0 4px 24px -4px rgba(0,0,0,0.08); overflow: visible; display: flex; flex-direction: column; border: 1px solid #e2e8f0;">
+
+        <form onsubmit="handleCompanyPageUpdateFromSection(event)" style="display: flex; flex-wrap: wrap; width: 100%;">
+
+            <div class="card-sidebar"
+                style="width: 280px; background: #f8fafc; padding: 32px 24px; border-right: 1px solid #e2e8f0; text-align: center; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; border-radius: 16px 0 0 16px; overflow: hidden;">
+                <h2
+                    style="font-size: var(--size-md); font-weight: 700; color: var(--color-text-main); margin-bottom: 8px; text-align: center;">
+                    Perusahaan</h2>
+                <p
+                    style="color: var(--color-text-muted); font-size: var(--size-sm); margin-bottom: 24px; text-align: center; line-height: 1.5;">
+                    Kelola data entitas bisnis dan administrasi.</p>
+
+                <div class="company-avatar-wrapper"
+                    style="margin: 0 auto 16px; width: 100px; height: 100px; background: #fff; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                        stroke="#2C7BE5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 21h18" />
+                        <path d="M5 21V7l8-4 8 4v14" />
+                        <path d="M17 21v-8H7v8" />
+                    </svg>
+                </div>
+
+                <h3 style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px;"
+                    id="display_company_sidebar">{{ nama_perusahaan }}</h3>
+                <span class="badge-role">Entitas Bisnis</span>
+            </div>
+
+            <div class="card-content" style="flex: 1; padding: 32px; min-width: 300px;">
+                <div id="company-success-notification" class="success-msg"
+                    style="margin-bottom: 20px; padding: 12px; background: #effdf5; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; font-weight: 600; display: none; text-align: center; font-size: 13px;">
+                    ✓ Informasi perusahaan berhasil diperbarui
+                </div>
+
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Nama Perusahaan</label>
+                        <input type="text" id="nama_perusahaan" name="nama_perusahaan" class="form-control"
+                            value="{{ nama_perusahaan }}">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Email Perusahaan</label>
+                        <input type="email" id="email_perusahaan" name="email_perusahaan" class="form-control"
+                            value="{{ email_perusahaan }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">No. Telepon</label>
+                        <input type="tel" id="telp_perusahaan" name="telp_perusahaan" class="form-control"
+                            value="{{ telp_perusahaan }}" placeholder="022-xxxxxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp</label>
+                        <input type="tel" id="wa_perusahaan" name="wa_perusahaan" class="form-control"
+                            value="{{ wa_perusahaan }}" placeholder="08xxxxxxxxxx">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2; margin-bottom: 0;">
+                        <label class="form-label">Fax</label>
+                        <input type="tel" id="fax_perusahaan" name="fax_perusahaan" class="form-control"
+                            value="{{ fax_perusahaan }}" placeholder="Nomor Fax">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2; margin-top: -12px;">
+                        <div
+                            style="display: flex; align-items: flex-start; gap: 7px; margin-bottom: 8px; padding: 9px 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 7px; font-size: 12px; color: #1d4ed8; line-height: 1.5;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span>Alamat ini adalah alamat yang akan dijadikan sebagai pengiriman <strong>Lembar Hasil
+                                    Uji</strong>.</span>
+                        </div>
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea id="alamat_perusahaan" name="alamat_perusahaan" class="form-control"
+                            rows="2">{{ alamat_perusahaan }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Provinsi</label>
+                        <div class="custom-select" id="dd-provinsi_perusahaan">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Provinsi</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="provinsi_perusahaan" name="provinsi_perusahaan_id" value="">
+                        <input type="hidden" id="provinsi_perusahaan_name" name="provinsi_perusahaan"
+                            value="{{ provinsi_perusahaan }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kabupaten</label>
+                        <div class="custom-select" id="dd-kabupaten_perusahaan">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kabupaten</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kabupaten_perusahaan" name="kabupaten_perusahaan_id" value="">
+                        <input type="hidden" id="kabupaten_perusahaan_name" name="kabupaten_perusahaan"
+                            value="{{ kabupaten_perusahaan }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kecamatan</label>
+                        <div class="custom-select" id="dd-kecamatan_perusahaan">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kecamatan</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kecamatan_perusahaan" name="kecamatan_perusahaan_id" value="">
+                        <input type="hidden" id="kecamatan_perusahaan_name" name="kecamatan_perusahaan"
+                            value="{{ kecamatan_perusahaan }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kode Pos</label>
+                        <div class="custom-select" id="dd-kodepos_perusahaan">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kode Pos</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kodepos_perusahaan" name="kodepos_perusahaan" value="">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" onclick="loadSection('beranda')">Batalkan</button>
+                    <button type="submit" class="btn-primary-blue">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Compact Premium Styling */
+    .unified-card {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    /* Layout */
+    .card-sidebar {
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 900px) {
+        .unified-card form {
+            flex-direction: column;
+        }
+
+        .card-sidebar {
+            width: 100% !important;
+            border-right: none;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+    }
+
+    /* Typography & Inputs */
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 12px;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        color: #0f172a;
+        font-size: var(--size-base);
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #2C7BE5;
+        box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.05);
+    }
+
+    /* Buttons */
+    .form-actions {
+        margin-top: 32px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        align-items: center;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+    }
+
+    .btn-primary-blue {
+        padding: 10px 24px;
+        border-radius: 8px;
+        border: none;
+        background: #2C7BE5;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(44, 123, 229, 0.2);
+        transition: all 0.2s;
+        font-size: 13px;
+    }
+
+    .btn-primary-blue:hover {
+        background: #1A68D1;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(44, 123, 229, 0.25);
+    }
+
+    .btn-ghost {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    /* Badges */
+    .badge-role {
+        display: inline-block;
+        padding: 4px 12px;
+        background: white;
+        color: #64748b;
+        font-size: 11px;
+        border-radius: 16px;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 8px 0;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

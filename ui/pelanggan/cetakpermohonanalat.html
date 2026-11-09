@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Permohonan Alat - {{ @nama_perusahaan }}</title>
+    <link rel="stylesheet" href="{{ @BASE }}/public/css/pelanggan/cetakpermohonanalat.css?v=1.1">
+</head>
+
+<body>
+    <div class="print-container">
+        <div class="print-header">
+            <div class="header-title">
+                <h1>{{ @kategori }}</h1>
+            </div>
+        </div>
+
+        <div class="customer-section">
+            <h2>Informasi Pelanggan</h2>
+            <div class="customer-info">
+                <div class="info-row">
+                    <span class="label">No. Identitas Permohonan</span>
+                    <span class="value" style="font-weight: 700; color: #1e3a8a;">{{ @no_identitas }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Nama Perusahaan</span>
+                    <span class="value">{{ @nama_perusahaan }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Nama Lengkap PIC</span>
+                    <span class="value">{{ @nama_lengkap }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Alamat</span>
+                    <span class="value">{{ @alamat_perusahaan }}, {{ @lokasi_perusahaan }}, {{ @kodepos_perusahaan
+                        }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="alat-section">
+            <h2>Data Spesifikasi Alat</h2>
+
+            <div id="alat-items-print">
+                {{ @ALAT_ITEMS_HTML | raw }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="print-actions no-print">
+        <button onclick="window.print()" class="btn-print">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Cetak / Simpan PDF
+        </button>
+        <button onclick="window.history.back()" class="btn-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Kembali
+        </button>
+    </div>
+</body>
+
+</html>

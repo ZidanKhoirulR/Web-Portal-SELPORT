@@ -1,0 +1,357 @@
+<div class="home-container">
+
+    <div class="header-section">
+        <h1>Pelayanan Industri</h1>
+        <h2 class="text-highlight">Terintegritas & Transparan</h2>
+        <p class="header-desc">
+            Portal resmi pengelolaan layanan pengujian, kalibrasi, dan sertifikasi
+            Balai Besar Standardisasi dan Pelayanan Jasa Industri Selulosa.
+        </p>
+    </div>
+
+    <div class="company-card-refined">
+        <div class="card-glass-glow"></div>
+        <div class="card-inner">
+            <div class="card-header-banner">
+                <div class="badge-wrapper">
+                    <img src="{{ BASE }}/public/images/beranda/perusahaan.png" alt="Perusahaan">
+                </div>
+                <div class="header-main">
+                    <h3>{{ nama_perusahaan }}</h3>
+                    <div style="font-size: 14px; color: #1e293b; margin-bottom: 8px; font-weight: 500;">{{ nama_lengkap
+                        }}</div>
+                    <div class="badge-status-pill">
+                        <span class="pulse-dot"></span>
+                        Terverifikasi
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-grid-modern">
+                <div class="grid-item">
+                    <div class="grid-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div class="grid-content">
+                        <label>Alamat Utama</label>
+                        <span>{{ alamat_perusahaan }}, {{ lokasi_perusahaan }}, {{ kodepos_perusahaan }}</span>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="grid-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </div>
+                    <div class="grid-content">
+                        <label>Email Perusahaan</label>
+                        <span>{{ email_perusahaan }}</span>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="grid-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="grid-content">
+                        <label>Telepon Perusahaan</label>
+                        <span>{{ telp_perusahaan }}</span>
+                    </div>
+                </div>
+
+
+                <div class="grid-item">
+                    <div class="grid-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="grid-content">
+                        <label>WhatsApp Perusahaan</label>
+                        <span>{{ wa_perusahaan }}</span>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div class="grid-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                            <rect x="1" y="3" width="22" height="5"></rect>
+                            <line x1="10" y1="12" x2="14" y2="12"></line>
+                        </svg>
+                    </div>
+                    <div class="grid-content">
+                        <label>Fax</label>
+                        <span>{{ fax_perusahaan }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">
+        <h3>Total Pelayanan</h3>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card-new">
+            <div class="stat-icon-wrapper">
+                <img src="{{ BASE }}/public/images/beranda/pengujian.png" alt="Pengujian" class="service-icon-img">
+            </div>
+            <div class="stat-info">
+                <span class="stat-title">PENGUJIAN</span>
+                <span class="stat-value"><!-- COUNT_PENGUJIAN --></span>
+            </div>
+        </div>
+
+        <div class="stat-card-new">
+            <div class="stat-icon-wrapper">
+                <img src="{{ BASE }}/public/images/beranda/kalibrasi.png" alt="Kalibrasi" class="service-icon-img">
+            </div>
+            <div class="stat-info">
+                <span class="stat-title">KALIBRASI</span>
+                <span class="stat-value"><!-- COUNT_KALIBRASI --></span>
+            </div>
+        </div>
+
+        <div class="stat-card-new">
+            <div class="stat-icon-wrapper">
+                <img src="{{ BASE }}/public/images/beranda/sertifikasi.png" alt="Sertifikasi" class="service-icon-img">
+            </div>
+            <div class="stat-info">
+                <span class="stat-title">SERTIFIKASI</span>
+                <span class="stat-value"><!-- COUNT_SERTIFIKASI --></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="content-card order-section">
+        <div class="card-header">
+            <h3>Riwayat Order</h3>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="custom-select custom-select-small" id="dropdown-filter-status">
+                    <button type="button" class="select-trigger">
+                        <span class="selected-text"><!-- SELECTED_STATUS_TEXT --></span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options">
+                        <!-- STATUS_OPTIONS -->
+                    </div>
+                </div>
+
+                <div class="custom-select custom-select-small" id="dropdown-filter-layanan">
+                    <button type="button" class="select-trigger">
+                        <span class="selected-text"><!-- SELECTED_LAYANAN_TEXT --></span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options">
+                        <!-- LAYANAN_OPTIONS -->
+                    </div>
+                </div>
+
+                <div class="custom-select custom-select-small" id="dropdown-filter-tahun">
+                    <button type="button" class="select-trigger">
+                        <span class="selected-text"><!-- SELECTED_TAHUN_TEXT --></span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options">
+                        <!-- YEAR_OPTIONS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th width="15%">Nomer Order</th>
+                        <th width="15%">Tanggal Masuk</th>
+                        <th width="15%">Jenis</th>
+                        <th width="15%">Layanan</th>
+                        <th width="15%">Status Layanan</th>
+                        <th width="15%">Biaya</th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
+                <tbody id="order-history-table-body">
+                    <!-- ORDER_HISTORY_ROWS -->
+                </tbody>
+            </table>
+        </div>
+        <div class="order-pagination-footer">
+            <div class="order-pagination-left">
+                <div class="order-pagination-info" id="orderPaginationInfo"></div>
+                <div class="order-pagination-controls">
+                    <span class="pagination-per-page-label">Tampilkan</span>
+                    <select id="orderPerPageSelect" class="pagination-per-page-select">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div id="orderPagination" class="order-pagination-container"></div>
+        </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS_LIST -->
+
+</div>
+
+<script>
+    // --- Order History Pagination ---
+    (function() {
+        let itemsPerPage = 10;
+        let currentPage = 1;
+
+        function getOrderRows() {
+            const tbody = document.getElementById('order-history-table-body');
+            if (!tbody) return [];
+            return Array.from(tbody.querySelectorAll('tr'));
+        }
+
+        function isEmptyState(rows) {
+            return rows.length === 1 && rows[0].querySelector('td[colspan]');
+        }
+
+        function renderOrderPagination() {
+            const rows = getOrderRows();
+            const container = document.getElementById('orderPagination');
+            const infoEl = document.getElementById('orderPaginationInfo');
+            if (!container) return;
+
+            // Don't paginate empty states
+            if (rows.length === 0 || isEmptyState(rows)) {
+                container.innerHTML = '';
+                if (infoEl) infoEl.textContent = '';
+                rows.forEach(r => r.style.display = '');
+                return;
+            }
+
+            const totalRows = rows.length;
+            const totalPages = Math.ceil(totalRows / itemsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = Math.min(start + itemsPerPage, totalRows);
+
+            rows.forEach((row, index) => {
+                row.style.display = (index >= start && index < end) ? '' : 'none';
+            });
+
+            // Update info text
+            if (infoEl) {
+                infoEl.textContent = `Menampilkan ${start + 1} - ${end} dari ${totalRows} data`;
+            }
+
+            // Jika hanya 1 halaman, tampilkan tombol disabled agar layout konsisten
+            if (totalPages <= 1) {
+                container.innerHTML = `<button class="order-page-btn" disabled>Prev</button><button class="order-page-btn active" disabled>1</button><button class="order-page-btn" disabled>Next</button>`;
+                return;
+            }
+
+            let html = '';
+            html += `<button class="order-page-btn" ${currentPage === 1 ? 'disabled' : ''} data-page="${currentPage - 1}">Prev</button>`;
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="order-page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+
+            html += `<button class="order-page-btn" ${currentPage === totalPages ? 'disabled' : ''} data-page="${currentPage + 1}">Next</button>`;
+            container.innerHTML = html;
+
+            container.querySelectorAll('.order-page-btn:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentPage = parseInt(this.dataset.page);
+                    renderOrderPagination();
+                });
+            });
+        }
+
+        // Per-page dropdown handler
+        const perPageSelect = document.getElementById('orderPerPageSelect');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', function() {
+                itemsPerPage = parseInt(this.value);
+                currentPage = 1;
+                renderOrderPagination();
+            });
+        }
+
+        // Initial render
+        renderOrderPagination();
+
+        // Expose for re-render after filter updates
+        window._renderOrderPagination = function() {
+            currentPage = 1;
+            renderOrderPagination();
+        };
+    })();
+
+    // Initialize custom dropdowns for filtering
+    if (typeof setupCustomDropdown === 'function') {
+        const applyFilters = () => {
+            const status = document.getElementById('dropdown-filter-status').querySelector('.option.selected')?.dataset.value || 'active';
+            const layanan = document.getElementById('dropdown-filter-layanan').querySelector('.option.selected')?.dataset.value || '';
+            const tahun = document.getElementById('dropdown-filter-tahun').querySelector('.option.selected')?.dataset.value || '';
+
+            console.log('Applying Filters:', { status, layanan, tahun });
+
+            // Use specialized call to only update the table body
+            loadSection('beranda', null, null, { status, layanan, tahun }, {
+                targetSelector: '#order-history-table-body',
+                skipAnimation: true,
+                skipScroll: true,
+                onlyTable: true
+            }).then(() => {
+                // Re-initialize pagination after table content is refreshed
+                if (typeof window._renderOrderPagination === 'function') {
+                    window._renderOrderPagination();
+                }
+                console.log('Table updated live');
+            });
+        };
+
+        setupCustomDropdown('dropdown-filter-status', null, (val) => {
+            applyFilters();
+        });
+        setupCustomDropdown('dropdown-filter-layanan', null, (val) => {
+            applyFilters();
+        });
+        setupCustomDropdown('dropdown-filter-tahun', null, (val) => {
+            applyFilters();
+        });
+    }
+</script>

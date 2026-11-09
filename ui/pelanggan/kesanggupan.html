@@ -1,0 +1,714 @@
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/beranda.css?v=3">
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/kesanggupan.css?v=4">
+
+<div class="home-container">
+
+  <div class="header-section">
+    <h1>Kesanggupan Pembayaran</h1>
+    <p class="header-desc">Unduh template, tanda tangani, lalu unggah kembali surat kesanggupan Anda untuk diverifikasi.
+    </p>
+  </div>
+
+  <!-- Card: Template Info -->
+  <div class="content-card order-section" style="min-height: unset;">
+    <div class="card-header">
+      <h3><i class="ri-file-text-line" style="margin-right:8px; color:#62A0FD;"></i>Template Surat Kesanggupan</h3>
+    </div>
+    <div id="template-info-container" style="margin-bottom:8px;">
+      <div style="padding:16px 20px; background:#f8fafc; border:1px solid #e2e8f0;
+                  border-radius:10px; display:inline-flex; align-items:center; gap:12px;">
+        <div class="spinner-small" id="template-loader"></div>
+        <span id="template-name" style="color:#475569; font-weight:600; font-size:0.9rem;">
+          Memeriksa ketersediaan template...
+        </span>
+      </div>
+    </div>
+
+    <div id="download-action-container" style="display:none; margin-bottom:4px;">
+      <a href="{{ BASE }}/dashboard/kesanggupan/download-template"
+        style="display:inline-flex; align-items:center; gap:8px; padding:11px 24px;
+                background:#62A0FD; color:white; font-weight:600; font-size:14px;
+                border-radius:10px; text-decoration:none; transition:all 0.2s; box-shadow: 0 4px 12px rgba(98, 160, 253, 0.3);">
+        <i class="ri-download-line"></i> Unduh Template (.doc/.docx)
+      </a>
+    </div>
+
+    <div id="no-template-container" style="display:none;">
+      <div style="padding:16px 20px; background:#fff1f2; border:1px solid #fecdd3;
+                  border-radius:10px; color:#be123c; font-weight:500; font-size:14px;">
+        <i class="ri-error-warning-line"></i>
+        Maaf, saat ini belum ada template aktif. Silakan hubungi admin.
+      </div>
+    </div>
+  </div>
+
+  <!-- Card: Form Upload -->
+  <div class="content-card order-section" style="min-height: unset;">
+    <div class="card-header">
+      <h3><i class="ri-upload-cloud-line" style="margin-right:8px; color:#62A0FD;"></i>Upload Surat Kesanggupan</h3>
+    </div>
+
+    <form id="upload-kesanggupan-form">
+      <div class="form-group-pay">
+        <label class="pay-label">
+          File Surat Kesanggupan <span style="color:#e74a3b">*</span>
+        </label>
+        <div class="dropzone-container" id="drop-zone-upload">
+          <input type="file" id="signed-file" accept=".pdf,application/pdf" style="display:none;">
+          <i class="ri-file-upload-line dropzone-icon"></i>
+          <div class="dropzone-text" id="drop-zone-text-upload">Klik atau seret file ke sini</div>
+          <div class="dropzone-subtext" id="drop-zone-sub-upload">Format: PDF — Maks. 10MB</div>
+        </div>
+      </div>
+
+      <div class="form-group-pay">
+        <label class="pay-label">
+          Keterangan <span style="color:#e74a3b">*</span>
+        </label>
+        <input type="text" id="inp-keterangan-kes" class="pay-input"
+          placeholder="Contoh: Surat kesanggupan pembayaran atas invoice INV-2025-0042" maxlength="255">
+      </div>
+
+      <div class="pay-submit-row">
+        <button type="submit" id="btn-submit-upload" class="btn-pay-submit" disabled>
+          <i class="ri-send-plane-line"></i> Kirim Surat Kesanggupan
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Card: Riwayat -->
+  <div class="content-card order-section" style="min-height: unset;">
+    <div class="card-header">
+      <h3><i class="ri-history-line" style="margin-right:8px; color:#62A0FD;"></i>Riwayat Surat Kesanggupan Pembayaran</h3>
+      <div style="display:flex; gap:12px; align-items:center;">
+
+        <!-- Dropdown Tahun -->
+        <div class="custom-select custom-select-small" id="dd-kesanggupan-tahun">
+          <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Tahun</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="select-options" id="dd-kesanggupan-tahun-options">
+            <div class="option selected" data-value="">Semua Tahun</div>
+          </div>
+        </div>
+
+        <!-- Dropdown Status -->
+        <div class="custom-select custom-select-small" id="dd-kesanggupan-status">
+          <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Status</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="select-options">
+            <div class="option selected" data-value="">Semua Status</div>
+            <div class="option" data-value="Pending">Pending</div>
+            <div class="option" data-value="Disetujui">Disetujui</div>
+            <div class="option" data-value="Perbaiki">Perbaiki</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table" id="tabel-riwayat-kesanggupan">
+        <thead>
+          <tr>
+            <th width="15%" style="text-align:center;">Tanggal Upload</th>
+            <th width="20%" style="text-align:center;">File Surat</th>
+            <th width="25%" style="text-align:center;">Keterangan</th>
+            <th width="20%" style="text-align:center;">Catatan</th>
+            <th width="10%" style="text-align:center;">Status</th>
+            <th width="10%" style="text-align:center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-riwayat-kesanggupan">
+          <tr>
+            <td colspan="6" style="text-align:center; padding:48px; color:#94a3b8;">
+              Memuat data...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notes -->
+    <div
+      style="display:flex; align-items:flex-start; gap:10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; margin-top:16px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div style="font-size:13px; color:#1e40af; line-height:1.6;">
+        <span style="font-weight:700;">Perhatian</span><br>
+        Jika surat kesanggupan Anda perlu diperbaiki, gunakan tombol <strong>Upload Ulang</strong> di kolom Aksi pada
+        baris yang sesuai.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Modal Upload Ulang -->
+<div id="modal-revisi-kesanggupan"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+  <div
+    style="background:#fff; width:90%; max-width:600px; border-radius:16px; padding:32px; position:relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif;">
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid #f1f5f9; padding-bottom:16px;">
+      <h3 style="margin:0; color:#0f172a; font-size:20px; font-weight:700;">
+        <i class="ri-refresh-line" style="color:#62A0FD; margin-right:8px;"></i> Upload Ulang Surat Kesanggupan
+      </h3>
+    </div>
+
+    <p style="color:#64748b; font-size:14px; margin-bottom:24px;">
+      Silakan unggah kembali surat kesanggupan untuk menggantikan dokumen yang perlu diperbaiki.
+    </p>
+
+    <form id="form-revisi-kesanggupan">
+      <input type="hidden" id="modal-id-perbaikan-kesanggupan">
+
+      <div id="modal-kesanggupan-reason-container"
+        style="display:none; margin-bottom:24px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px;">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <i class="ri-information-line" style="color:#3b82f6; font-size:1.25rem; flex-shrink:0;"></i>
+          <div>
+            <div style="font-weight:700; color:#1e40af; font-size:14px; margin-bottom:4px;">Catatan Perbaikan:</div>
+            <div id="modal-kesanggupan-reason-text" style="color:#1e3a8a; font-size:14px; line-height:1.6;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group-pay">
+        <label class="pay-label">
+          File Surat Kesanggupan <span style="color:#e74a3b">*</span>
+        </label>
+        <div class="dropzone-container" id="modal-dropzone-kesanggupan">
+          <input type="file" id="modal-inp-file-kesanggupan" accept=".pdf,application/pdf" style="display:none">
+          <i class="ri-file-upload-line dropzone-icon"></i>
+          <div class="dropzone-text" id="modal-dz-text-kesanggupan">Klik atau seret file ke sini</div>
+          <div class="dropzone-subtext" id="modal-dz-subtext-kesanggupan">Format: PDF — Maks. 10MB</div>
+        </div>
+      </div>
+
+      <div class="form-group-pay">
+        <label class="pay-label">
+          Keterangan <span style="color:#e74a3b">*</span>
+        </label>
+        <input type="text" id="modal-inp-keterangan-kesanggupan" class="pay-input"
+          placeholder="Keterangan mengenai surat kesanggupan ini..." maxlength="255">
+      </div>
+
+      <div
+        style="display:flex; gap:12px; justify-content:flex-end; margin-top:32px; padding-top:20px; border-top:1px solid #f1f5f9;">
+        <button type="button" onclick="tutupModalRevisiKesanggupan()" class="btn-outline">
+          Batal
+        </button>
+        <button type="button" id="modal-btn-submit-kesanggupan" class="btn-pay-submit" disabled>
+          <i class="ri-send-plane-line"></i> Kirim Ulang
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .spinner-small {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e2e8f0;
+    border-top-color: #62A0FD;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<script>
+  (function () {
+
+    /* ── Template Check ─────────────────────────────────── */
+    function fetchTemplate() {
+      fetch(`${window.BASE_URL}/dashboard/api/kesanggupan-pembayaran`)
+        .then(r => r.json())
+        .then(res => {
+          const loader = document.getElementById('template-loader');
+          const name = document.getElementById('template-name');
+          const dlBox = document.getElementById('download-action-container');
+          const noBox = document.getElementById('no-template-container');
+
+          if (loader) loader.style.display = 'none';
+
+          if (res.success && res.data) {
+            name.innerText = res.data.nama_asli;
+            dlBox.style.display = 'block';
+          } else {
+            document.getElementById('template-info-container').style.display = 'none';
+            noBox.style.display = 'block';
+          }
+        })
+        .catch(() => {
+          if (document.getElementById('template-loader'))
+            document.getElementById('template-loader').style.display = 'none';
+          document.getElementById('no-template-container').style.display = 'block';
+        });
+    }
+
+    /* ── Load Riwayat Table ─────────────────────────────── */
+    let allRiwayatKesanggupan = [];
+
+    function loadRiwayat() {
+      fetch(`${window.BASE_URL}/dashboard/api/kesanggupan/riwayat`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            allRiwayatKesanggupan = data.data || [];
+            populateTahunFilterKesanggupan(allRiwayatKesanggupan);
+            applyFilterKesanggupan();
+          }
+        })
+        .catch(() => { });
+    }
+
+    function populateTahunFilterKesanggupan(rows) {
+      const optionsEl = document.getElementById('dd-kesanggupan-tahun-options');
+      if (!optionsEl) return;
+
+      const years = [...new Set(rows.map(r => {
+        const ts = r.created_at || '';
+        return ts ? ts.substring(0, 4) : null;
+      }).filter(Boolean))].sort((a, b) => b - a);
+
+      optionsEl.innerHTML = '<div class="option selected" data-value="">Semua Tahun</div>';
+      years.forEach(y => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.dataset.value = y;
+        div.textContent = y;
+        optionsEl.appendChild(div);
+      });
+
+      if (typeof setupCustomDropdown === 'function') {
+        setupCustomDropdown('dd-kesanggupan-tahun', null, () => applyFilterKesanggupan());
+      }
+    }
+
+    function applyFilterKesanggupan() {
+      const tahun  = document.getElementById('dd-kesanggupan-tahun')?.querySelector('.option.selected')?.dataset.value  || '';
+      const status = document.getElementById('dd-kesanggupan-status')?.querySelector('.option.selected')?.dataset.value || '';
+
+      const filtered = allRiwayatKesanggupan.filter(r => {
+        const rowTahun = (r.created_at || '').substring(0, 4);
+        
+        // Map status backend to UI dropdown status
+        let mappedStatus = 'Pending';
+        if (r.status === 'Disetujui' || r.status === 'approved') mappedStatus = 'Disetujui';
+        if (r.status === 'Perbaiki' || r.status === 'rejected') mappedStatus = 'Perbaiki';
+
+        const matchTahun  = !tahun  || rowTahun === tahun;
+        const matchStatus = !status || mappedStatus === status;
+        return matchTahun && matchStatus;
+      });
+
+      renderRiwayat(filtered);
+    }
+
+    if (typeof setupCustomDropdown === 'function') {
+      setupCustomDropdown('dd-kesanggupan-tahun',  null, () => applyFilterKesanggupan());
+      setupCustomDropdown('dd-kesanggupan-status', null, () => applyFilterKesanggupan());
+    }
+
+    function renderRiwayat(rows) {
+      const tbody = document.getElementById('tbody-riwayat-kesanggupan');
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:32px; color:#94a3b8;">
+        Belum ada riwayat pengajuan.</td></tr>`;
+        return;
+      }
+      const statusMap = {
+        'Disetujui': { color: '#059669', bg: 'transparent', label: 'Disetujui' },
+        'approved': { color: '#059669', bg: 'transparent', label: 'Disetujui' },
+        'Perbaiki': { color: '#dc2626', bg: 'transparent', label: 'Perbaiki' },
+        'rejected': { color: '#dc2626', bg: 'transparent', label: 'Perbaiki' },
+        'Pending': { color: '#d97706', bg: 'transparent', label: 'Pending' },
+        'pending': { color: '#d97706', bg: 'transparent', label: 'Pending' }
+      };
+      tbody.innerHTML = rows.map(r => {
+        const revCount = parseInt(r.revision_count || 0);
+        let uiLabel = r.status;
+        if (r.status === 'Disetujui' || r.status === 'approved') {
+            uiLabel = 'Disetujui';
+        } else if (r.status === 'Perbaiki' || r.status === 'rejected') {
+            const nextRev = revCount + 1;
+            uiLabel = nextRev > 3 ? 'Perbaiki (Maks)' : `Perbaiki ${nextRev}`;
+        } else if (revCount > 0) {
+            uiLabel = `Re-upload (Perbaikan ${revCount})`;
+        } else {
+            uiLabel = 'Pending';
+        }
+
+        const st = statusMap[r.status] || statusMap['Pending'];
+        const tanggal = r.created_at
+          ? new Date(r.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+          : '-';
+
+        let actionHtml = '';
+        if (r.status === 'Perbaiki' || r.status === 'rejected') {
+          actionHtml = `<button
+          class="btn-action btn-text kelola btn-upload-ulang-kes"
+          data-id="${r.id}"
+          data-note="${(r.note || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Upload Ulang
+        </button>`;
+        } else if (r.status === 'Pending' || r.status === 'pending') {
+          if (r.is_revision_pending) {
+            actionHtml = `<button type="button" disabled title="Dokumen tidak dapat dihapus setelah upload ulang" class="btn-action btn-text" style="background:#f1f5f9; color:#94a3b8; border:1px solid #e2e8f0; cursor:not-allowed;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Hapus
+            </button>`;
+          } else {
+            actionHtml = `<button type="button" onclick="hapusKesanggupan(${r.id})" title="Hapus dokumen ini" class="btn-action btn-text delete">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Hapus
+            </button>`;
+          }
+        }
+
+        const fileLink = r.preview_token ? `${window.BASE_URL}/dokumen/view/${r.preview_token}` : '#';
+
+        return `<tr>
+        <td style="white-space:nowrap;">${tanggal}</td>
+        <td>
+          <a href="${fileLink}"
+             target="_blank" style="color:#4e73df; text-decoration:none;">
+            <i class="ri-file-line"></i> ${r.original_name || r.file_name || '-'}
+          </a>
+        </td>
+        <td style="color:#4a5568; font-size:0.85rem;">${r.keterangan || '-'}</td>
+        <td style="color:#64748b; font-size:0.85rem;">
+          ${r.note ? `<span style="color:#1e293b; font-weight: 500;">${r.note}</span>` : '-'}
+        </td>
+        <td>
+          <span style="color:${st.color}; font-size:0.85rem; font-weight:500;">
+            ${uiLabel}
+          </span>
+        </td>
+        <td>${actionHtml}</td>
+      </tr>`;
+      }).join('');
+    }
+
+    /* ── Dropzone ───────────────────────────────────────── */
+    const dz = document.getElementById('drop-zone-upload');
+    const fileInput = document.getElementById('signed-file');
+    const dzText = document.getElementById('drop-zone-text-upload');
+    const dzSub = document.getElementById('drop-zone-sub-upload');
+    const btn = document.getElementById('btn-submit-upload');
+    const inpKet = document.getElementById('inp-keterangan-kes');
+
+    function checkFormReady() {
+      const hasFile = fileInput.files && fileInput.files.length > 0;
+      const hasKet = inpKet.value.trim().length > 0;
+      btn.disabled = !(hasFile && hasKet);
+      btn.style.opacity = (hasFile && hasKet) ? '1' : '0.5';
+      btn.style.cursor = (hasFile && hasKet) ? 'pointer' : 'not-allowed';
+    }
+
+    dz.addEventListener('click', () => fileInput.click());
+
+    dz.addEventListener('dragover', e => {
+      e.preventDefault();
+      dz.style.borderColor = '#4e73df';
+      dz.style.background = '#eff6ff';
+    });
+    dz.addEventListener('dragleave', () => {
+      dz.style.borderColor = '#cbd5e1';
+      dz.style.background = '#f8fafc';
+    });
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.style.borderColor = '#cbd5e1';
+      dz.style.background = '#f8fafc';
+      if (e.dataTransfer.files[0]) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) handleFileSelected(this.files[0]);
+    });
+
+    inpKet.addEventListener('input', checkFormReady);
+
+    function handleFileSelected(file) {
+      // Validasi ekstensi
+      const allowedExts = ['pdf'];
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowedExts.includes(ext)) {
+        showMessage('Format Tidak Diizinkan', `File .${ext} tidak diizinkan. Gunakan format: PDF.`, 'error');
+        fileInput.value = '';
+        dzText.innerText = 'Klik atau seret file ke sini';
+        dzSub.innerText = 'Format: PDF — Maks. 10MB';
+        checkFormReady();
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        showMessage('Ukuran Terlalu Besar', 'Ukuran file maksimal 10MB.', 'error');
+        fileInput.value = '';
+        dzText.innerText = 'Klik atau seret file ke sini';
+        dzSub.innerText = 'Format: PDF — Maks. 10MB';
+        checkFormReady();
+        return;
+      }
+      dzText.innerHTML = `<span style="color:#4e73df;">${file.name}</span>`;
+      dzSub.innerText = 'File terpilih. Klik untuk mengganti.';
+      dz.style.borderColor = '#4e73df';
+      checkFormReady();
+    }
+
+    /* ── Submit ─────────────────────────────────────────── */
+    document.getElementById('upload-kesanggupan-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      showConfirm('Kirim surat kesanggupan ini?', function () {
+        const origHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ri-loader-4-line"></i> Mengirim...';
+
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('keterangan', inpKet.value.trim());
+
+        fetch(`${window.BASE_URL}/dashboard/api/kesanggupan/upload`, {
+          method: 'POST',
+          body: fd
+        })
+          .then(r => r.text())
+          .then(text => {
+            try {
+              const res = JSON.parse(text);
+              if (res.success) {
+                showMessage('Berhasil', res.message, 'success');
+                fileInput.value = '';
+                inpKet.value = '';
+                dzText.innerText = 'Klik atau seret file ke sini';
+                dzSub.innerText = 'Format: PDF — Maks. 10MB';
+                dz.style.borderColor = '#cbd5e1';
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                btn.innerHTML = origHTML;
+                loadRiwayat();
+
+              } else {
+                showMessage('Gagal', res.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = origHTML;
+              }
+            } catch (e) {
+              console.error('Server error raw text:', text);
+              showMessage('Error Server', text.substring(0, 100), 'error');
+              btn.disabled = false;
+              btn.innerHTML = origHTML;
+            }
+          })
+          .catch(err => {
+            showMessage('Error', 'Terjadi kesalahan jaringan.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = origHTML;
+          });
+      }, 'warning');
+    });
+
+    // Event delegation untuk tombol Upload Ulang Kesanggupan
+    document.getElementById('tbody-riwayat-kesanggupan').addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn-upload-ulang-kes');
+      if (btn) {
+        const id = btn.getAttribute('data-id');
+        const note = btn.getAttribute('data-note') || '';
+        mulaiRevisiKes(id, note);
+      }
+    });
+
+    window.mulaiRevisiKes = function (id, note) {
+      document.getElementById('modal-id-perbaikan-kesanggupan').value = id;
+
+      // Tampilkan catatan dari admin
+      const rc = document.getElementById('modal-kesanggupan-reason-container');
+      const rt = document.getElementById('modal-kesanggupan-reason-text');
+      if (rc && rt) {
+        if (note && note.trim() && note !== '-') {
+          rc.style.display = 'block';
+          rt.textContent = note;
+        } else {
+          rc.style.display = 'none';
+        }
+      }
+
+      document.getElementById('modal-revisi-kesanggupan').style.display = 'flex';
+    };
+
+    window.tutupModalRevisiKesanggupan = function () {
+      document.getElementById('modal-revisi-kesanggupan').style.display = 'none';
+      document.getElementById('modal-id-perbaikan-kesanggupan').value = '';
+      document.getElementById('modal-inp-file-kesanggupan').value = '';
+      document.getElementById('modal-inp-keterangan-kesanggupan').value = '';
+      document.getElementById('modal-dz-text-kesanggupan').innerHTML = 'Klik atau seret file ke sini';
+      document.getElementById('modal-dz-subtext-kesanggupan').innerText = 'Format: PDF — Maks. 10MB';
+
+      const rc = document.getElementById('modal-kesanggupan-reason-container');
+      if (rc) rc.style.display = 'none';
+
+      checkModalReadyKesanggupan();
+    };
+
+    // --- Modal Logic ---
+    const modalDropzoneKesanggupan = document.getElementById('modal-dropzone-kesanggupan');
+    const modalFileInputKesanggupan = document.getElementById('modal-inp-file-kesanggupan');
+    const modalDzTextKesanggupan = document.getElementById('modal-dz-text-kesanggupan');
+    const modalDzSubKesanggupan = document.getElementById('modal-dz-subtext-kesanggupan');
+    const modalBtnKesanggupan = document.getElementById('modal-btn-submit-kesanggupan');
+    const modalInpKetKesanggupan = document.getElementById('modal-inp-keterangan-kesanggupan');
+
+    function checkModalReadyKesanggupan() {
+      const hasFile = modalFileInputKesanggupan.files && modalFileInputKesanggupan.files.length > 0;
+      const hasKet = modalInpKetKesanggupan.value.trim().length > 0;
+      modalBtnKesanggupan.disabled = !(hasFile && hasKet);
+      modalBtnKesanggupan.style.opacity = (hasFile && hasKet) ? '1' : '0.5';
+      modalBtnKesanggupan.style.cursor = (hasFile && hasKet) ? 'pointer' : 'not-allowed';
+    }
+
+    modalDropzoneKesanggupan.addEventListener('click', () => modalFileInputKesanggupan.click());
+    modalDropzoneKesanggupan.addEventListener('dragover', (e) => { e.preventDefault(); modalDropzoneKesanggupan.style.borderColor = '#4e73df'; modalDropzoneKesanggupan.style.background = '#eff6ff'; });
+    modalDropzoneKesanggupan.addEventListener('dragleave', () => { modalDropzoneKesanggupan.style.borderColor = '#cbd5e1'; modalDropzoneKesanggupan.style.background = '#f8fafc'; });
+    modalDropzoneKesanggupan.addEventListener('drop', (e) => {
+      e.preventDefault();
+      modalDropzoneKesanggupan.style.borderColor = '#cbd5e1'; modalDropzoneKesanggupan.style.background = '#f8fafc';
+      if (e.dataTransfer.files[0]) {
+        modalFileInputKesanggupan.files = e.dataTransfer.files;
+        handleModalFileSelectedKesanggupan(e.dataTransfer.files[0]);
+      }
+    });
+
+    modalFileInputKesanggupan.addEventListener('change', function () {
+      if (this.files && this.files[0]) handleModalFileSelectedKesanggupan(this.files[0]);
+    });
+    modalInpKetKesanggupan.addEventListener('input', checkModalReadyKesanggupan);
+
+    function handleModalFileSelectedKesanggupan(file) {
+      const allowedExts = ['pdf'];
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowedExts.includes(ext)) {
+        showMessage('Format Tidak Diizinkan', `File .${ext} tidak diizinkan. Gunakan format: PDF.`, 'error');
+        modalFileInputKesanggupan.value = '';
+        modalDzTextKesanggupan.innerHTML = 'Klik atau seret file ke sini';
+        modalDzSubKesanggupan.innerText = 'Format: PDF — Maks. 10MB';
+        checkModalReadyKesanggupan();
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showMessage('Ukuran Terlalu Besar', 'Ukuran file maksimal 10MB.', 'error');
+        modalFileInputKesanggupan.value = '';
+        modalDzTextKesanggupan.innerHTML = 'Klik atau seret file ke sini';
+        modalDzSubKesanggupan.innerText = 'Format: PDF — Maks. 10MB';
+        checkModalReadyKesanggupan();
+        return;
+      }
+      modalDzTextKesanggupan.innerHTML = `<span style="color:#4e73df;">${file.name}</span>`;
+      modalDzSubKesanggupan.innerText = 'File terpilih. Klik untuk mengganti.';
+      modalDropzoneKesanggupan.style.borderColor = '#4e73df';
+      checkModalReadyKesanggupan();
+    }
+
+    modalBtnKesanggupan.addEventListener('click', function () {
+      if (!modalFileInputKesanggupan.files || modalFileInputKesanggupan.files.length === 0) return;
+
+      showConfirm('Kirim ulang surat kesanggupan ini?', function () {
+        const originalText = modalBtnKesanggupan.innerHTML;
+        modalBtnKesanggupan.disabled = true;
+        modalBtnKesanggupan.innerHTML = '<i class="ri-loader-4-line"></i> Mengirim...';
+
+        const formData = new FormData();
+        formData.append('id_perbaikan', document.getElementById('modal-id-perbaikan-kesanggupan').value);
+        formData.append('file', modalFileInputKesanggupan.files[0]);
+        formData.append('keterangan', modalInpKetKesanggupan.value.trim());
+
+        fetch(`${window.BASE_URL}/dashboard/api/kesanggupan/upload`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(r => r.text())
+          .then(text => {
+            try {
+              const data = JSON.parse(text);
+              if (data.success) {
+                showMessage('Berhasil', data.message, 'success', () => location.reload());
+              } else {
+                showMessage('Gagal', data.message, 'error');
+                modalBtnKesanggupan.disabled = false;
+                modalBtnKesanggupan.innerHTML = originalText;
+              }
+            } catch (e) {
+              console.error('Server error raw text:', text);
+              showMessage('Error Server', text.substring(0, 100), 'error');
+              modalBtnKesanggupan.disabled = false;
+              modalBtnKesanggupan.innerHTML = originalText;
+            }
+          })
+          .catch(err => {
+            showMessage('Error', 'Terjadi kesalahan jaringan.', 'error');
+            modalBtnKesanggupan.disabled = false;
+            modalBtnKesanggupan.innerHTML = originalText;
+          });
+      }, 'warning');
+    });
+
+    window.hapusKesanggupan = function (id) {
+      showConfirm('Hapus surat kesanggupan ini?', function () {
+        const formData = new FormData();
+        formData.append('id', id);
+
+        fetch(`${window.BASE_URL}/dashboard/api/kesanggupan/delete`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              showMessage('Berhasil', data.message, 'success');
+              loadRiwayat();
+            } else {
+              showMessage('Gagal', data.message, 'error');
+            }
+          })
+          .catch(() => {
+            showMessage('Error', 'Terjadi kesalahan saat menghapus data.', 'error');
+          });
+      }, 'warning');
+    };
+
+    fetchTemplate();
+    loadRiwayat();
+  })();
+</script>

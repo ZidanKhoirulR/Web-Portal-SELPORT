@@ -1,0 +1,910 @@
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/kuesioner.css?v=5">
+<div class="kuesioner-container">
+    <div class="view-header">
+        <h1 class="view-title">Survei Kepuasan Masyarakat & Anti Korupsi</h1>
+    </div>
+
+    <form id="kuesioner-form" class="survey-form">
+        <!-- Hidden: order_id for database linkage -->
+        <input type="hidden" name="order_id" value="{{ order_id_raw }}">
+        <div class="form-step active" id="form-step-1">
+            <h3 class="step-heading">DATA RESPONDEN</h3>
+
+            <div class="form-group">
+                <label>Jenis Pelayanan yang diterima <span class="required-asterisk">*</span></label>
+                <input type="text" name="jenis_pelayanan" id="jenis_pelayanan" class="readonly-field" value="{{ jenis_pelayanan_otomatis }}" readonly required>
+            </div>
+
+            <div class="form-group">
+                <label>Nama Instansi/Perusahaan <span class="required-asterisk">*</span></label>
+                <input type="text" name="instansi" class="readonly-field" value="{{ nama_perusahaan }}" readonly
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Nama Lengkap <span class="required-asterisk">*</span></label>
+                <input type="text" name="nama_lengkap" class="readonly-field" value="{{ nama_lengkap }}" readonly
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Nomor HP <span class="required-asterisk">*</span></label>
+                <input type="text" name="no_hp" class="readonly-field" value="{{ no_whatsapp }}" readonly required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Usia <span class="required-asterisk">*</span></label>
+                    <div class="custom-select" id="dropdown-usia">
+                        <button type="button" class="select-trigger">
+                            <span class="selected-text">Pilih Usia</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option" data-value="">Pilih Usia</div>
+                            <div class="option" data-value="16 - 25 Tahun">16 - 25 Tahun</div>
+                            <div class="option" data-value="26 - 35 Tahun">26 - 35 Tahun</div>
+                            <div class="option" data-value="36 - 45 Tahun">36 - 45 Tahun</div>
+                            <div class="option" data-value="46 - 55 Tahun">46 - 55 Tahun</div>
+                            <div class="option" data-value="56 - 65 Tahun">56 - 65 Tahun</div>
+                            <div class="option" data-value="> 65 Tahun">> 65 Tahun</div>
+                        </div>
+                        <input type="hidden" name="usia" id="usia" value="" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin <span class="required-asterisk">*</span></label>
+                    <input type="text" name="jenis_kelamin" class="readonly-field" value="{{ jenis_kelamin }}" readonly
+                        required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Pendidikan Terakhir <span class="required-asterisk">*</span></label>
+                    <div class="custom-select" id="dropdown-pendidikan">
+                        <button type="button" class="select-trigger">
+                            <span class="selected-text">Pilih Pendidikan</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option" data-value="">Pilih Pendidikan</div>
+                            <div class="option" data-value="SMP kebawah">SMP kebawah</div>
+                            <div class="option" data-value="SMA">SMA</div>
+                            <div class="option" data-value="D1 / D2 / D3 / D4">D1 / D2 / D3 / D4</div>
+                            <div class="option" data-value="S-1">S-1</div>
+                            <div class="option" data-value="S-2 keatas">S-2 keatas</div>
+                        </div>
+                        <input type="hidden" name="pendidikan" id="pendidikan" value="" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status <span class="required-asterisk">*</span></label>
+                    <div class="custom-select" id="dropdown-status">
+                        <button type="button" class="select-trigger">
+                            <span class="selected-text">Pilih Status</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option" data-value="">Pilih Status</div>
+                            <div class="option" data-value="Perusahaan Industri">Perusahaan Industri</div>
+                            <div class="option" data-value="Instansi/Lembaga">Instansi/Lembaga</div>
+                            <div class="option" data-value="Non Industri">Non Industri</div>
+                            <div class="option" data-value="Perorangan">Perorangan</div>
+                        </div>
+                        <input type="hidden" name="status_responden" id="status_responden" value="" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-survey next" onclick="nextStep(1)">
+                    Berikutnya <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-step" id="form-step-2">
+            <h3 class="step-heading">PENILAIAN TERHADAP UNSUR - UNSUR KEPUASAN MASYARAKAT</h3>
+
+            <div class="question-list">
+                <div class="question-item">
+                    <label class="q-label">(U1) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut Saudara tentang persyaratan pelayanan yang harus dipenuhi,
+                        apakah telah sesuai dengan informasi yang diperoleh ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U1" value="Tidak Sesuai" required> Tidak Sesuai</label>
+                        <label><input type="radio" name="U1" value="Kurang Sesuai"> Kurang Sesuai</label>
+                        <label><input type="radio" name="U1" value="Sesuai"> Sesuai</label>
+                        <label><input type="radio" name="U1" value="Sangat Sesuai"> Sangat Sesuai</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U2) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut Saudara tentang kemudahan prosedur pelayanan di Unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U2" value="Tidak Sesuai" required> Tidak Sesuai</label>
+                        <label><input type="radio" name="U2" value="Kurang Sesuai"> Kurang Sesuai</label>
+                        <label><input type="radio" name="U2" value="Sesuai"> Sesuai</label>
+                        <label><input type="radio" name="U2" value="Sangat Sesuai"> Sangat Sesuai</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T1) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Melalui media apa Saudara memperoleh informasi prosedur dan persyaratan pelayanan
+                        Unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T1" value="Petugas Pelayanan" required> Petugas
+                            Pelayanan</label>
+                        <label><input type="radio" name="T1" value="Website"> Website</label>
+                        <label><input type="radio" name="T1" value="Call Center"> Call Center</label>
+                        <label><input type="radio" name="T1" value="Sosial Media"> Sosial Media</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T2) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang kejelasan informasi prosedur dan persyaratan
+                        pelayanan Unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T2" value="Tidak Jelas" required>
+                            Tidak Jelas</label>
+                        <label><input type="radio" name="T2" value="Kurang Jelas">
+                            Kurang Jelas</label>
+                        <label><input type="radio" name="T2" value="Jelas">
+                            Jelas</label>
+                        <label><input type="radio" name="T2" value="Sangat Jelas">
+                            Sangat Jelas</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question" id="T3_wrapper">
+                    <label class="q-label">(T3) :</label>
+                    <p class="q-text">Alasan memilih Tidak Jelas/Kurang Jelas pada T2 (abaikan jika memilih jelas/sangat
+                        jelas)</p>
+                    <textarea name="T3" class="not-required fixed-textarea"
+                        placeholder="Masukkan alasan Anda"></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U3) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang ketepatan waktu penyelesaian pelayanan di Unit
+                        ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U3" value="Tidak Tepat" required> Tidak Tepat</label>
+                        <label><input type="radio" name="U3" value="Kurang Tepat"> Kurang Tepat</label>
+                        <label><input type="radio" name="U3" value="Tepat"> Tepat</label>
+                        <label><input type="radio" name="U3" value="Sangat Tepat"> Sangat Tepat</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U4) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat saudara tentang kesesuaian biaya pelayanan di unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U4" value="Tidak Sesuai" required> Tidak
+                            Sesuai</label>
+                        <label><input type="radio" name="U4" value="Sesuai">
+                            Sesuai</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">(T4) :</label>
+                    <p class="q-text">Jika tidak sesuai dengan ketentuan, biaya apa yang dibebankan kepada saudara ?
+                    </p>
+                    <textarea name="T4" class="not-required fixed-textarea" placeholder="Jenis biaya"></textarea>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">(T5) :</label>
+                    <p class="q-text">Jika tidak sesuai dengan ketentuan, berapa besar biaya yang saudara bayarkan ?
+                    </p>
+                    <textarea name="T5" class="not-required fixed-textarea" placeholder="Besar biaya"></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U5) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang kesesuaian produk pelayanan antara ketentuan
+                        dengan hasil yang diberikan oleh Unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U5" value="Tidak Sesuai" required> Tidak Sesuai</label>
+                        <label><input type="radio" name="U5" value="Kurang Sesuai"> Kurang Sesuai</label>
+                        <label><input type="radio" name="U5" value="Sesuai"> Sesuai</label>
+                        <label><input type="radio" name="U5" value="Sangat Sesuai"> Sangat Sesuai</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U6) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang kemampuan petugas pelayanan dalam memberikan
+                        pelayanan ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U6" value="Tidak Mampu" required> Tidak Mampu</label>
+                        <label><input type="radio" name="U6" value="Kurang Mampu"> Kurang Mampu</label>
+                        <label><input type="radio" name="U6" value="Mampu"> Mampu</label>
+                        <label><input type="radio" name="U6" value="Sangat Mampu"> Sangat Mampu</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U7) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang sikap atau perilaku petugas pelayanan dalam
+                        memberikan pelayanan ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U7" value="Tidak Sopan" required> Tidak Sopan</label>
+                        <label><input type="radio" name="U7" value="Kurang Sopan"> Kurang Sopan</label>
+                        <label><input type="radio" name="U7" value="Sopan"> Sopan</label>
+                        <label><input type="radio" name="U7" value="Sangat Sopan"> Sangat Sopan</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U8) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut Saudara mengenai kemudahan akses layanan pengaduan di Unit ini ?
+                    </p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U8" value="Tidak Mudah" required> Tidak Mudah</label>
+                        <label><input type="radio" name="U8" value="Kurang Mudah"> Kurang Mudah</label>
+                        <label><input type="radio" name="U8" value="Mudah"> Mudah</label>
+                        <label><input type="radio" name="U8" value="Sangat Mudah"> Sangat Mudah</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T6) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Apakah Saudara pernah mengajukan keluhan/pengaduan di Unit ini ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T6" value="Tidak" required> Tidak</label>
+                        <label><input type="radio" name="T6" value="Iya"> Iya</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T7) :</label>
+                    <p class="q-text">Jika YA, Berkaitan dengan apa isi keluhan/pengaduan yang Saudara sampaikan?
+                        (abaikan jika memilih tidak pada nomor T6)</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T7" value="Persyaratan Pelayanan"> Persyaratan Pelayanan</label>
+                        <label><input type="radio" name="T7" value="Prosedur Pelayanan"> Prosedur Pelayanan</label>
+                        <label><input type="radio" name="T7" value="Ketepatan Waktu Penyelesaian"> Ketepatan Waktu Penyelesaian</label>
+                        <label><input type="radio" name="T7" value="Biaya / Tarif"> Biaya / Tarif</label>
+                        <label><input type="radio" name="T7" value="Petugas Pelayanan"> Petugas Pelayanan</label>
+                        <label><input type="radio" name="T7" value="Sarana dan Prasarana"> Sarana dan Prasarana</label>
+                        <label><input type="radio" name="T7" value="Lainnya"> Lainnya</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">(T8) :</label>
+                    <p class="q-text">Jika YA, Uraikan isi pengaduan yang pernah Saudara sampaikan
+                        (abaikan jika memilih tidak pada nomor T6)</p>
+                    <textarea name="T8" class="not-required fixed-textarea"
+                        placeholder="Uraikan isi pengaduan"></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T9) :</label>
+                    <p class="q-text">Jika YA, Bagaimana pendapat Saudara tentang ketanggapan petugas pelayanan
+                        terhadap keluhan/pengaduan yang disampaikan?
+                        (abaikan jika memilih tidak pada nomor T6)</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T9" value="Tidak Tanggap"> Tidak Tanggap</label>
+                        <label><input type="radio" name="T9" value="Kurang Tanggap"> Kurang Tanggap</label>
+                        <label><input type="radio" name="T9" value="Tanggap"> Tanggap</label>
+                        <label><input type="radio" name="T9" value="Sangat Tanggap"> Sangat Tanggap</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question" id="T10_wrapper">
+                    <label class="q-label">(T10) :</label>
+                    <p class="q-text">Alasan memilih Tidak Tanggap/Kurang Tanggap pada nomor T9?</p>
+                    <textarea name="T10" class="not-required fixed-textarea"
+                        placeholder="Masukkan alasan Anda"></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(T11) :</label>
+                    <p class="q-text">Jika YA, Apakah tindak lanjut atas pengaduan yang disampaikan telah sesuai
+                        dengan yang Saudara harapkan?
+                        (abaikan jika memilih tidak pada nomor T6)</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="T11" value="Tidak Sesuai"> Tidak Sesuai</label>
+                        <label><input type="radio" name="T11" value="Sesuai"> Sesuai</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question" id="T12_wrapper">
+                    <label class="q-label">(T12) :</label>
+                    <p class="q-text">Alasan memilih Tidak Sesuai pada nomor T11?</p>
+                    <textarea name="T12" class="not-required fixed-textarea"
+                        placeholder="Masukkan alasan Anda"></textarea>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.1) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat saudara tentang kondisi ruang tunggu unit pelayanan kami ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_1" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_1" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_1" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_1" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.2) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang kondisi toilet unit pelayanan kami ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_2" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_2" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_2" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_2" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.3) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat Saudara tentang kondisi fasilitas untuk disabilitas unit
+                        pelayanan kami ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_3" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_3" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_3" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_3" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.4) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat saudara tentang kondisi tempat parkir di Unit pelayanan kami?
+                    </p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_4" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_4" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_4" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_4" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.5) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat saudara tentang kondisi sarana keamanan (pemeriksaan masuk
+                        gedung, penitipan barang, dll) di unit pelayanan kami ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_5" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_5" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_5" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_5" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(U9.6) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana pendapat saudara tentang kondisi kantin di unit pelayanan kami ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="U9_6" value="Tidak Baik" required> Tidak Baik</label>
+                        <label><input type="radio" name="U9_6" value="Kurang Baik"> Kurang Baik</label>
+                        <label><input type="radio" name="U9_6" value="Baik"> Baik</label>
+                        <label><input type="radio" name="U9_6" value="Sangat Baik"> Sangat Baik</label>
+                    </div>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">(T13) :</label>
+                    <p class="q-text">Jika ada, inovasi pelayanan apa yang saudara harapkan dari Unit pelayanan kami?
+                    </p>
+                    <textarea name="T13" class="not-required fixed-textarea"
+                        placeholder="Inovasi yang diharapkan"></textarea>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">(T14) :</label>
+                    <p class="q-text">Jelaskan alasan dari inovasi pelayanan yang Saudara harapkan ?</p>
+                    <textarea name="T14" class="not-required fixed-textarea" placeholder="Alasan inovasi"></textarea>
+                </div>
+
+                <div class="question-item full-width-question">
+                    <label class="q-label">Saran / Opini :</label>
+                    <p class="q-text">Saran/ opini Anda Untuk Meningkatkan Kualitas Pelayanan Jasa di BBSPJIS :</p>
+                    <textarea name="opini" class="not-required fixed-textarea" placeholder="Saran Anda"></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-survey prev" onclick="prevStep(2)">
+                    <i class="ri-arrow-left-line"></i> Sebelumnya
+                </button>
+                <button type="button" class="btn-survey next" onclick="nextStep(2)">
+                    Berikutnya <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-step" id="form-step-3">
+            <h3 class="step-heading">PENILAIAN TERHADAP UNSUR-UNSUR PELAYANAN YANG BEBAS DARI KORUPSI</h3>
+
+            <div class="question-list">
+                <div class="question-item">
+                    <label class="q-label">(UK1) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang prosedur pelayanan yang ditetapkan, apakah sudah
+                        memadai dan bersih dari korupsi, kolusi, dan nepotisme (KKN) ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK1" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK1" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK1" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK1" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK2) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang petugas pelayanan, apakah petugas pelayanan
+                        bersih tidak memberikan pelayanan di luar prosedur yang telah ditetapkan dengan imbalan
+                        uang/barang ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK2" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK2" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK2" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK2" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK3) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang praktik percaloan, apakah Unit ini bersih tidak
+                        terdapat praktik percaloan / perantara yang tidak resmi ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK3" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK3" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK3" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK3" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK4) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang petugas pelayanan, apakah Petugas pelayanan
+                        bersikap adil dan tidak diskriminatif ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK4" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK4" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK4" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK4" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK5) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang pungutan liar, apakah Unit ini bersih tidak
+                        terdapat pungutan liar ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK5" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK5" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK5" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK5" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK6) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang petugas pelayanan, apakah petugas pelayanan
+                        tidak meminta / menuntut imbalan uang / barang terkait pelayanan yang diberikan ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK6" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK6" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK6" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK6" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK7) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang petugas pelayanan, apakah petugas pelayanan
+                        bersih menolak uang / barang terkait pelayanan yang diberikan ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK7" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK7" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK7" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK7" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UK8) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Bagaimana menurut saudara tentang penanganan pengaduan di unit ini, apakah
+                        penanganan pengaduan dilakukan dengan adil tidak ada diskriminasi ?</p>
+                    <div class="radio-options">
+                        <label><input type="radio" name="UK8" value="Tidak Setuju" required> Tidak Setuju</label>
+                        <label><input type="radio" name="UK8" value="Kurang Setuju"> Kurang Setuju</label>
+                        <label><input type="radio" name="UK8" value="Setuju"> Setuju</label>
+                        <label><input type="radio" name="UK8" value="Sangat Setuju"> Sangat Setuju</label>
+                    </div>
+                </div>
+
+                <div class="question-item">
+                    <label class="q-label">(UR1) <span class="required-asterisk">*</span> :</label>
+                    <p class="q-text">Seberapa besar kemungkinan saudara merekomendasikan produk layanan BBSPJIS kepada
+                        mitra atau kolega saudara ?</p>
+                    <div class="nps-wrapper">
+                        <span class="nps-label left">Sangat Tidak Mungkin</span>
+                        <div class="nps-scale">
+                            <label class="nps-item"><input type="radio" name="UR1" value="1"
+                                    required><span>1</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="2"><span>2</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="3"><span>3</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="4"><span>4</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="5"><span>5</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="6"><span>6</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="7"><span>7</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="8"><span>8</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="9"><span>9</span></label>
+                            <label class="nps-item"><input type="radio" name="UR1" value="10"><span>10</span></label>
+                        </div>
+                        <span class="nps-label right">Sangat Mungkin</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-survey prev" onclick="prevStep(3)">
+                    <i class="ri-arrow-left-line"></i> Sebelumnya
+                </button>
+                <button type="submit" class="btn-survey submit">Kirim Kuesioner <i
+                        class="ri-send-plane-fill"></i></button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</div>
+
+<style>
+    /* Ensure modal-error style for the global confirm-modal when used as error message */
+    .modal-box.modal-error #confirm-ok {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: white !important;
+    }
+
+    .modal-box.modal-error #confirm-ok:hover {
+        background: #dc2626 !important;
+        border-color: #dc2626 !important;
+        box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.2) !important;
+    }
+
+    .modal-box.modal-error .modal-icon svg {
+        stroke: #ef4444 !important;
+    }
+</style>
+
+<script>
+    // Initialize custom dropdowns
+    if (typeof setupCustomDropdown === 'function') {
+        setupCustomDropdown('dropdown-usia', 'usia');
+        setupCustomDropdown('dropdown-pendidikan', 'pendidikan');
+        setupCustomDropdown('dropdown-status', 'status_responden');
+    }
+
+    // Utility for conditional fields
+    function toggleConditionField(sourceName, wrapperId, targetValues) {
+        const source = document.querySelector(`[name="${sourceName}"]`);
+        const wrapper = document.getElementById(wrapperId);
+        if (!source || !wrapper) return;
+
+        if (targetValues.includes(source.value)) {
+            wrapper.style.display = 'block';
+            wrapper.querySelectorAll('input, select, textarea').forEach(el => {
+                if (!el.classList.contains('not-required')) {
+                    el.setAttribute('required', 'required');
+                }
+            });
+        } else {
+            wrapper.style.display = 'none';
+            wrapper.querySelectorAll('input, select, textarea').forEach(el => el.removeAttribute('required'));
+        }
+    }
+
+    // Clear errors on input
+    document.getElementById('kuesioner-form').addEventListener('input', function (e) {
+        if (e.target.classList.contains('field-error')) {
+            e.target.classList.remove('field-error');
+        }
+        if (e.target.type === 'radio') {
+            const wrapper = e.target.closest('.radio-options, .nps-scale');
+            if (wrapper) wrapper.classList.remove('radio-error-wrapper');
+        }
+    });
+
+    document.getElementById('kuesioner-form').addEventListener('change', function (e) {
+        if (e.target.classList.contains('field-error')) {
+            e.target.classList.remove('field-error');
+        }
+        // If it's a hidden input from custom select
+        if (e.target.closest('.custom-select')) {
+            e.target.closest('.custom-select').classList.remove('field-error');
+        }
+    });
+
+    // Load SweetAlert2 dynamically if not present
+    if (typeof Swal === 'undefined') {
+        const swalScript = document.createElement('script');
+        swalScript.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+        document.head.appendChild(swalScript);
+    }
+
+    // Handle Custom Select Triggers to clear error
+    document.querySelectorAll('.custom-select .select-trigger').forEach(trigger => {
+        trigger.addEventListener('click', function () {
+            this.closest('.custom-select').classList.remove('field-error');
+        });
+    });
+
+    // Helper: check if element is hidden (CSS class or inline style)
+    function isHidden(el) {
+        return !el || getComputedStyle(el).display === 'none';
+    }
+
+    // Helper: check if element is inside any hidden container (form-step or conditional-group)
+    function isInHiddenContainer(el) {
+        // Skip fields in form steps that are not active (user already passed those steps)
+        const formStep = el.closest('.form-step');
+        if (formStep && !formStep.classList.contains('active')) return true;
+        // Skip fields in hidden conditional groups (e.g. T7-T12 when T6 = 'Tidak')
+        const condGroup = el.closest('.conditional-group');
+        if (condGroup && isHidden(condGroup)) return true;
+        return false;
+    }
+
+    // Handle Form Submission
+    document.getElementById('kuesioner-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Final level validation — only validate the currently active step
+        const form = document.getElementById('kuesioner-form');
+        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+        const radios = form.querySelectorAll('.radio-options, .nps-scale');
+        let valid = true;
+        let firstErrorElement = null;
+
+        // Check standard inputs (skip hidden steps & hidden conditional groups)
+        inputs.forEach(el => {
+            if (isInHiddenContainer(el)) return;
+
+            if (el.type === 'hidden' && el.classList.contains('custom-select-input') || el.closest('.custom-select')) {
+                // For custom select validation
+                const val = el.value;
+                if (!val || val === "") {
+                    valid = false;
+                    const customSelect = el.closest('.custom-select');
+                    if (customSelect) customSelect.classList.add('field-error');
+                    if (!firstErrorElement) firstErrorElement = (customSelect || el);
+                }
+            } else if (!el.value || el.value === "") {
+                valid = false;
+                el.classList.add('field-error');
+                if (!firstErrorElement) firstErrorElement = el;
+            }
+        });
+
+        // Check radio groups (skip hidden steps & hidden conditional groups)
+        radios.forEach(wrapper => {
+            if (isInHiddenContainer(wrapper)) return;
+
+            const firstRadio = wrapper.querySelector('input[type="radio"]');
+            if (!firstRadio || !firstRadio.hasAttribute('required')) return;
+
+            const name = firstRadio.getAttribute('name');
+            if (name && !form.querySelector(`input[name="${name}"]:checked`)) {
+                valid = false;
+                wrapper.classList.add('radio-error-wrapper');
+                if (!firstErrorElement) firstErrorElement = wrapper;
+            }
+        });
+
+        if (!valid) {
+            if (firstErrorElement) {
+                firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Mohon lengkapi semua data yang wajib diisi (bertanda bintang).',
+                    icon: 'warning',
+                    confirmButtonColor: '#2C7BE5'
+                });
+            } else {
+                showMessage('Peringatan', 'Mohon lengkapi semua data yang wajib diisi (bertanda bintang).', 'error');
+            }
+            return;
+        }
+
+        showConfirm('Apakah saudara sudah yakin dengan jawaban kuesioner yang telah diisi tersebut?', window.submitSurvey);
+    });
+
+    window.submitSurvey = async function () {
+        const form = document.getElementById('kuesioner-form');
+        const formData = new FormData(form);
+
+        // Ensure all checked radios are captured
+        form.querySelectorAll('input[type="radio"]:checked').forEach(r => {
+            if (!formData.has(r.name)) formData.set(r.name, r.value);
+        });
+
+        try {
+            const BASE_URL = window.BASE_URL || '';
+            const res = await fetch(`${BASE_URL}/dashboard/kuesioner/submit`, {
+                method: 'POST',
+                body: formData
+            });
+            const json = await res.json();
+
+            if (json.success) {
+                const orderIdRaw   = "{{ order_id_raw }}";
+                const jenisLayanan = "{{ sample_type }}";
+                localStorage.setItem('kuesioner_done_' + jenisLayanan + '_' + orderIdRaw, 'true');
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Terima kasih! Kuesioner Anda telah berhasil dikirim.',
+                        icon: 'success',
+                        confirmButtonColor: '#2C7BE5'
+                    }).then(() => {
+                        sessionStorage.setItem('open_download_tab', 'true');
+                        loadSection('detailorder', '{{ sample_type }}', '{{ order_id_raw }}');
+                    });
+                } else {
+                    alert('Terima kasih! Kuesioner Anda telah berhasil dikirim.');
+                    sessionStorage.setItem('open_download_tab', 'true');
+                    loadSection('detailorder', '{{ sample_type }}', '{{ order_id_raw }}');
+                }
+            } else {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ title: 'Gagal', text: json.message || 'Terjadi kesalahan.', icon: 'error', confirmButtonColor: '#ef4444' });
+                } else {
+                    alert('Gagal: ' + (json.message || 'Terjadi kesalahan.'));
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({ title: 'Error', text: 'Gagal mengirim kuesioner. Periksa koneksi Anda.', icon: 'error', confirmButtonColor: '#ef4444' });
+            } else {
+                alert('Gagal mengirim kuesioner. Periksa koneksi Anda.');
+            }
+        }
+    }
+
+    // Monkey patch for .each since F3 might not have jQuery but we want clean code
+    NodeList.prototype.each = Array.prototype.forEach;
+
+    // Multi-step Navigation Functions
+    window.nextStep = function (currentStep) {
+        const currentStepEl = document.getElementById('form-step-' + currentStep);
+        const requiredFields = currentStepEl.querySelectorAll('input[required]:not(.not-required), select[required]:not(.not-required), textarea[required]:not(.not-required)');
+        const radioGroups = {};
+        let isValid = true;
+        let firstError = null;
+
+        // Clear previous errors
+        currentStepEl.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+        currentStepEl.querySelectorAll('.radio-error-wrapper').forEach(el => {
+            el.classList.remove('radio-error-wrapper');
+        });
+
+        // Validate standard fields (input, select, textarea)
+        requiredFields.forEach(field => {
+            if (field.type !== 'radio') {
+                if (field.type === 'hidden' || field.closest('.custom-select')) {
+                    const val = field.value;
+                    if (!val || val.trim() === '') {
+                        isValid = false;
+                        const customSelect = field.closest('.custom-select');
+                        if (customSelect) customSelect.classList.add('field-error');
+                        if (!firstError) firstError = customSelect || field;
+                    }
+                } else if (!field.value || field.value.trim() === '') {
+                    isValid = false;
+                    field.classList.add('field-error');
+                    if (!firstError) firstError = field;
+                }
+            }
+        });
+
+        // Validate radio groups (only visible + required)
+        currentStepEl.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+            const name = radio.getAttribute('name');
+            if (radioGroups[name] !== undefined) return; // already processed
+
+            // Skip if inside hidden conditional group
+            const condGroup = radio.closest('.conditional-group');
+            if (condGroup && isHidden(condGroup)) {
+                radioGroups[name] = true; // mark as processed/skipped
+                return;
+            }
+
+            radioGroups[name] = currentStepEl.querySelector(`input[name="${name}"]:checked`);
+            if (!radioGroups[name]) {
+                isValid = false;
+                const wrapper = radio.closest('.radio-options, .nps-scale');
+                if (wrapper) {
+                    wrapper.classList.add('radio-error-wrapper');
+                    if (!firstError) firstError = wrapper;
+                }
+            }
+        });
+
+        if (!isValid) {
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Mohon lengkapi semua field yang wajib diisi (bertanda *) sebelum melanjutkan.',
+                    icon: 'warning',
+                    confirmButtonColor: '#2C7BE5'
+                });
+            } else {
+                showMessage('Peringatan', 'Mohon lengkapi semua field yang wajib diisi (bertanda *) sebelum melanjutkan.', 'error');
+            }
+            return;
+        }
+
+        // Hide current step, show next step
+        currentStepEl.classList.remove('active');
+        const nextStepEl = document.getElementById('form-step-' + (currentStep + 1));
+        nextStepEl.classList.add('active');
+
+        // Scroll to top
+        document.querySelector('.kuesioner-container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.prevStep = function (currentStep) {
+        // Hide current step, show previous step
+        const currentStepEl = document.getElementById('form-step-' + currentStep);
+        const prevStepEl = document.getElementById('form-step-' + (currentStep - 1));
+
+        currentStepEl.classList.remove('active');
+        prevStepEl.classList.add('active');
+
+        // Scroll to top
+        document.querySelector('.kuesioner-container').scrollIntoView({ behavior: 'smooth' });
+    }
+    // Toggle radio: klik lagi pada pilihan yang sudah dipilih → batalkan pilihan
+    document.getElementById('kuesioner-form').addEventListener('mousedown', function (e) {
+        const radio = e.target.closest('input[type="radio"]');
+        if (!radio) return;
+        if (radio.checked) {
+            // Tandai supaya setelah browser "check" kita uncheck
+            radio._wasChecked = true;
+        }
+    });
+    document.getElementById('kuesioner-form').addEventListener('click', function (e) {
+        const radio = e.target.closest('input[type="radio"]');
+        if (!radio) return;
+        if (radio._wasChecked) {
+            radio.checked = false;
+            radio._wasChecked = false;
+            // Hapus highlight error jika ada
+            const wrapper = radio.closest('.radio-options, .nps-scale');
+            if (wrapper) wrapper.classList.remove('radio-error-wrapper');
+        }
+    });
+
+</script>

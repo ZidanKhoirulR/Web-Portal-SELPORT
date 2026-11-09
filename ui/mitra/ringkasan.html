@@ -1,0 +1,147 @@
+<div class="stats-grid">
+    <!-- Validasi Pelanggan -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('validasi-pelanggan')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Validasi Pelanggan</h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-user-search-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Pending</p>
+                <p id="stat-vp-pending" style="font-size: 1.2rem; margin: 0; color: #f59e0b; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Disetujui</p>
+                <p id="stat-vp-approved" style="font-size: 1.2rem; margin: 0; color: #10b981; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Ditolak</p>
+                <p id="stat-vp-rejected" style="font-size: 1.2rem; margin: 0; color: #ef4444; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Permohonan Pengecualian -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('pengecualian-dokumen')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Permohonan Pengecualian</h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-file-list-3-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Pending</p>
+                <p id="stat-pp-pending" style="font-size: 1.2rem; margin: 0; color: #f59e0b; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Disetujui</p>
+                <p id="stat-pp-approved" style="font-size: 1.2rem; margin: 0; color: #10b981; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Perbaiki</p>
+                <p id="stat-pp-rejected" style="font-size: 1.2rem; margin: 0; color: #ef4444; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Permohonan Alat -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('permohonan-alat')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Permohonan Alat</h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-tools-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Pending</p>
+                <p id="stat-pa-pending" style="font-size: 1.2rem; margin: 0; color: #f59e0b; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Disetujui</p>
+                <p id="stat-pa-approved" style="font-size: 1.2rem; margin: 0; color: #10b981; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Perbaiki</p>
+                <p id="stat-pa-rejected" style="font-size: 1.2rem; margin: 0; color: #ef4444; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kelola Pembayaran -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('kelola-pembayaran')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Kelola Pembayaran <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(View Only)</span></h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-money-dollar-circle-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Pending</p>
+                <p id="stat-kp-pending" style="font-size: 1.2rem; margin: 0; color: #f59e0b; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Disetujui</p>
+                <p id="stat-kp-approved" style="font-size: 1.2rem; margin: 0; color: #10b981; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Perbaiki</p>
+                <p id="stat-kp-rejected" style="font-size: 1.2rem; margin: 0; color: #ef4444; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kesanggupan Pembayaran -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('kesanggupan-pembayaran')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Kesanggupan Pembayaran <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(View Only)</span></h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-file-text-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Pending</p>
+                <p id="stat-ksp-pending" style="font-size: 1.2rem; margin: 0; color: #f59e0b; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Disetujui</p>
+                <p id="stat-ksp-approved" style="font-size: 1.2rem; margin: 0; color: #10b981; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Perbaiki</p>
+                <p id="stat-ksp-rejected" style="font-size: 1.2rem; margin: 0; color: #ef4444; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layanan Pelanggan -->
+    <div class="stat-card" style="cursor: pointer; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 15px;" onclick="loadSection('layanan-pelanggan')">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0;">Layanan Pelanggan</h3>
+            <div class="icon" style="margin: 0; padding: 8px;"><i class="ri-message-3-line"></i></div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Keluhan</p>
+                <p id="stat-lp-keluhan" style="font-size: 1.2rem; margin: 0; color: #334155; font-weight: 700;">Loading...</p>
+            </div>
+            <div style="flex: 1;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 5px;">Layanan</p>
+                <p id="stat-lp-layanan" style="font-size: 1.2rem; margin: 0; color: #334155; font-weight: 700;">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pemberitahuan -->
+    <div class="stat-card" style="cursor: pointer;" onclick="loadSection('pemberitahuan')">
+        <div class="info">
+            <h3>Pemberitahuan</h3>
+            <p id="stat-announcements">Loading...</p>
+        </div>
+        <div class="icon"><i class="ri-notification-3-line"></i></div>
+    </div>
+
+    <!-- Total Responden -->
+    <div class="stat-card" style="cursor: pointer;" onclick="loadSection('kuesioner-pelanggan')">
+        <div class="info">
+            <h3>Total Responden</h3>
+            <p id="stat-responden">Loading...</p>
+        </div>
+        <div class="icon"><i class="ri-group-line"></i></div>
+    </div>
+</div>

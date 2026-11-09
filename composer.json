@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^7.0",
+        "bcosca/fatfree-core": "^3.9",
+        "tecnickcom/tcpdf": "^6.11"
+    }
+}

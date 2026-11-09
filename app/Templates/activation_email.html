@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivasi Akun Portal SELPORT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background-color: #EEF4FF;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #62A0FD;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .activation-button {
+            display: inline-block;
+            padding: 14px 32px;
+            background-color: #62A0FD;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .activation-button:hover {
+            background-color: #2C7BE5;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 32px 0;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #62A0FD;
+            padding: 20px;
+            margin: 32px 0;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            color: #2C7BE5;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #92400e;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Aktivasi Akun Portal SELPORT</h1>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                Halo, {NAME}!
+            </div>
+
+            <div class="message">
+                Terima kasih telah mendaftar di <strong>Portal SELPORT</strong>!
+                <br><br>
+                Untuk melanjutkan proses registrasi dan mengaktifkan akun Anda, silakan klik tombol di bawah ini:
+            </div>
+
+            <div class="button-container">
+                <a href="{ACTIVATION_LINK}" class="activation-button">
+                    Aktivasi Akun Sekarang
+                </a>
+            </div>
+
+            <div class="info-box">
+                <strong>📋 Langkah Selanjutnya:</strong>
+                <ol style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li>Klik tombol aktivasi di atas</li>
+                    <li>Anda akan diarahkan ke halaman aktivasi</li>
+                    <li>Kode OTP akan dikirim ke WhatsApp Anda</li>
+                    <li>Masukkan kode OTP untuk melanjutkan</li>
+                    <li>Tunggu persetujuan dari tim kami</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Penting:</strong>
+                <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                    <li>Link aktivasi berlaku selama <strong>24 jam</strong></li>
+                    <li>Anda akan mendapat maksimal <strong>5 kali percobaan</strong> untuk memasukkan kode OTP</li>
+                    <li>Jangan bagikan link atau kode OTP kepada siapapun</li>
+                </ul>
+            </div>
+
+            <div class="message" style="margin-top: 30px; font-size: 14px; color: #777;">
+                Jika tombol tidak berfungsi, salin dan tempel link berikut ke browser Anda:
+                <br>
+                <a href="{ACTIVATION_LINK}" style="color: #667eea; word-break: break-all;">{ACTIVATION_LINK}</a>
+            </div>
+
+            <div class="message" style="margin-top: 30px; font-size: 14px; color: #999;">
+                <em>Jika Anda tidak merasa mendaftar di Portal BBSPJIS, abaikan email ini.</em>
+            </div>
+        </div>
+
+        <div class="footer" style="padding: 30px; border-top: 1px solid #eeeeee;">
+            <p style="margin-bottom: 5px;"><strong>Balai Besar Standardisasi dan Pelayanan Jasa Industri
+                    Selulosa</strong></p>
+            <p style="margin-bottom: 5px;">Jl. Raya Dayeuhkolot No. 132, Bandung 40258</p>
+            <p style="margin-bottom: 20px;">Email: <a href="mailto:bbs@kemenperin.go.id"
+                    style="color: #62A0FD; text-decoration: none;">bbs@kemenperin.go.id</a></p>
+            <div style="font-size: 11px; color: #cccccc; border-top: 1px dashed #efefef; padding-top: 15px;">
+                © 2026 Portal SELPORT BBSPJIS. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

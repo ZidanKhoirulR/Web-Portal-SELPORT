@@ -1,0 +1,138 @@
+﻿.services-redesign-container {
+    padding: 20px 0 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.services-header {
+    margin-bottom: 48px;
+    padding: 0 10px;
+}
+
+.services-header h1 {
+    font-size: var(--size-xl);
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.services-header p {
+    font-size: var(--size-base);
+    color: #64748b;
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+.services-grid-redesign {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+}
+
+.service-card-v2 {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.service-card-v2:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.bg-soft-red {
+    background: rgba(246, 32, 36, 0.1);
+}
+
+.bg-soft-yellow {
+    background: rgba(255, 210, 0, 0.1);
+}
+
+.bg-soft-blue {
+    background: rgba(91, 127, 255, 0.1);
+}
+
+.service-card-v2 h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 16px;
+}
+
+.service-card-v2 p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    flex-grow: 1;
+}
+
+.service-card-v2 .btn {
+    width: 100%;
+    max-width: 160px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.btn-red-solid {
+    background: #F62024;
+    color: #fff;
+}
+
+.btn-red-solid:hover {
+    background: #d91c1f;
+    box-shadow: 0 4px 12px rgba(246, 32, 36, 0.3);
+}
+
+.btn-yellow-outline {
+    background: transparent;
+    border-color: #FFD200 !important;
+    color: #FFD200;
+}
+
+.btn-yellow-outline:hover {
+    background: rgba(255, 210, 0, 0.05);
+}
+
+.btn-blue-outline {
+    background: transparent;
+    border-color: #5B7FFF !important;
+    color: #5B7FFF;
+}
+
+.btn-blue-outline:hover {
+    background: rgba(91, 127, 255, 0.05);
+}
+
+@media (max-width: 768px) {
+    .services-grid-redesign {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card-v2 {
+        padding: 32px 24px;
+    }
+}

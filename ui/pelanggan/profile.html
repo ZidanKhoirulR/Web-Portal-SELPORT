@@ -1,0 +1,301 @@
+<div class="profile-section-container" style="max-width: 980px; margin: 0 auto; padding-top: 20px;">
+
+    <div class="unified-card"
+        style="background: white; border-radius: 16px; box-shadow: 0 4px 24px -4px rgba(0,0,0,0.08); overflow: visible; display: flex; flex-direction: column; border: 1px solid #e2e8f0;">
+
+        <form onsubmit="handleFullProfileUpdate(event)" enctype="multipart/form-data"
+            style="display: flex; flex-wrap: wrap; width: 100%;">
+
+            <div class="card-sidebar"
+                style="width: 280px; background: #f8fafc; padding: 32px 24px; border-right: 1px solid #e2e8f0; text-align: center; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; border-radius: 16px 0 0 16px; overflow: hidden;">
+                <h2
+                    style="font-size: var(--size-md); font-weight: 700; color: var(--color-text-main); margin-bottom: 8px; text-align: center;">
+                    Ubah Profil</h2>
+                <p
+                    style="color: var(--color-text-muted); font-size: var(--size-sm); margin-bottom: 24px; text-align: center; line-height: 1.5;">
+                    Kelola informasi profil dan keamanan akun Anda.</p>
+
+                <div class="profile-avatar-wrapper" id="profile-preview"
+                    style="margin: 0 auto 16px; width: 120px; height: 120px; position: relative;">
+                    <img src="{{ profile_photo_url }}" alt="Profile" class="profile-avatar"
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <label for="profile-upload" class="avatar-overlay" title="Ganti Foto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                            </path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </label>
+                    <input type="file" id="profile-upload" name="profile_photo" accept="image/*" hidden
+                        onchange="previewImage(this)">
+                </div>
+
+                <h3 style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 4px;"
+                    id="display_name_sidebar">{{ nama_lengkap }}</h3>
+                <span class="badge-role">Pelanggan</span>
+            </div>
+
+            <div class="card-content" style="flex: 1; padding: 32px; min-width: 300px;">
+                <div id="profile-success-notification" class="success-msg"
+                    style="margin-bottom: 20px; padding: 12px; background: #effdf5; color: #15803d; border: 1px solid #bbf7d0; border-radius: 8px; font-weight: 600; display: none; text-align: center; font-size: 13px;">
+                    ✓ Profil berhasil diperbarui
+                </div>
+
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" id="nama_lengkap" name="nama_lengkap" class="form-control"
+                            value="{{ nama_lengkap }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" value="{{ email }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp</label>
+                        <input type="tel" id="no_whatsapp" name="no_whatsapp" class="form-control"
+                            value="{{ no_whatsapp }}" placeholder="08xxx">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Jabatan</label>
+                        <input type="text" id="jabatan" name="jabatan" class="form-control" value="{{ jabatan }}"
+                            placeholder="Jabatan Anda">
+                    </div>
+
+                    <div class="form-divider" style="grid-column: span 2;"></div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea id="alamat_tinggal" name="alamat_tinggal" class="form-control" rows="2">{{ alamat_tinggal }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Provinsi</label>
+                        <div class="custom-select" id="dd-provinsi_tinggal">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Provinsi</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="provinsi_tinggal" name="provinsi_tinggal_id" value="">
+                        <input type="hidden" id="provinsi_tinggal_name" name="provinsi_tinggal" value="{{ provinsi_tinggal }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kabupaten</label>
+                        <div class="custom-select" id="dd-kabupaten_tinggal">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kabupaten</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kabupaten_tinggal" name="kabupaten_tinggal_id" value="">
+                        <input type="hidden" id="kabupaten_tinggal_name" name="kabupaten_tinggal" value="{{ kabupaten_tinggal }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kecamatan</label>
+                        <div class="custom-select" id="dd-kecamatan_tinggal">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kecamatan</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kecamatan_tinggal" name="kecamatan_tinggal_id" value="">
+                        <input type="hidden" id="kecamatan_tinggal_name" name="kecamatan_tinggal" value="{{ kecamatan_tinggal }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kode Pos</label>
+                        <div class="custom-select" id="dd-kodepos_tinggal">
+                            <button type="button" class="select-trigger">
+                                <span class="selected-text">Pilih Kode Pos</span>
+                                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </button>
+                            <div class="select-options"></div>
+                        </div>
+                        <input type="hidden" id="kodepos_tinggal" name="kodepos_tinggal" value="">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" onclick="loadSection('beranda')">Batalkan</button>
+                    <button type="submit" class="btn-primary-blue">Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Compact Premium Styling */
+    .unified-card {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    /* Layout */
+    .card-sidebar {
+        background: #f8fafc;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 900px) {
+        .unified-card form {
+            flex-direction: column;
+        }
+
+        .card-sidebar {
+            width: 100% !important;
+            border-right: none;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+    }
+
+    /* Typography & Inputs */
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 12px;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        color: #0f172a;
+        font-size: var(--size-base);
+        transition: all 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #2C7BE5;
+        box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.05);
+    }
+
+    /* Buttons */
+    .form-actions {
+        margin-top: 32px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        align-items: center;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+    }
+
+    .btn-primary-blue {
+        padding: 10px 24px;
+        border-radius: 8px;
+        border: none;
+        background: #2C7BE5;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(44, 123, 229, 0.2);
+        transition: all 0.2s;
+        font-size: 13px;
+    }
+
+    .btn-primary-blue:hover {
+        background: #1A68D1;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(44, 123, 229, 0.25);
+    }
+
+    .btn-ghost {
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    /* Avatar & Badges */
+    .profile-avatar {
+        transition: transform 0.3s;
+    }
+
+    .profile-avatar-wrapper:hover .profile-avatar {
+        transform: scale(1.02);
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 32px;
+        height: 32px;
+        background: #2C7BE5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+    }
+
+    .avatar-overlay:hover {
+        transform: scale(1.1);
+    }
+
+    .badge-role {
+        display: inline-block;
+        padding: 4px 12px;
+        background: white;
+        color: #64748b;
+        font-size: 11px;
+        border-radius: 16px;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-divider {
+        height: 1px;
+        background: #f1f5f9;
+        margin: 8px 0;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

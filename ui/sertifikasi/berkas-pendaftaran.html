@@ -1,0 +1,575 @@
+<div class="page-header" style="margin-bottom:15px;">
+    <div>
+        <h2 style="margin:0; font-size:1.5rem; color:#5a5c69;">Berkas Pendaftaran Sertifikasi</h2>
+        <p style="margin:5px 0 0; color:#858796; font-size:0.9rem;">Daftar order sertifikasi yang telah mendaftar dan
+            berkas yang diunggah pelanggan.</p>
+    </div>
+</div>
+
+<!-- Search & Filter Bar -->
+<div class="search-bar"
+    style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; align-items:center; background:#fff; padding:15px; border-radius:10px; border:1px solid #e3e6f0; box-shadow:0 0.125rem 0.25rem 0 rgba(58,59,69,0.05);">
+    <div style="flex:1; max-width:320px; min-width:280px; position:relative;">
+        <i class="ri-search-line"
+            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#858796;"></i>
+        <input type="text" id="pendaftaranSearch" class="form-control" placeholder="Cari no. order atau perusahaan ...."
+            style="width:100% !important; padding-left:35px; height:40px; border-radius:8px; border:1px solid #d1d3e2; font-size:0.875rem;">
+    </div>
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0; margin-left:auto;">
+        <!-- Filter Tahun -->
+        <div class="admin-custom-select" id="dropdown-pendaftaranTahun" style="width:150px;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; font-size:0.875rem; width:100%; min-width:0; box-sizing:border-box; margin:0; line-height:1.5; background:#fff; border:1px solid #d1d3e2; padding:0 12px; display:flex; justify-content:space-between; align-items:center;">
+                <span class="selected-text" id="pendaftaranTahunSelectedText"
+                    style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Semua Tahun</span>
+                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-left:8px;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="select-options" id="options-pendaftaranTahun">
+                <div class="option selected" data-value="">Semua Tahun</div>
+            </div>
+            <input type="hidden" id="pendaftaranTahun" value="">
+        </div>
+
+        <!-- Filter Status -->
+        <div class="admin-custom-select" id="dropdown-pendaftaranStatus" style="width:160px;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; font-size:0.875rem; width:100%; min-width:0; box-sizing:border-box; margin:0; line-height:1.5; background:#fff; border:1px solid #d1d3e2; padding:0 12px; display:flex; justify-content:space-between; align-items:center;">
+                <span class="selected-text" id="pendaftaranStatusSelectedText"
+                    style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pending</span>
+                <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-left:8px;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="select-options" id="options-pendaftaranStatus">
+                <div class="option selected" data-value="pending">Pending</div>
+                <div class="option" data-value="diverifikasi">Disetujui</div>
+            </div>
+            <input type="hidden" id="pendaftaranStatus" value="pending">
+        </div>
+    </div>
+</div>
+
+<!-- Table Card -->
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="pendaftaranTable">
+            <thead>
+                <tr>
+                    <th width="5%">No</th>
+                    <th width="15%">Tanggal Upload</th>
+                    <th width="20%">No. Order</th>
+                    <th width="30%">Perusahaan</th>
+                    <th width="15%" style="text-align:center;">Status</th>
+                    <th width="15%" style="text-align:center;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="pendaftaranBody">
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:30px; color:#858796;">
+                        <i class="ri-loader-4-line"></i> Memuat data...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div style="padding:15px; border-top:1px solid #e3e6f0;">
+        <div id="pendaftaranPagination" class="pagination-container"
+            style="margin-top:0; padding-top:0; border-top:none; width:100%; justify-content:space-between;">
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sunting Berkas Pendaftaran -->
+<div id="modalSuntingPendaftaran"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center;">
+    <div
+        style="background:#fff; width:92%; max-width:680px; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; position:relative; max-height:90vh; display:flex; flex-direction:column;">
+
+        <!-- Modal Header -->
+        <div
+            style="display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid #e2e8f0; flex-shrink:0;">
+            <div>
+                <h3 style="margin:0; font-size:1.05rem; font-weight:700; color:#1e293b;">Kelola Berkas Pendaftaran</h3>
+                <p id="modalSuntingOrderNo" style="margin:3px 0 0; font-size:0.82rem; color:#64748b;"></p>
+            </div>
+            <button onclick="closeSuntingPendaftaran()"
+                style="background:none; border:none; cursor:pointer; font-size:1.4rem; color:#94a3b8; line-height:1; padding:4px;"
+                onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div style="padding:22px; overflow-y:auto; flex:1;">
+
+            <!-- Status Verifikasi -->
+            <div class="form-group" style="margin-bottom:18px;">
+                <label>Status Verifikasi</label>
+                <div class="admin-custom-select" id="dropdown-modalStatus" style="width:100%;">
+                    <button type="button" class="select-trigger"
+                        style="width:100%; height:42px; min-width:0; box-sizing:border-box; margin:0; line-height:1.5;">
+                        <span class="selected-text" id="statusSelectedText">Pending</span>
+                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="select-options" style="width:100%;">
+                        <div class="option" data-value="pending">Pending</div>
+                        <div class="option" data-value="diverifikasi">Disetujui</div>
+                    </div>
+                    <input type="hidden" id="modalStatusSelect" value="pending">
+                </div>
+            </div>
+
+            <!-- Berkas Upload Pelanggan -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px 20px;">
+                <div
+                    style="font-weight:700; font-size:0.85rem; color:#374151; margin-bottom:14px; display:flex; align-items:center; gap:6px;">
+                    Daftar Berkas Pelanggan
+                </div>
+                <div id="modalBerkasFiles" style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="text-align:center; padding:16px; color:#94a3b8; font-size:0.85rem;"><i
+                            class="ri-loader-4-line"></i> Memuat berkas...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div
+            style="padding:16px 22px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px; flex-shrink:0;">
+            <button onclick="closeSuntingPendaftaran()"
+                style="padding:10px 24px; background:#f1f5f9; color:#374151; border:1px solid #e2e8f0; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem; transition:all 0.2s;"
+                onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">
+                Batal
+            </button>
+            <button id="btnSimpanStatus" onclick="simpanStatusPendaftaran()"
+                style="padding:10px 24px; background:#4e73df; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem; transition:all 0.2s; box-shadow:0 2px 8px rgba(78,115,223,0.3);"
+                onmouseover="this.style.background='#3a5fc8'" onmouseout="this.style.background='#4e73df'">
+                Simpan
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let sertPendaftaranData = [];
+        let sertPendaftaranFiltered = [];
+        let currentPage = 1;
+        let pageSize = 5;
+        let currentEditArsipId = null;
+
+        function formatTanggalIndo(dateStr) {
+            if (!dateStr || dateStr === '-') return '-';
+            const b = dateStr.split(' ')[0].split('-');
+            if (b.length !== 3) return dateStr;
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+            let d, m, y;
+            if (b[0].length === 4) {
+                y = b[0]; m = parseInt(b[1], 10); d = parseInt(b[2], 10);
+            } else {
+                d = parseInt(b[0], 10); m = parseInt(b[1], 10); y = b[2];
+            }
+            return d + ' ' + months[m - 1] + ' ' + y;
+        }
+
+        function applyFilters() {
+            const q = (document.getElementById('pendaftaranSearch')?.value || '').toLowerCase();
+            const t = (document.getElementById('pendaftaranTahun')?.value || '');
+            const s = (document.getElementById('pendaftaranStatus')?.value || 'pending');
+            sertPendaftaranFiltered = sertPendaftaranData.filter(r => {
+                const matchSearch = (r.no_id_order || '').toLowerCase().includes(q) || (r.nama_perusahaan || '').toLowerCase().includes(q);
+                let matchTahun = true;
+                if (t) {
+                    let rowTahun = '';
+                    if (r.tanggal_pendaftaran) {
+                        const m = r.tanggal_pendaftaran.match(/\b(20\d{2})\b/);
+                        if (m) rowTahun = m[1];
+                    }
+                    if (rowTahun !== t) matchTahun = false;
+                }
+                let matchStatus = true;
+                const rowStatus = r.status_berkas || 'pending';
+                if (rowStatus !== s) matchStatus = false;
+                return matchSearch && matchTahun && matchStatus;
+            });
+            currentPage = 1;
+            renderTable();
+        }
+
+        function loadData() {
+            const tbody = document.getElementById('pendaftaranBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#858796;"><i class="ri-loader-4-line"></i> Memuat data...</td></tr>';
+
+            fetch(`${BASE_URL}/sertifikasi/api/berkas-pendaftaran`)
+                .then(r => r.json())
+                .then(res => {
+                    sertPendaftaranData = res.data || [];
+
+                    const optionsContainer = document.getElementById('options-pendaftaranTahun');
+                    if (optionsContainer) {
+                        const yearsSet = new Set();
+                        sertPendaftaranData.forEach(r => {
+                            if (r.tanggal_pendaftaran) {
+                                const m = r.tanggal_pendaftaran.match(/\b(20\d{2})\b/);
+                                if (m) yearsSet.add(m[1]);
+                            }
+                        });
+                        const years = Array.from(yearsSet).sort((a, b) => b - a);
+
+                        let optsHtml = '<div class="option selected" data-value="">Semua Tahun</div>';
+                        years.forEach(y => {
+                            optsHtml += `<div class="option" data-value="${y}">${y}</div>`;
+                        });
+                        optionsContainer.innerHTML = optsHtml;
+
+                        const dropdownTahun = document.getElementById('dropdown-pendaftaranTahun');
+                        const selectedText = dropdownTahun.querySelector('.selected-text');
+                        const options = optionsContainer.querySelectorAll('.option');
+                        const hiddenInput = document.getElementById('pendaftaranTahun');
+
+                        options.forEach(opt => {
+                            opt.addEventListener('click', () => {
+                                options.forEach(o => o.classList.remove('selected'));
+                                opt.classList.add('selected');
+                                selectedText.textContent = opt.textContent;
+                                hiddenInput.value = opt.dataset.value;
+                                dropdownTahun.classList.remove('open');
+                                applyFilters();
+                            });
+                        });
+                    }
+
+                    applyFilters();
+                })
+                .catch(() => {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#ef4444;">Gagal memuat data.</td></tr>';
+                });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('pendaftaranBody');
+            const total = sertPendaftaranFiltered.length;
+            const ps = pageSize === 'all' ? Math.max(total, 1) : parseInt(pageSize, 10);
+            const totalPages = Math.ceil(total / ps);
+
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+            const start = (currentPage - 1) * ps;
+            const end = Math.min(start + ps, total);
+            const paged = sertPendaftaranFiltered.slice(start, end);
+
+            if (total === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#858796;"><i class="ri-inbox-line" style="font-size:2rem;display:block;margin-bottom:8px;"></i>Tidak ada data ditemukan.</td></tr>';
+                document.getElementById('pendaftaranPagination').innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            paged.forEach((row, idx) => {
+                const no = start + idx + 1;
+                const statusVal = row.status_berkas || 'pending';
+                const isPending = statusVal === 'pending';
+                const statusBadge = isPending
+                    ? `<span style="font-size:0.8rem;font-weight:600;color:#d97706;">Pending</span>`
+                    : `<span style="font-size:0.8rem;font-weight:600;color:#059669;">Disetujui</span>`;
+
+                html += `<tr style="transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background=''">
+                <td style="vertical-align:middle; color:#1e293b; font-size:0.85rem; text-align:center;">${no}</td>
+                <td style="vertical-align:middle; color:#000; font-size:0.85rem;">${formatTanggalIndo(row.tanggal_pendaftaran)}</td>
+                <td style="vertical-align:middle; color:#1e293b; font-size:0.85rem;">${row.no_id_order || '-'}</td>
+                <td style="vertical-align:middle; color:#1e293b; font-size:0.85rem;">${row.nama_perusahaan || '-'}</td>
+                <td style="vertical-align:middle; text-align:center;">
+                    ${statusBadge}
+                </td>
+                <td style="vertical-align:middle; text-align:center;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <button onclick="openSuntingPendaftaran(${JSON.stringify(row).replace(/"/g, '&quot;')})"
+                            style="display:inline-flex; align-items:center; gap:5px; padding:6px 14px; background:#62A0FD; color:#fff; border:none; border-radius:6px; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; box-shadow:0 4px 12px rgba(98,160,253,0.3);">
+                            <i class="ri-edit-line"></i> Kelola
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+            });
+            tbody.innerHTML = html;
+
+            // Pagination
+            let pHtml = `<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 15px;">`;
+
+            const startIdx = total === 0 ? 0 : start + 1;
+            const endIdx = end;
+
+            pHtml += `<div style="display: flex; align-items: center; gap: 15px; font-size: 14px; color: #6c757d;">`;
+            if (total > 0) {
+                pHtml += `<span>Menampilkan ${startIdx} - ${endIdx} dari ${total} data</span>`;
+            }
+
+            pHtml += `
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span>Tampilkan</span>
+                    <select class="form-control" style="width: auto; padding: 4px 8px; height: auto; border-radius: 4px;" onchange="window.sertPendaftaranSetPageSize(this.value)">
+                        <option value="5" ${ps == 5 ? 'selected' : ''}>5</option>
+                        <option value="10" ${ps == 10 ? 'selected' : ''}>10</option>
+                        <option value="25" ${ps == 25 ? 'selected' : ''}>25</option>
+                        <option value="50" ${ps == 50 ? 'selected' : ''}>50</option>
+                    </select>
+                </div>
+            </div>`;
+
+            pHtml += `<div style="display: flex; gap: 5px;">`;
+
+            const sp = Math.max(1, currentPage - 2), ep = Math.min(totalPages, currentPage + 2);
+            pHtml += `<button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="sertPendaftaranChangePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Prev</button>`;
+            if (sp > 1) pHtml += `<button class="page-btn" onclick="sertPendaftaranChangePage(1)">1</button>${sp > 2 ? '<span class="page-btn" style="cursor:default;">…</span>' : ''}`;
+            for (let i = sp; i <= ep; i++) pHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="sertPendaftaranChangePage(${i})">${i}</button>`;
+            if (ep < totalPages) pHtml += `${ep < totalPages - 1 ? '<span class="page-btn" style="cursor:default;">…</span>' : ''}<button class="page-btn" onclick="sertPendaftaranChangePage(${totalPages})">${totalPages}</button>`;
+            pHtml += `<button class="page-btn ${currentPage >= totalPages ? 'disabled' : ''}" onclick="sertPendaftaranChangePage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>Next</button>`;
+
+            pHtml += `</div></div>`;
+            document.getElementById('pendaftaranPagination').innerHTML = pHtml;
+        }
+
+        window.sertPendaftaranChangePage = function (p) {
+            currentPage = p;
+            renderTable();
+        };
+
+        window.sertPendaftaranSetPageSize = function (size) {
+            pageSize = size;
+            currentPage = 1;
+            renderTable();
+        };
+
+        window.openSuntingPendaftaran = function (row) {
+            currentEditArsipId = row.id_arsip_sertifikasi;
+            document.getElementById('modalSuntingOrderNo').textContent = 'No. Order: ' + (row.no_id_order || '-') + '  |  ' + (row.nama_perusahaan || '-');
+
+            // Set status dropdown
+            const statusVal = row.status_berkas || 'pending';
+            document.getElementById('modalStatusSelect').value = statusVal;
+            document.getElementById('statusSelectedText').textContent = statusVal === 'diverifikasi' ? 'Disetujui' : 'Pending';
+
+            document.querySelectorAll('#dropdown-modalStatus .option').forEach(opt => {
+                if (opt.dataset.value === statusVal) opt.classList.add('selected');
+                else opt.classList.remove('selected');
+            });
+
+            // Load berkas files from API
+            const berkasContainer = document.getElementById('modalBerkasFiles');
+            berkasContainer.innerHTML = '<div style="text-align:center; padding:16px; color:#94a3b8; font-size:0.85rem;"><i class="ri-loader-4-line"></i> Memuat berkas...</div>';
+
+            fetch(`${BASE_URL}/sertifikasi/api/berkas-pendaftaran/files?id_arsip_sertifikasi=${row.id_arsip_sertifikasi}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (!res.success || !res.has_berkas) {
+                        berkasContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.85rem;"><i class="ri-inbox-line" style="font-size:1.5rem;display:block;margin-bottom:6px;"></i>Pelanggan belum mengupload berkas.</div>';
+                        return;
+                    }
+                    let fHtml = '';
+                    res.files.forEach(f => {
+                        const uploaded = f.uploaded;
+                        const st = f.file_status || 'belum';
+
+                        let bg = '#fff';
+                        let border = '#f1f5f9';
+                        let icon = 'ri-close-circle-line';
+                        let iconColor = '#e2e8f0';
+                        let labelColor = '#94a3b8';
+                        let statusTextHTML = '<span style="font-size:0.72rem;color:#94a3b8;">Belum diupload</span>';
+
+                        if (st === 'diverifikasi') {
+                            bg = '#f0fdf4';
+                            border = '#bbf7d0';
+                            icon = 'ri-checkbox-circle-fill';
+                            iconColor = '#059669';
+                            labelColor = '#1e293b';
+                            statusTextHTML = '<span style="font-size:0.72rem;color:#059669;font-weight:600;">Sudah diupload</span>';
+                        } else if (st === 'reupload') {
+                            bg = '#fefce8';
+                            border = '#fef08a';
+                            icon = 'ri-error-warning-fill';
+                            iconColor = '#ca8a04';
+                            labelColor = '#1e293b';
+                            statusTextHTML = '<span style="font-size:0.72rem;color:#ca8a04;font-weight:600;">Diupload ulang</span>';
+                        }
+
+                        const fileUrl = f.file_url ? `${BASE_URL}${f.file_url}` : `${BASE_URL}/public/uploads/sertifikasi/berkas-pendaftaran/${f.file_name}`;
+                        const fileLink = uploaded
+                            ? `<a href="${fileUrl}" target="_blank" style="font-size:0.72rem;color:#4e73df;text-decoration:none;white-space:nowrap;font-weight:500;">↗ Buka</a>`
+                            : '';
+                        fHtml += `<div style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:${bg}; border:1px solid ${border}; border-radius:6px;">
+                        <i class="${icon}" style="font-size:1.1rem; color:${iconColor}; flex-shrink:0;"></i>
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:0.82rem; font-weight:500; color:${labelColor}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.label}</div>
+                            ${statusTextHTML}
+                        </div>
+                        ${fileLink}
+                    </div>`;
+                    });
+                    berkasContainer.innerHTML = fHtml;
+                })
+                .catch(() => {
+                    berkasContainer.innerHTML = '<div style="text-align:center; padding:16px; color:#ef4444; font-size:0.85rem;">Gagal memuat berkas.</div>';
+                });
+
+            document.getElementById('modalSuntingPendaftaran').style.display = 'flex';
+        };
+
+        window.closeSuntingPendaftaran = function () {
+            document.getElementById('modalSuntingPendaftaran').style.display = 'none';
+            currentEditArsipId = null;
+        };
+
+        window.simpanStatusPendaftaran = function () {
+            if (!currentEditArsipId) return;
+
+            const status = document.getElementById('modalStatusSelect').value;
+            const btn = document.getElementById('btnSimpanStatus');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="ri-loader-4-line"></i> Menyimpan...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('id_arsip_sertifikasi', currentEditArsipId);
+            formData.append('status', status);
+
+            fetch(`${BASE_URL}/sertifikasi/api/berkas-pendaftaran/update-status`, {
+                method: 'POST',
+                body: formData
+            })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.success) {
+                        // Update local data
+                        const item = sertPendaftaranData.find(r => r.id_arsip_sertifikasi == currentEditArsipId);
+                        if (item) item.status_berkas = status;
+                        const filteredItem = sertPendaftaranFiltered.find(r => r.id_arsip_sertifikasi == currentEditArsipId);
+                        if (filteredItem) filteredItem.status_berkas = status;
+                        renderTable();
+                        closeSuntingPendaftaran();
+                        if (typeof showSertAlert === 'function') {
+                            showSertAlert(res.message || 'Status berhasil disimpan!');
+                        }
+                    } else {
+                        if (typeof showSertAlert === 'function') {
+                            showSertAlert(res.message || 'Gagal menyimpan status.', 'error');
+                        } else {
+                            alert(res.message || 'Gagal menyimpan status.');
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (typeof showSertAlert === 'function') {
+                        showSertAlert('Terjadi kesalahan saat menyimpan.', 'error');
+                    } else {
+                        alert('Terjadi kesalahan saat menyimpan.');
+                    }
+                })
+                .finally(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+        };
+
+        // Close on backdrop click
+        document.getElementById('modalSuntingPendaftaran').addEventListener('click', function (e) {
+            if (e.target === this) closeSuntingPendaftaran();
+        });
+
+        // Event bindings
+        document.getElementById('pendaftaranSearch')?.addEventListener('input', function () {
+            applyFilters();
+        });
+
+        // Custom dropdown logic
+        const statusDropdown = document.getElementById('dropdown-modalStatus');
+        if (statusDropdown) {
+            const trigger = statusDropdown.querySelector('.select-trigger');
+            const options = statusDropdown.querySelectorAll('.option');
+            const hiddenInput = document.getElementById('modalStatusSelect');
+            const selectedText = document.getElementById('statusSelectedText');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                statusDropdown.classList.toggle('open');
+            });
+
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    options.forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    selectedText.textContent = opt.textContent;
+                    hiddenInput.value = opt.dataset.value;
+                    statusDropdown.classList.remove('open');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!statusDropdown.contains(e.target)) {
+                    statusDropdown.classList.remove('open');
+                }
+            });
+        }
+
+        // Custom dropdown logic for year filter
+        const tahunDropdown = document.getElementById('dropdown-pendaftaranTahun');
+        if (tahunDropdown) {
+            const trigger = tahunDropdown.querySelector('.select-trigger');
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tahunDropdown.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!tahunDropdown.contains(e.target)) {
+                    tahunDropdown.classList.remove('open');
+                }
+            });
+        }
+
+        // Custom dropdown logic for Status filter
+        const pendaftaranStatusDropdown = document.getElementById('dropdown-pendaftaranStatus');
+        if (pendaftaranStatusDropdown) {
+            const trigger = pendaftaranStatusDropdown.querySelector('.select-trigger');
+            const options = pendaftaranStatusDropdown.querySelectorAll('.option');
+            const hiddenInput = document.getElementById('pendaftaranStatus');
+            const selectedText = pendaftaranStatusDropdown.querySelector('.selected-text');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                pendaftaranStatusDropdown.classList.toggle('open');
+            });
+
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    options.forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    selectedText.textContent = opt.textContent;
+                    hiddenInput.value = opt.dataset.value;
+                    pendaftaranStatusDropdown.classList.remove('open');
+                    applyFilters();
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!pendaftaranStatusDropdown.contains(e.target)) {
+                    pendaftaranStatusDropdown.classList.remove('open');
+                }
+            });
+        }
+
+        // Initial load
+        loadData();
+    })();
+</script>

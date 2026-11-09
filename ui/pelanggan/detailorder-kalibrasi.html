@@ -1,0 +1,149 @@
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <button onclick="loadSection('beranda')" class="back-btn-modern">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </button>
+        <div class="header-text-group">
+            <span class="header-subtitle">DETAIL ORDER KALIBRASI</span>
+            <h1 class="header-order-id">{{ order_id }}</h1>
+        </div>
+    </div>
+
+    <!-- STEPPER_HTML -->
+
+    <!-- TABS HEADER -->
+    <div class="order-tabs-wrapper">
+        <div class="order-tabs-header">
+            <button class="tab-btn active" onclick="switchOrderKalibrasiTab(event, 'tab-kalibrasi-biaya')">Informasi
+                Biaya</button>
+            <button class="tab-btn" onclick="switchOrderKalibrasiTab(event, 'tab-kalibrasi-data-alat')">Data
+                Alat</button>
+            <button class="tab-btn" onclick="switchOrderKalibrasiTab(event, 'tab-kalibrasi-download')">Download
+                Berkas</button>
+        </div>
+
+        <!-- TABS CONTENT -->
+        <div class="order-tabs-content">
+
+            <!-- TAB: INFORMASI BIAYA -->
+            <div id="tab-kalibrasi-biaya" class="tab-pane active">
+                <div class="content-card-modern">
+                    <div class="info-details-list">
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Biaya Alat</span>
+                            <span class="info-value-modern">{{ biaya_alat }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Biaya Transportasi & Akomodasi</span>
+                            <span class="info-value-modern">{{ biaya_transport }}</span>
+                        </div>
+                        <div class="info-row-modern">
+                            <span class="info-label-modern">Jasa Kalibrasi Insitu</span>
+                            <span class="info-value-modern">{{ jasa_insitu }}</span>
+                        </div>
+                        <!-- BIAYA_SELISIH_ALAT_ROW -->
+                        <div class="info-row-modern"
+                            style="border-top: 2px dashed #cbd5e1; margin-top: 10px; padding-top: 15px;">
+                            <span class="info-label-modern"
+                                style="font-size: 15px; font-weight: 800; color: #0f172a;">Total Biaya</span>
+                            <span class="info-value-modern"
+                                style="font-size: 16px; font-weight: 800; color: #2C7BE5;">{{ total_biaya }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: DATA ALAT -->
+            <div id="tab-kalibrasi-data-alat" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="parameter-table-wrapper">
+                        <table class="custom-table" id="data-alat-table">
+                            <thead>
+                                <tr>
+                                    <th width="50px">No.</th>
+                                    <th>Nomor</th>
+                                    <th>Nomor Order</th>
+                                    <th>Nama Alat</th>
+                                    <th width="150px">Tarif</th>
+                                    <th>Jenis Pekerjaan</th>
+                                    <th>Tanggal Hasil Uji</th>
+                                    <th>Validasi Hasil Uji</th>
+                                    <th>Lembar Hasil</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ITERATE DATA ALAT ROWS -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8" class="total-label"
+                                        style="text-align: right; font-weight: 700; padding-right: 20px;">TOTAL BIAYA
+                                    </td>
+                                    <td class="total-value" style="font-weight: 700;">{{ total_biaya_alat }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: DOWNLOAD BERKAS -->
+            <div id="tab-kalibrasi-download" class="tab-pane">
+                <div class="content-card-modern">
+                    <div class="card-header-v2 border-0">
+                        <h3 class="card-title-v2">Dokumen Tersedia</h3>
+                    </div>
+
+                    <div class="document-list-simple">
+                        <!-- INVOICES_KALIBRASI_HTML -->
+
+                        <!-- DOK_PERMOHONAN_ALAT_HTML -->
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        window.switchOrderKalibrasiTab = function (evt, tabId) {
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(p => p.classList.remove('active'));
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        };
+
+        // Handle Questionnaire Logic for Kalibrasi
+        const orderId = "{{ order_id }}";
+        const storageKey = 'kuesioner_done_Kalibrasi_' + orderId;
+        const isKuesionerDoneBackend = "{{ is_kuesioner_done }}" === "true";
+
+        if (isKuesionerDoneBackend || localStorage.getItem(storageKey)) {
+            // Kita tidak perlu mengubah DOM langsung di sini karena untuk kalibrasi
+            // link LHU dirender secara server-side jika `is_kuesioner_done` true.
+            // Namun, localStorage berguna sebagai backup jika isKuesionerDoneBackend gagal.
+            // Idealnya, halaman akan reload setelah isi kuesioner, jadi backend yang cover.
+            // Sebagai pengamanan tambahan, script ini disiapkan untuk masa depan.
+        }
+
+        // Auto-open data alat tab if coming from questionnaire
+        if (sessionStorage.getItem('open_download_tab') === 'true') {
+            sessionStorage.removeItem('open_download_tab');
+            const dataAlatTabBtn = document.querySelector('.tab-btn[onclick*="tab-kalibrasi-data-alat"]');
+            if (dataAlatTabBtn) {
+                setTimeout(() => dataAlatTabBtn.click(), 100);
+            }
+        }
+    })();
+</script>
+
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/detailorder-kalibrasi.css?v={{ time() }}">

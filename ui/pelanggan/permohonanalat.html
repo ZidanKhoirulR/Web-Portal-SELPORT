@@ -1,0 +1,1841 @@
+<!-- SweetAlert2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="home-container">
+
+    <div class="header-section">
+        <h1>Permintaan Permohonan Alat</h1>
+        <p class="header-desc">Isi data teknis, cetak untuk tanda tangan pelanggan, lalu unggah kembali berkasnya.</p>
+    </div>
+
+    <!-- Pilihan Metode Input -->
+    <div id="metode-pemilihan-container" class="content-card order-section method-container">
+        <h3 style="margin-bottom: 24px; color: #1e293b;">Pilih Metode Pengisian Permohonan Alat</h3>
+        <div class="method-cards-wrapper">
+
+            <div class="method-card" onclick="pilihMetode('manual')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <h4>Input Data Manual</h4>
+                <p>Isi data alat satu per satu melalui formulir sistem untuk kemudahan pelacakan.</p>
+            </div>
+
+            <div class="method-card" onclick="pilihMetode('upload')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <h4>Upload Langsung</h4>
+                <p>Gunakan template yang telah disediakan, isi, dan upload langsung filenya.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Upload Langsung Container -->
+    <div id="upload-langsung-container" class="content-card order-section" style="display: none;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Upload Langsung Permohonan Alat</h3>
+        </div>
+        <div style="padding: 24px;">
+            <div
+                style="margin-bottom: 24px; padding: 20px; background-color: #eff6ff; border-radius: 8px; border: 1px solid #bfdbfe;">
+                <h4
+                    style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Template
+                </h4>
+                <p style="margin: 0 0 16px 0; font-size: 13px; color: #3b82f6; line-height: 1.5;">Silahkan download
+                    template file permohonan alat di bawah ini, isi data alat yang akan diuji, kemudian unggah
+                    kembali dalam format PDF.</p>
+                <!-- URL Template mengambil file terbaru yang diunggah Mitra -->
+                <a href="javascript:void(0);"
+                    onclick="window.location.href = window.BASE_URL + '/mitra/template/permohonan-alat'"
+                    class="btn-primary"
+                    style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Template
+                </a>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 13px; color: #334155;">Catatan</label>
+                <textarea id="inp-upload-langsung-catatan" class="form-textarea"
+                    placeholder="Masukkan catatan untuk permohonan ini..." rows="3"
+                    style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; font-family: inherit; font-size: 13px;"></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" class="btn-back" onclick="kembaliPilihMetode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Kembali
+                </button>
+                <button type="button" class="btn-primary" onclick="bukaModalUploadLangsung()"
+                    style="display: inline-flex; align-items: center; gap: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Upload
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Daftar Permohonan -->
+    <div id="alat-list-container" class="content-card order-section" style="display: none;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Daftar Permohonan Alat</h3>
+            <button type="button" class="btn-primary" onclick="showForm()">+ Tambah Permohonan</button>
+        </div>
+
+        <div id="orders-empty-state" style="padding: 48px; text-align: center; color: #94a3b8;">
+            Belum ada data permohonan alat
+        </div>
+
+        <div id="orders-table-wrapper" style="display: none;" class="table-responsive">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%" style="text-align: center;"></th>
+                        <th width="5%" style="text-align: center;">No</th>
+                        <th width="30%" style="text-align: center;">Kategori</th>
+                        <th width="25%" style="text-align: center;">Tanggal</th>
+                        <th width="35%" style="text-align: center;"></th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px 0 24px; border-top: 1px solid #f1f5f9; margin-top: 20px;">
+            <button type="button" class="btn-back" onclick="kembaliPilihMetode()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Kembali
+            </button>
+            <div style="display: flex; gap: 12px;">
+                <button type="button" class="btn btn-primary"
+                    style="background: transparent; color: #2C7BE5; border: 1px solid #2C7BE5; box-shadow: none;"
+                    id="btn-cetak-massal" onclick="cetakMassal()"
+                    onmouseover="this.style.background='rgba(44, 123, 229, 0.05)'"
+                    onmouseout="this.style.background='transparent'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    Cetak Dokumen
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-upload-massal" onclick="openUploadModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Upload
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 3. Detail Permohonan -->
+    <div id="alat-detail-container" class="content-card order-section" style="display: none; margin-top: 24px;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Detail Permohonan Alat</h3>
+        </div>
+
+        <input type="hidden" id="current-order-id" value="">
+
+        <div style="margin-bottom: 24px;">
+            <h4
+                style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;">
+                Informasi Utama
+            </h4>
+            <div class="table-responsive">
+                <table class="custom-table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Kategori</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="detail-kategori" style="color: #334155; text-align: center;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;">
+            <h4
+                style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
+                Tabel Detail Alat
+            </h4>
+            <button type="button" class="btn-primary" onclick="showItemForm()"
+                style="padding: 8px 16px; font-size: 13px;">+ Tambah Alat</button>
+        </div>
+
+        <div id="items-empty-state" style="padding: 24px; text-align: center; color: #94a3b8;">
+            Belum ada item alat
+        </div>
+
+        <div id="items-table-wrapper" style="display: none;" class="table-responsive">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="text-align: center; width: 5%;">No</th>
+                        <th>Alat</th>
+                        <th>Merk</th>
+                        <th>Tipe/Nomor Seri</th>
+                        <th>Kapasitas</th>
+                        <th>Jumlah</th>
+                        <th>Kondisi</th>
+                        <th>Titik Ukur</th>
+                        <th style="text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="items-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+            <button type="button" class="btn-back" onclick="showList()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Kembali
+            </button>
+            <button type="button" id="btn-cetak-di-detail" class="btn-primary" onclick="cetakPdf()"
+                style="display: none; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Cetak Dokumen
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Form Permohonan Utama -->
+    <div id="alat-form-container" class="content-card order-section" style="display: none;">
+        <div class="card-header">
+            <h3>Form Permohonan Alat</h3>
+        </div>
+
+        <input type="hidden" id="alat-edit-id" value="">
+
+        <input type="hidden" id="inp-kategori" value="Permohonan Kalibrasi">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <div>
+                <label class="form-label">Nama Penandatangan Surat <span style="color: red">*</span></label>
+                <input type="text" id="inp-nama-penanda-tangan" class="form-input"
+                    placeholder="Masukkan nama penandatangan">
+            </div>
+            <div>
+                <label class="form-label">Jabatan <span style="color: red">*</span></label>
+                <input type="text" id="inp-jabatan" class="form-input" placeholder="Masukkan jabatan penandatangan">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Catatan</label>
+            <textarea id="inp-catatan" class="form-textarea" placeholder="Masukkan catatan ...."
+                style="width: 100%; min-height: 80px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" class="btn-outline" onclick="showList()">Batal</button>
+            <button type="button" id="btn-simpan-order" class="btn-primary" onclick="simpanOrder()">Simpan
+                Permohonan</button>
+        </div>
+    </div>
+
+    <!-- 4. Form Spesifikasi Item -->
+    <div id="alat-item-form-container" class="content-card order-section" style="display: none;">
+        <div class="card-header">
+            <h3>Data Permohonan Alat</h3>
+        </div>
+
+        <input type="hidden" id="alat-item-id" value="">
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Nama Alat <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-nama" class="form-input" placeholder="Contoh: Termometer, Timbangan">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Merk <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-merk" class="form-input" placeholder="Contoh: Toshiba">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Tipe/Nomor Seri <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-tipe" class="form-input" placeholder="Contoh: Tipe A/No Seri: NPSA3042Z">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Kapasitas <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-kapasitas" class="form-input" placeholder="Contoh: 100">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Ketelitian <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-ketelitian" class="form-input" placeholder="Contoh: 0.01">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Satuan <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-satuan" class="form-input" placeholder="Contoh: kg, mm, derajat">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Jumlah <span style="color: red">*</span></label>
+            <input type="number" id="inp-item-jumlah" class="form-input" placeholder="Contoh: 2">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Titik Ukur <span style="color: red">*</span></label>
+            <input type="text" id="inp-item-titik-ukur" class="form-input" placeholder="Contoh: 10,20,30">
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Kondisi Alat <span style="color: red">*</span></label>
+            <div class="custom-select" id="dropdown-kondisi">
+                <button type="button" class="select-trigger">
+                    <span class="selected-text">Pilih Kondisi</span>
+                    <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+                <div class="select-options">
+                    <div class="option" data-value="">Pilih Kondisi</div>
+                    <div class="option" data-value="Baik">Baik</div>
+                    <div class="option" data-value="Rusak">Rusak</div>
+                </div>
+                <input type="hidden" id="inp-item-kondisi" value="">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Upload Gambar Alat <span style="color: red">*</span> <span
+                    style="font-size: 11px; color: #64748b; font-weight: 400;">Format: PNG, JPG, JPEG (Maks.
+                    3MB)</span></label>
+            <input type="file" id="inp-item-gambar" class="form-input" accept=".png, .jpg, .jpeg"
+                style="padding: 10px;">
+            <div id="gambar-preview" style="display: none; margin-top: 12px;">
+                <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Gambar saat ini (kosongkan file jika
+                    tidak ingin mengganti):</p>
+                <img id="gambar-preview-img" src="" alt="Preview Gambar Alat"
+                    style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #e2e8f0; object-fit: cover;">
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <label class="form-label">Keterangan</label>
+            <textarea id="inp-item-keterangan" class="form-textarea"
+                placeholder="Masukkan keterangan detail"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button type="button" class="btn-outline"
+                onclick="showDetail(document.getElementById('current-order-id').value)">Batal</button>
+            <button type="button" id="btn-simpan-item" class="btn-primary" onclick="simpanItem()">Simpan
+                Permohonan</button>
+        </div>
+    </div>
+
+    <!-- 2. Dokumen Permohonan Alat -->
+    <div id="dokumen-list-container" class="content-card order-section" style="margin-top: 24px;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>Dokumen Permohonan Alat</h3>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <div class="custom-select" id="dropdown-doc-status" style="min-width: 150px;">
+                        <button type="button" class="select-trigger"
+                            style="padding: 8px 12px; border-radius: 8px; font-size: 13px;">
+                            <span class="selected-text">Semua Status</span>
+                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="select-options">
+                            <div class="option selected" data-value="">Semua Status</div>
+                            <div class="option" data-value="pending">Pending</div>
+                            <div class="option" data-value="verified">Disetujui</div>
+                            <div class="option" data-value="rejected">Perbaiki</div>
+                        </div>
+                        <input type="hidden" id="doc-filter-status" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dokumen-empty-state" style="padding: 48px; text-align: center; color: #94a3b8;">
+            Belum ada dokumen yang diunggah
+        </div>
+
+        <div id="dokumen-table-wrapper" style="display: none;" class="table-responsive">
+            <table class="custom-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th width="5%" style="text-align: center;">No</th>
+                        <th width="13%" style="text-align: center;">No Identitas Permohonan</th>
+                        <th width="12%" style="text-align: center;">Tanggal Upload</th>
+                        <th width="12%" style="text-align: center;">Proses Input</th>
+                        <th width="18%" style="text-align: center;">Nama Dokumen</th>
+                        <th width="13%" style="text-align: center;">Catatan Perusahaan</th>
+                        <th width="10%" style="text-align: center;">Status</th>
+                        <th width="12%" style="text-align: center;">Alasan</th>
+                        <th width="5%" style="text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="dokumen-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="order-pagination-footer" id="dokumen-pagination-footer" style="display: none;">
+            <div class="order-pagination-left">
+                <div class="order-pagination-info" id="dokumenPaginationInfo"></div>
+                <div class="order-pagination-controls">
+                    <span class="pagination-per-page-label">Tampilkan</span>
+                    <select id="dokumenPerPageSelect" class="pagination-per-page-select">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div id="dokumenPagination" class="order-pagination-container"></div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/permohonanalat.css?v=1.1">
+
+<script>
+    window.pilihMetode = function (method) {
+        document.getElementById('metode-pemilihan-container').style.display = 'none';
+        if (method === 'manual') {
+            document.getElementById('alat-list-container').style.display = 'block';
+            document.getElementById('dokumen-list-container').style.display = 'block';
+        } else if (method === 'upload') {
+            document.getElementById('upload-langsung-container').style.display = 'block';
+            document.getElementById('dokumen-list-container').style.display = 'block';
+        }
+    };
+
+    window.kembaliPilihMetode = function () {
+        window.currentRejectedDocId = null; // Reset flag edit dari dokumen yang ditolak
+        window.isEditFromDoc = false;
+        window.editingOrderIds = null;
+        document.getElementById('metode-pemilihan-container').style.display = 'block';
+        document.getElementById('alat-list-container').style.display = 'none';
+        document.getElementById('dokumen-list-container').style.display = 'block';
+        document.getElementById('upload-langsung-container').style.display = 'none';
+    };
+
+    window.bukaModalUploadLangsung = function () {
+        // Set mode agar btn-next-terms tahu harus trigger input mana
+        window._uploadMode = 'langsung';
+        const cbTerms = document.getElementById('terms-checkbox');
+        const btnNext = document.getElementById('btn-next-terms');
+        if (cbTerms) cbTerms.checked = false;
+        if (btnNext) btnNext.disabled = true;
+        document.getElementById('modal-upload-terms').style.display = 'flex';
+    };
+
+    document.getElementById('hidden-upload-langsung-input').addEventListener('change', async function (e) {
+        if (!e.target.files || e.target.files.length === 0) return;
+
+        const file = e.target.files[0];
+        const allowedTypes = [
+            'application/pdf'
+        ];
+        const allowedExts = ['pdf'];
+        const fileExt = file.name.split('.').pop().toLowerCase();
+        if (!allowedTypes.includes(file.type) && !allowedExts.includes(fileExt)) {
+            Swal.fire('Format Tidak Sesuai', 'Hanya file PDF yang diperbolehkan.', 'error');
+            e.target.value = '';
+            return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+            Swal.fire('Ukuran Terlalu Besar', 'Ukuran file maksimal 10MB.', 'error');
+            e.target.value = '';
+            return;
+        }
+
+        const catatan = document.getElementById('inp-upload-langsung-catatan').value;
+
+        Swal.fire({
+            title: 'Mengupload...',
+            html: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        const formData = new FormData();
+        formData.append('document', file);
+        formData.append('catatan', catatan);
+
+        if (window.reuploadUploadLangsungDocId) {
+            formData.append('reupload_doc_id', window.reuploadUploadLangsungDocId);
+        }
+
+        try {
+            const response = await fetch(window.BASE_URL + '/dashboard/alat/upload-langsung', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (result.success) {
+                Swal.fire('Berhasil!', 'Dokumen permohonan berhasil diupload.', 'success').then(() => {
+                    document.getElementById('inp-upload-langsung-catatan').value = '';
+                    e.target.value = '';
+                    window.reuploadUploadLangsungDocId = null;
+                    loadDokumenData();
+                });
+            } else {
+                Swal.fire('Error', result.message || 'Gagal mengupload dokumen.', 'error');
+                e.target.value = '';
+            }
+        } catch (err) {
+            console.error('Upload langsung error:', err);
+            Swal.fire('Error', 'Terjadi kesalahan koneksi ke server.', 'error');
+            e.target.value = '';
+        }
+    });
+
+    (function () {
+        // Init Custom Dropdowns
+        setupCustomDropdown('dropdown-jenis-uji', 'inp-jenis-uji');
+        setupCustomDropdown('dropdown-kondisi', 'inp-item-kondisi');
+        setupCustomDropdown('dropdown-doc-status', 'doc-filter-status');
+
+        function setupCustomDropdown(dropdownId, inputId) {
+            const dropdown = document.getElementById(dropdownId);
+            const input = document.getElementById(inputId);
+            if (!dropdown || !input) return;
+
+            const trigger = dropdown.querySelector('.select-trigger');
+            const optionsContainer = dropdown.querySelector('.select-options');
+            const selectedText = dropdown.querySelector('.selected-text');
+
+            trigger.addEventListener('click', (e) => {
+                document.querySelectorAll('.custom-select').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+                e.stopPropagation();
+            });
+
+            optionsContainer.addEventListener('click', (e) => {
+                const option = e.target.closest('.option');
+                if (!option) return;
+
+                const val = option.dataset.value;
+                input.value = val;
+                selectedText.textContent = option.textContent;
+
+                optionsContainer.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+                dropdown.classList.remove('open');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+        }
+
+        // Navigation Functions
+        window.hideAllSections = function () {
+            document.getElementById('metode-pemilihan-container').style.display = 'none';
+            document.getElementById('upload-langsung-container').style.display = 'none';
+            document.getElementById('alat-list-container').style.display = 'none';
+            document.getElementById('alat-detail-container').style.display = 'none';
+            document.getElementById('alat-form-container').style.display = 'none';
+            document.getElementById('alat-item-form-container').style.display = 'none';
+        };
+
+        window.showList = function () {
+            window.editingOrderIds = null;
+            window.isEditFromDoc = false;
+            window.currentRejectedDocId = null; // Reset flag edit dari dokumen yang ditolak
+            hideAllSections();
+            document.getElementById('alat-list-container').style.display = 'block';
+
+            // Tampilkan kembali semua baris di dokumen-tbody
+            const docTbody = document.getElementById('dokumen-tbody');
+            if (docTbody) {
+                Array.from(docTbody.querySelectorAll('tr')).forEach(row => {
+                    row.style.display = '';
+                });
+            }
+
+            // Re-enable semua tombol edit
+            document.querySelectorAll('.btn-edit-doc').forEach(btn => {
+                btn.disabled = false;
+                btn.style.removeProperty('background');
+                btn.style.removeProperty('background-color');
+                btn.style.removeProperty('border-color');
+                btn.style.removeProperty('color');
+                btn.style.cursor = 'pointer';
+                btn.style.opacity = '';
+                btn.style.pointerEvents = '';
+                btn.style.setProperty('background', '#f8fafc');
+                btn.style.setProperty('color', '#3b82f6');
+                btn.style.setProperty('border', '1px solid #bfdbfe');
+            });
+
+            // Reload data segar
+            loadData();
+            loadDokumenData();
+            renderList();
+        };
+
+        window.showForm = function (id = null) {
+            hideAllSections();
+            document.getElementById('alat-edit-id').value = id || '';
+            document.getElementById('alat-form-container').style.display = 'block';
+        };
+
+        window.showDetail = function (id) {
+            hideAllSections();
+            document.getElementById('current-order-id').value = id;
+            document.getElementById('alat-detail-container').style.display = 'block';
+            // Here you would fetch details for the specific ID and populate the UI
+        };
+
+        window.showItemForm = function (itemId = null) {
+            hideAllSections();
+            document.getElementById('alat-item-id').value = itemId || '';
+            document.getElementById('alat-item-form-container').style.display = 'block';
+
+            // Reset form title
+            const titleEl = document.querySelector('#alat-item-form-container .card-header h3');
+            if (titleEl) titleEl.textContent = itemId ? 'Edit Data Alat' : 'Data Permohonan Alat';
+
+            // Clear fields when adding new item
+            if (!itemId) {
+                document.getElementById('inp-item-nama').value = '';
+                document.getElementById('inp-item-merk').value = '';
+                document.getElementById('inp-item-tipe').value = '';
+                document.getElementById('inp-item-kapasitas').value = '';
+                document.getElementById('inp-item-ketelitian').value = '';
+                document.getElementById('inp-item-satuan').value = '';
+                document.getElementById('inp-item-jumlah').value = '';
+                document.getElementById('inp-item-titik-ukur').value = '';
+                document.getElementById('inp-item-keterangan').value = '';
+                if (typeof setDropdownValue === 'function') {
+                    setDropdownValue('dropdown-kondisi', '');
+                } else {
+                    document.getElementById('inp-item-kondisi').value = '';
+                }
+                const fileInput = document.getElementById('inp-item-gambar');
+                if (fileInput) fileInput.value = '';
+                const previewContainer = document.getElementById('gambar-preview');
+                if (previewContainer) previewContainer.style.display = 'none';
+            }
+        };
+
+        let alatData = [];
+        let dokumenData = [];
+
+        window.loadData = function (includeAll = false) {
+            return fetch(window.BASE_URL + '/dashboard/alat/list' + (includeAll ? '?include_all=true' : ''))
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alatData = res.data;
+                        renderList();
+                    }
+                });
+        };
+
+        window.renderList = function () {
+            const tbody = document.getElementById('orders-tbody');
+            const emptyState = document.getElementById('orders-empty-state');
+            const tableWrapper = document.getElementById('orders-table-wrapper');
+
+            tbody.innerHTML = '';
+
+            let filteredData = alatData;
+            if (window.editingOrderIds && window.editingOrderIds.length > 0) {
+                filteredData = alatData.filter(order => window.editingOrderIds.includes(parseInt(order.id)));
+            }
+
+            if (filteredData.length === 0) {
+                emptyState.style.display = 'block';
+                tableWrapper.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableWrapper.style.display = 'block';
+
+            filteredData.forEach((order, index) => {
+                const tr = document.createElement('tr');
+                const tgl = new Date(order.dibuat_pada).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <label class="order-radio-label">
+                            <input type="checkbox" name="order_select[]" class="order-checkbox" value="${order.id}" onchange="handleSingleSelect(this)">
+                            <div class="order-radio-box">
+                                <svg class="order-radio-check" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </label>
+                    </td>
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td style="text-align: center;">${order.kategori || '-'}</td>
+                    <td style="text-align: center;">${tgl}</td>
+                    <td>
+                        <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center; padding-right: 12px;">
+                            <button onclick="showDetail(${order.id})" class="btn-action icon-btn manage">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                Kelola Data Alat
+                            </button>
+                            <button onclick="deleteOrder(${order.id})" class="btn-action icon-btn danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                Hapus
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+
+        window.loadDokumenData = function () {
+            fetch(window.BASE_URL + '/dashboard/alat/dokumen/list')
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        dokumenData = res.data;
+                        renderDokumenList();
+                    }
+                });
+        };
+
+        let dokumenItemsPerPage = 10;
+        let dokumenCurrentPage = 1;
+
+        const perPageSelect = document.getElementById('dokumenPerPageSelect');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', function () {
+                dokumenItemsPerPage = parseInt(this.value);
+                dokumenCurrentPage = 1;
+                renderDokumenList();
+            });
+        }
+
+        window.renderDokumenList = function () {
+            const tbody = document.getElementById('dokumen-tbody');
+            const emptyState = document.getElementById('dokumen-empty-state');
+            const tableWrapper = document.getElementById('dokumen-table-wrapper');
+            const paginationFooter = document.getElementById('dokumen-pagination-footer');
+
+            tbody.innerHTML = '';
+
+            let filteredData = dokumenData;
+
+            if (filteredData.length === 0) {
+                emptyState.style.display = 'block';
+                tableWrapper.style.display = 'none';
+                if (paginationFooter) paginationFooter.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableWrapper.style.display = 'block';
+            if (paginationFooter) paginationFooter.style.display = 'flex';
+
+            const totalRows = filteredData.length;
+            const totalPages = Math.ceil(totalRows / dokumenItemsPerPage);
+            if (dokumenCurrentPage > totalPages) dokumenCurrentPage = totalPages;
+            if (dokumenCurrentPage < 1) dokumenCurrentPage = 1;
+
+            const start = (dokumenCurrentPage - 1) * dokumenItemsPerPage;
+            const end = Math.min(start + dokumenItemsPerPage, totalRows);
+
+            const pageData = filteredData.slice(start, end);
+
+            pageData.forEach((doc, index) => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-doc-id', doc.id);
+                const tgl = new Date(doc.dibuat_pada).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                let statusLabel = 'Pending';
+                let statusStyle = 'color: #d97706; font-weight: 500;'; // pengecualian style
+                if (doc.status === 'verified') {
+                    statusLabel = 'Disetujui';
+                    statusStyle = 'color: #059669; font-weight: 500;'; // pengecualian style
+                } else if (doc.status === 'rejected') {
+                    const revCount = parseInt(doc.jumlah_revisi) || 1;
+                    statusLabel = 'Perbaiki ' + revCount;
+                    statusStyle = 'color: #dc2626; font-weight: 500;'; // pengecualian style
+                }
+
+                let filesHtml = '';
+                let datesHtml = '';
+                let catatanHtml = '';
+                
+                const fmtFull = (val) => {
+                    if (!val) return '-';
+                    const d = new Date(val);
+                    return isNaN(d) ? '-' : d.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+                };
+                const linkStyle = 'color:#3b82f6;text-decoration:underline;font-weight:500;font-size:13px;display:inline-flex;align-items:center;gap:4px;';
+                const dateStyle = 'color:#1e293b;font-size:13px;';
+
+                let validHistory = [];
+                for (let i = 1; i <= 5; i++) {
+                    if (doc['preview_token_' + i]) {
+                        validHistory.push({
+                            token: doc['preview_token_' + i],
+                            name: doc['nama_file_' + i] || '',
+                            // Tanggal upload file di slot i adalah tanggal revisi_upload_{i-1} (atau dibuat_pada jika i=1)
+                            date: (i === 1) ? fmtFull(doc.dibuat_pada) : (doc['revisi_upload_' + (i - 1)] ? fmtFull(doc['revisi_upload_' + (i - 1)]) : '-')
+                        });
+                    }
+                }
+
+                if (validHistory.length === 0 || doc.proses_input === 'Input Manual') {
+                    filesHtml = doc.preview_token
+                        ? `<div><a href="${window.BASE_URL}/dokumen/view/${doc.preview_token}" target="_blank" style="${linkStyle}" title="${doc.nama_file_asli}">Lihat File</a></div>`
+                        : `<span style="color:#94a3b8;font-style:italic;">Tidak tersedia</span>`;
+                    
+                    if (validHistory.length > 0) {
+                        let highestSlot = 0;
+                        for (let i = 1; i <= 5; i++) {
+                            if (doc['preview_token_' + i]) highestSlot = i;
+                        }
+                        const latestDate = doc['revisi_upload_' + highestSlot] ? fmtFull(doc['revisi_upload_' + highestSlot]) : fmtFull(doc.dibuat_pada);
+                        datesHtml = `<div style="${dateStyle}">${latestDate}</div>`;
+                    } else {
+                        datesHtml = `<div style="${dateStyle}">${fmtFull(doc.dibuat_pada)}</div>`;
+                    }
+                } else {
+                    // Output history from OLDEST to NEWEST to match catatan order (Perbaikan 1 → 2 → terbaru)
+                    let highestSlot = 0;
+                    for (let i = 1; i <= 5; i++) {
+                        if (doc['preview_token_' + i]) highestSlot = i;
+                    }
+                    const latestDate = doc['revisi_upload_' + highestSlot] ? fmtFull(doc['revisi_upload_' + highestSlot]) : fmtFull(doc.dibuat_pada);
+
+                    // Slot history: oldest first (i=0 = original, i=1 = Perbaikan 1, dst.)
+                    for (let i = 0; i < validHistory.length; i++) {
+                        const h = validHistory[i];
+                        let label;
+                        if (i === 0) {
+                            label = 'Lihat File';
+                        } else {
+                            label = `Lihat File Perbaikan ${i}`;
+                        }
+                        let displayDate = h.date;
+                        if (displayDate === '-') displayDate = fmtFull(doc.dibuat_pada);
+                        filesHtml += `<div style="margin-bottom:4px;"><a href="${window.BASE_URL}/dokumen/view/${h.token}" target="_blank" style="${linkStyle}" title="${h.name}">${label}</a></div>`;
+                        datesHtml += `<div style="margin-bottom:4px;${dateStyle}">${displayDate}</div>`;
+                    }
+
+                    // Tambahkan file TERBARU (aktif saat ini) di akhir
+                    const latestRevNum = validHistory.length;
+                    if (doc.preview_token) {
+                        filesHtml += `<div style="margin-bottom:4px;"><a href="${window.BASE_URL}/dokumen/view/${doc.preview_token}" target="_blank" style="${linkStyle}" title="${doc.nama_file_asli}">Lihat File Perbaikan ${latestRevNum}</a></div>`;
+                    }
+                    datesHtml += `<div style="margin-bottom:4px;${dateStyle}">${latestDate}</div>`;
+
+                    // Pecah catatan per revisi agar sejajar dengan baris file
+                    if (doc.catatan && doc.catatan !== '-') {
+                        const catatanParts = doc.catatan.split('\n\n---\n\n').map(p => p.trim()).filter(p => p);
+                        // Baris pertama untuk file original (tidak punya catatan)
+                        catatanHtml += `<div style="margin-bottom:4px;color:#94a3b8;font-style:italic;font-size:13px;">-</div>`;
+                        catatanParts.forEach(part => {
+                            catatanHtml += `<div style="margin-bottom:4px;font-size:13px;white-space:pre-wrap;">${part}</div>`;
+                        });
+                    } else {
+                        catatanHtml = '-';
+                    }
+                }
+
+                if (!filesHtml) filesHtml = `<span style="color:#94a3b8;font-style:italic;">Tidak tersedia</span>`;
+
+                tr.innerHTML = `
+                    <td style="text-align: center;">${start + index + 1}</td>
+                    <td style="text-align: center; font-weight: 500;">${doc.no_identitas || '-'}</td>
+                    <td style="text-align: center;">${datesHtml}</td>
+                    <td style="text-align: center; white-space: nowrap;">${doc.proses_input || '-'}</td>
+                    <td style="text-align: center;">${filesHtml}</td>
+                    <td style="color:#1e293b;font-size:13px;">${catatanHtml || doc.catatan || '-'}</td>
+                    <td style="text-align: center;">
+                        <span style="font-size: 13px; ${statusStyle}">${statusLabel}</span>
+                    </td>
+                    <td style="color: #1e293b; font-weight: 500;">${doc.status === 'rejected' && doc.alasan_penolakan ? doc.alasan_penolakan : '-'}</td>
+                    <td style="text-align: center;">
+                        ${doc.status === 'verified' && doc.lokasi_file ? `
+                            <div style="display: flex; justify-content: center;">
+                                <a href="${window.BASE_URL}${doc.lokasi_file}" target="_blank"
+                                    title="Unduh Dokumen"
+                                    style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #62A0FD; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; box-shadow: 0 2px 4px rgba(98, 160, 253, 0.2); transition: all 0.2s;" download>
+                                    Unduh File
+                                </a>
+                            </div>
+                        ` : ''}
+                        ${doc.status === 'rejected' ? `
+                            <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                                ${doc.proses_input !== 'Upload Langsung' ? `
+                                <button onclick="editPermohonanFromDoc(${doc.id}, '${(doc.id_permintaan_list || '').replace(/'/g, "\\'")}')" 
+                                    id="edit-doc-btn-${doc.id}"
+                                    title="Edit Form Permohonan"
+                                    style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #f8fafc; color: #3b82f6; border: 1px solid #bfdbfe; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    Edit Data
+                                </button>
+                                ` : ''}
+                                ${doc.proses_input === 'Upload Langsung' ? `
+                                <button onclick="window.reuploadUploadLangsungDocId = ${doc.id}; pilihMetode('upload'); window.scrollTo({ top: 0, behavior: 'smooth' });"
+                                    title="Upload Ulang Dokumen"
+                                    style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #3b82f6; color: white; border: 1px solid #3b82f6; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    Upload Ulang
+                                </button>
+                                ` : `
+                                <button onclick="openReuploadAlatModal(${doc.id})"
+                                    title="Upload Ulang Dokumen PDF"
+                                    style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 6px 12px; background: #3b82f6; color: white; border: 1px solid #3b82f6; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                    Upload Ulang
+                                </button>
+                                `}
+                            </div>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Render Pagination
+            const container = document.getElementById('dokumenPagination');
+            const infoEl = document.getElementById('dokumenPaginationInfo');
+
+            if (infoEl) {
+                infoEl.textContent = `Menampilkan ${start + 1} - ${end} dari ${totalRows} data`;
+            }
+
+            if (!container) return;
+
+            if (totalPages <= 1) {
+                container.innerHTML = `<button class="order-page-btn" disabled>Prev</button><button class="order-page-btn active" disabled>1</button><button class="order-page-btn" disabled>Next</button>`;
+                return;
+            }
+
+            let html = '';
+            html += `<button class="order-page-btn" ${dokumenCurrentPage === 1 ? 'disabled' : ''} data-page="${dokumenCurrentPage - 1}">Prev</button>`;
+
+            let startPage = Math.max(1, dokumenCurrentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="order-page-btn ${i === dokumenCurrentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+
+            html += `<button class="order-page-btn" ${dokumenCurrentPage === totalPages ? 'disabled' : ''} data-page="${dokumenCurrentPage + 1}">Next</button>`;
+            container.innerHTML = html;
+
+            container.querySelectorAll('.order-page-btn:not([disabled])').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    dokumenCurrentPage = parseInt(this.dataset.page);
+                    renderDokumenList();
+                });
+            });
+        };
+
+        window.editPermohonanFromDoc = function (docId, permintaanIdsStr) {
+            if (!permintaanIdsStr) {
+                if (window.showAlert) showAlert('Tidak ada data permohonan terkait.', 'warning');
+                return;
+            }
+
+            // Tandai bahwa sedang mengedit dari dokumen yang ditolak (Input Manual)
+            window.currentRejectedDocId = docId;
+
+            // Disable tombol edit yang diklik
+            const editBtn = document.getElementById('edit-doc-btn-' + docId);
+            if (editBtn) {
+                editBtn.disabled = true;
+                editBtn.style.setProperty('background', '#6b7280', 'important');
+                editBtn.style.setProperty('border-color', '#6b7280', 'important');
+                editBtn.style.setProperty('color', '#d1d5db', 'important');
+                editBtn.style.cursor = 'not-allowed';
+                editBtn.style.opacity = '0.7';
+                editBtn.style.pointerEvents = 'none';
+            }
+
+            // Sembunyikan baris dokumen lain yang tidak diedit
+            const docTbody = document.getElementById('dokumen-tbody');
+            if (docTbody) {
+                Array.from(docTbody.querySelectorAll('tr[data-doc-id]')).forEach(row => {
+                    if (row.dataset.docId != docId) {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+
+            const ids = permintaanIdsStr.split(',').map(s => s.trim()).filter(Boolean);
+            if (ids.length > 0) {
+                // Set flag edit dari dokumen
+                window.isEditFromDoc = true;
+                window.editingOrderIds = ids.map(id => parseInt(id));
+
+                loadData(true).then(() => {
+                    hideAllSections();
+
+                    if (window.editingOrderIds.length === 1) {
+                        showDetail(window.editingOrderIds[0]);
+                    } else {
+                        document.getElementById('alat-list-container').style.display = 'block';
+                        renderList();
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+                    }
+                });
+            }
+        };
+
+        window.handleSingleSelect = function (checkbox) {
+            if (checkbox.checked) {
+                // Uncheck semua checkbox lain
+                document.querySelectorAll('.order-checkbox').forEach(cb => {
+                    if (cb !== checkbox) cb.checked = false;
+                });
+            }
+        };
+
+        window.simpanOrder = function () {
+            const id = document.getElementById('alat-edit-id').value;
+            const kategori = document.getElementById('inp-kategori').value;
+            const nama_penanda_tangan = document.getElementById('inp-nama-penanda-tangan').value;
+            const jabatan = document.getElementById('inp-jabatan').value;
+            const catatan = document.getElementById('inp-catatan') ? document.getElementById('inp-catatan').value : '';
+
+            if (!nama_penanda_tangan || !jabatan) {
+                if (window.showAlert) showAlert('Semua kolom bertanda * wajib diisi', 'error');
+                else alert('Semua kolom bertanda * wajib diisi');
+                return;
+            }
+
+            const formData = new FormData();
+            if (id) formData.append('id', id);
+            formData.append('kategori', kategori);
+            formData.append('nama_penanda_tangan', nama_penanda_tangan);
+            formData.append('jabatan', jabatan);
+            formData.append('catatan', catatan);
+
+            fetch(window.BASE_URL + '/dashboard/alat/order/save', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        if (window.showAlert) showAlert(res.message, 'success');
+                        else alert(res.message);
+
+                        // Reset form
+                        document.getElementById('inp-kategori').value = 'Permohonan Kalibrasi';
+                        document.getElementById('inp-nama-penanda-tangan').value = '';
+                        document.getElementById('inp-jabatan').value = '';
+                        if (document.getElementById('inp-catatan')) document.getElementById('inp-catatan').value = '';
+
+                        loadData();
+                        loadDokumenData();
+                        showList();
+                    } else {
+                        if (window.showAlert) showAlert(res.message, 'error');
+                        else alert(res.message);
+                    }
+                });
+        };
+
+        window.deleteOrder = function (id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Permohonan ini akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData();
+                    formData.append('id', id);
+
+                    fetch(window.BASE_URL + '/dashboard/alat/order/delete', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                Swal.fire('Terhapus!', res.message, 'success');
+                                loadData();
+                            } else {
+                                Swal.fire('Gagal!', res.message, 'error');
+                            }
+                        });
+                }
+            });
+        };
+
+        window.showDetail = async function (id) {
+            hideAllSections();
+            document.getElementById('current-order-id').value = id;
+            document.getElementById('alat-detail-container').style.display = 'block';
+
+            let order = alatData.find(o => o.id == id);
+
+            if (!order || !order.items) {
+                await loadData(true);
+                order = alatData.find(o => o.id == id);
+                if (!order) {
+                    showList();
+                    return;
+                }
+            }
+
+            document.getElementById('detail-kategori').textContent = order.kategori || '-';
+
+            // Tampilkan/sembunyikan tombol Cetak sesuai mode edit
+            const btnCetak = document.getElementById('btn-cetak-di-detail');
+            if (btnCetak) {
+                btnCetak.style.display = window.isEditFromDoc ? 'flex' : 'none';
+            }
+
+            renderItems(order.items || []);
+            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+        };
+
+        function renderItems(items) {
+            const tbody = document.getElementById('items-tbody');
+            const emptyState = document.getElementById('items-empty-state');
+            const tableWrapper = document.getElementById('items-table-wrapper');
+
+            tbody.innerHTML = '';
+
+            if (items.length === 0) {
+                emptyState.style.display = 'block';
+                tableWrapper.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tableWrapper.style.display = 'block';
+
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td>${item.nama_alat || '-'}</td>
+                    <td>${item.merk || '-'}</td>
+                    <td>${item.tipe_seri || '-'}</td>
+                    <td>${item.kapasitas || '-'}</td>
+                    <td>${item.jumlah || '0'}</td>
+                    <td>${item.kondisi_alat || '-'}</td>
+                    <td>${item.titik_ukur || '-'}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button onclick="editItem(${item.id})" class="btn-action btn-text kelola">Edit</button>
+                            <button onclick="deleteItem(${item.id})" class="btn-action btn-text delete">Hapus</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.simpanItem = function () {
+            const id_permintaan = document.getElementById('current-order-id').value;
+            const id = document.getElementById('alat-item-id').value;
+
+            const nama_alat = document.getElementById('inp-item-nama').value;
+            const merk = document.getElementById('inp-item-merk').value;
+            const tipe_seri = document.getElementById('inp-item-tipe').value;
+            const kapasitas = document.getElementById('inp-item-kapasitas').value;
+            const ketelitian = document.getElementById('inp-item-ketelitian').value;
+            const satuan = document.getElementById('inp-item-satuan').value;
+            const jumlah = document.getElementById('inp-item-jumlah').value;
+            const titik_ukur = document.getElementById('inp-item-titik-ukur').value;
+            const kondisi_alat = document.getElementById('inp-item-kondisi').value;
+            const keterangan = document.getElementById('inp-item-keterangan').value;
+            const fileInput = document.getElementById('inp-item-gambar');
+
+            if (!nama_alat || !merk || !tipe_seri || !kapasitas || !ketelitian || !satuan || !jumlah || !titik_ukur || !kondisi_alat) {
+                if (window.showAlert) showAlert('Mohon lengkapi semua kolom teks yang wajib diisi', 'error');
+                else alert('Mohon lengkapi semua kolom teks yang wajib diisi');
+                return;
+            }
+
+            // Validasi file upload (wajib jika baru)
+            if (!fileInput || fileInput.files.length === 0) {
+                if (!id) {
+                    if (window.showAlert) showAlert('Mohon unggah gambar alat yang wajib dilampirkan', 'error');
+                    else alert('Mohon unggah gambar alat yang wajib dilampirkan');
+                    return;
+                }
+            }
+
+            const formData = new FormData();
+            formData.append('id_permintaan', id_permintaan);
+            if (id) formData.append('id', id);
+
+            formData.append('nama_alat', nama_alat);
+            formData.append('merk', merk);
+            formData.append('tipe_seri', tipe_seri);
+            formData.append('kapasitas', kapasitas);
+            formData.append('ketelitian', ketelitian);
+            formData.append('satuan', satuan);
+            formData.append('jumlah', jumlah);
+            formData.append('titik_ukur', titik_ukur);
+            formData.append('kondisi_alat', kondisi_alat);
+            formData.append('keterangan', keterangan);
+
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!validTypes.includes(file.type)) {
+                    if (window.showAlert) showAlert('Format file harus PNG, JPG, atau JPEG', 'error');
+                    else alert('Format file harus PNG, JPG, atau JPEG');
+                    return;
+                }
+                if (file.size > 3 * 1024 * 1024) {
+                    if (window.showAlert) showAlert('Ukuran file maksimal 3MB', 'error');
+                    else alert('Ukuran file maksimal 3MB');
+                    return;
+                }
+                formData.append('gambar', file);
+            }
+
+            fetch(window.BASE_URL + '/dashboard/alat/item/save', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        if (window.showAlert) showAlert(res.message, 'success');
+                        else alert(res.message);
+
+                        document.getElementById('inp-item-nama').value = '';
+                        document.getElementById('inp-item-merk').value = '';
+                        document.getElementById('inp-item-tipe').value = '';
+                        document.getElementById('inp-item-kapasitas').value = '';
+                        document.getElementById('inp-item-ketelitian').value = '';
+                        document.getElementById('inp-item-satuan').value = '';
+                        document.getElementById('inp-item-jumlah').value = '';
+                        document.getElementById('inp-item-titik-ukur').value = '';
+                        document.getElementById('inp-item-keterangan').value = '';
+                        document.getElementById('inp-item-kondisi').value = '';
+                        if (document.getElementById('inp-item-gambar')) document.getElementById('inp-item-gambar').value = '';
+                        document.querySelector('#dropdown-kondisi .selected-text').textContent = 'Pilih Kondisi';
+
+                        fetch(window.BASE_URL + '/dashboard/alat/list')
+                            .then(r => r.json())
+                            .then(r => {
+                                if (r.success) {
+                                    alatData = r.data;
+                                    showDetail(id_permintaan);
+                                }
+                            });
+                    } else {
+                        if (window.showAlert) showAlert(res.message, 'error');
+                        else alert(res.message);
+                    }
+                });
+        };
+
+        window.deleteItem = function (id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Spesifikasi alat ini akan dihapus permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData();
+                    formData.append('id', id);
+
+                    fetch(window.BASE_URL + '/dashboard/alat/item/delete', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                Swal.fire('Terhapus!', res.message, 'success');
+                                const id_permintaan = document.getElementById('current-order-id').value;
+                                fetch(window.BASE_URL + '/dashboard/alat/list')
+                                    .then(r => r.json())
+                                    .then(r => {
+                                        if (r.success) {
+                                            alatData = r.data;
+                                            showDetail(id_permintaan);
+                                        }
+                                    });
+                            } else {
+                                Swal.fire('Gagal!', res.message, 'error');
+                            }
+                        });
+                }
+            });
+        };
+
+        window.editItem = function (id) {
+            const orderId = document.getElementById('current-order-id').value;
+            const order = alatData.find(o => o.id == orderId);
+            if (!order || !order.items) return;
+            const item = order.items.find(i => i.id == id);
+            if (!item) return;
+
+            // Show the form first (this hides other sections and makes the form visible)
+            showItemForm(item.id);
+
+            // Now populate the fields
+            document.getElementById('inp-item-nama').value = item.nama_alat || '';
+            document.getElementById('inp-item-merk').value = item.merk || '';
+            document.getElementById('inp-item-tipe').value = item.tipe_seri || '';
+            document.getElementById('inp-item-kapasitas').value = item.kapasitas || '';
+            document.getElementById('inp-item-ketelitian').value = item.ketelitian || '';
+            document.getElementById('inp-item-satuan').value = item.satuan || '';
+            document.getElementById('inp-item-jumlah').value = item.jumlah || '';
+            document.getElementById('inp-item-titik-ukur').value = item.titik_ukur || '';
+            document.getElementById('inp-item-keterangan').value = item.keterangan || '';
+
+            // Set kondisi alat dropdown
+            if (typeof setDropdownValue === 'function') {
+                setDropdownValue('dropdown-kondisi', item.kondisi_alat || '');
+            } else {
+                document.getElementById('inp-item-kondisi').value = item.kondisi_alat || '';
+            }
+
+            const fileInput = document.getElementById('inp-item-gambar');
+            if (fileInput) fileInput.value = '';
+
+            // Show image preview if item already has an uploaded image
+            const previewContainer = document.getElementById('gambar-preview');
+            const previewImg = document.getElementById('gambar-preview-img');
+            if (previewContainer && previewImg) {
+                if (item.lokasi_gambar) {
+                    previewImg.src = window.BASE_URL + item.lokasi_gambar;
+                    previewContainer.style.display = 'block';
+                } else {
+                    previewContainer.style.display = 'none';
+                }
+            }
+
+            // Update form title to indicate edit mode
+            const titleEl = document.querySelector('#alat-item-form-container .card-header h3');
+            if (titleEl) titleEl.textContent = 'Edit Data Alat';
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.cetakMassal = function () {
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Pilih dokumen permohonan terlebih dahulu untuk dicetak.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            const orderId = selectedIds[0];
+            const printUrl = window.BASE_URL + '/dashboard/alat/cetak?id=' + orderId;
+
+            Swal.fire({
+                title: 'Menyiapkan Dokumen...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let printIframe = document.getElementById('print-iframe');
+            if (!printIframe) {
+                printIframe = document.createElement('iframe');
+                printIframe.id = 'print-iframe';
+                printIframe.style.visibility = 'hidden';
+                printIframe.style.position = 'absolute';
+                printIframe.style.width = '0px';
+                printIframe.style.height = '0px';
+                printIframe.style.border = 'none';
+                document.body.appendChild(printIframe);
+            }
+
+            printIframe.onload = function () {
+                Swal.close();
+                setTimeout(() => {
+                    printIframe.contentWindow.print();
+                }, 100);
+            };
+
+            printIframe.src = printUrl;
+        };
+
+        window.openUploadModal = function () {
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Pilih minimal satu permohonan untuk diunggah.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            const cbTerms = document.getElementById('terms-checkbox');
+            const btnNext = document.getElementById('btn-next-terms');
+            if (cbTerms) cbTerms.checked = false;
+            if (btnNext) btnNext.disabled = true;
+
+            document.getElementById('modal-upload-terms').style.display = 'flex';
+        };
+
+        const checkboxTerms = document.getElementById('terms-checkbox');
+        const btnNextTerms = document.getElementById('btn-next-terms');
+
+        if (checkboxTerms) {
+            checkboxTerms.addEventListener('change', function () {
+                btnNextTerms.disabled = !this.checked;
+            });
+        }
+
+        window.closeModal = function (modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        };
+
+        if (btnNextTerms) {
+            btnNextTerms.addEventListener('click', function () {
+                document.getElementById('modal-upload-terms').style.display = 'none';
+                if (window._uploadMode === 'langsung') {
+                    window._uploadMode = null;
+                    document.getElementById('hidden-upload-langsung-input').click();
+                } else {
+                    document.getElementById('hidden-upload-input').click();
+                }
+            });
+        }
+
+        document.getElementById('hidden-upload-input').addEventListener('change', async function (e) {
+            const files = e.target.files;
+            if (files.length === 0) return;
+
+            const file = files[0];
+            if (file.type !== 'application/pdf') {
+                Swal.fire({
+                    title: 'Format Tidak Sesuai',
+                    text: 'Hanya file PDF yang diperbolehkan.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                this.value = '';
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                Swal.fire({
+                    title: 'Ukuran Terlalu Besar',
+                    text: 'Ukuran file maksimal 10MB.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                this.value = '';
+                return;
+            }
+
+            document.getElementById('modal-upload-confirm').style.display = 'flex';
+        });
+
+        window.confirmUpload = async function () {
+            document.getElementById('modal-upload-confirm').style.display = 'none';
+            const fileInput = document.getElementById('hidden-upload-input');
+            const selectedIds = Array.from(document.querySelectorAll('.order-checkbox:checked')).map(cb => cb.value);
+
+            if (fileInput.files.length === 0 || selectedIds.length === 0) return;
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('order_ids', JSON.stringify(selectedIds));
+            // Kirim nilai konfirmasi syarat (checkbox sudah dicentang sebelumnya)
+            formData.append('konfirmasi_syarat', 1);
+
+            try {
+                Swal.fire({
+                    title: 'Mengunggah...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const response = await fetch(window.BASE_URL + '/dashboard/alat/dokumen/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Dokumen Anda telah berhasil diunggah.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    loadData();
+                    loadDokumenData();
+                    fileInput.value = '';
+                    document.querySelectorAll('.order-checkbox:checked').forEach(cb => cb.checked = false);
+                } else {
+                    Swal.fire('Error', result.message || 'Gagal mengunggah dokumen', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+            }
+        };
+
+        window.cetakPdf = function () {
+            const orderId = document.getElementById('current-order-id').value;
+            if (!orderId) {
+                Swal.fire('Peringatan', 'ID permohonan tidak ditemukan.', 'warning');
+                return;
+            }
+
+            const printUrl = window.BASE_URL + '/dashboard/alat/cetak?id=' + orderId;
+
+            Swal.fire({
+                title: 'Menyiapkan Dokumen...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            let printIframe = document.getElementById('print-iframe');
+            if (!printIframe) {
+                printIframe = document.createElement('iframe');
+                printIframe.id = 'print-iframe';
+                printIframe.style.visibility = 'hidden';
+                printIframe.style.position = 'absolute';
+                printIframe.style.width = '0px';
+                printIframe.style.height = '0px';
+                printIframe.style.border = 'none';
+                document.body.appendChild(printIframe);
+            }
+
+            printIframe.onload = function () {
+                Swal.close();
+                setTimeout(() => {
+                    printIframe.contentWindow.print();
+                }, 100);
+            };
+
+            printIframe.src = printUrl;
+        };
+
+        // Re-upload functionality
+        let currentReuploadAlatDocId = null;
+        window.openReuploadAlatModal = function (docId) {
+            currentReuploadAlatDocId = docId;
+            const cb = document.getElementById('reupload-terms-checkbox');
+            const btn = document.getElementById('btn-next-reupload-terms');
+            if (cb) cb.checked = false;
+            if (btn) btn.disabled = true;
+            document.getElementById('modal-reupload-terms').style.display = 'flex';
+        };
+
+        const reuploadCb = document.getElementById('reupload-terms-checkbox');
+        const reuploadBtn = document.getElementById('btn-next-reupload-terms');
+        if (reuploadCb) {
+            reuploadCb.addEventListener('change', function () {
+                reuploadBtn.disabled = !this.checked;
+            });
+        }
+        if (reuploadBtn) {
+            reuploadBtn.addEventListener('click', function () {
+                document.getElementById('modal-reupload-terms').style.display = 'none';
+                document.getElementById('hidden-reupload-input').click();
+            });
+        }
+
+        document.getElementById('hidden-reupload-input').addEventListener('change', async function (e) {
+            if (!this.files || this.files.length === 0) return;
+            const file = this.files[0];
+            const maxSize = 10 * 1024 * 1024;
+
+            if (file.type !== 'application/pdf') {
+                if (window.showAlert) showAlert('Format file tidak valid. Hanya file PDF yang diperbolehkan.', 'error');
+                this.value = '';
+                return;
+            }
+
+            if (file.size > maxSize) {
+                if (window.showAlert) showAlert('Ukuran file maksimal 10 MB.', 'error');
+                this.value = '';
+                return;
+            }
+
+            Swal.fire({
+                title: 'Konfirmasi Upload Ulang',
+                text: 'Apakah Anda yakin ingin mengunggah ulang dokumen ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Upload',
+                cancelButtonText: 'Batal'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        Swal.fire({
+                            title: 'Mengunggah...',
+                            text: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            didOpen: () => { Swal.showLoading(); }
+                        });
+
+                        const formData = new FormData();
+                        formData.append('document', file);
+                        formData.append('doc_id', currentReuploadAlatDocId);
+                        // Kirim nilai konfirmasi syarat (checkbox sudah dicentang sebelumnya)
+                        formData.append('konfirmasi_syarat', 1);
+
+                        const response = await fetch(window.BASE_URL + '/dashboard/alat/dokumen/reupload', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const res = await response.json();
+
+                        if (res.success) {
+                            Swal.fire('Berhasil!', 'Dokumen berhasil diunggah ulang.', 'success').then(() => {
+                                loadData();
+                                loadDokumenData();
+
+                                // Jika reupload ini berasal dari proses edit dokumen Input Manual yang ditolak,
+                                // ubah container atas kembali ke tampilan Pemilihan Metode
+                                if (window.currentRejectedDocId) {
+                                    window.currentRejectedDocId = null;
+                                    window.isEditFromDoc = false;
+                                    window.editingOrderIds = null;
+
+                                    // Tampilkan kembali semua baris dokumen yang disembunyikan
+                                    const docTbody = document.getElementById('dokumen-tbody');
+                                    if (docTbody) {
+                                        Array.from(docTbody.querySelectorAll('tr')).forEach(row => {
+                                            row.style.display = '';
+                                        });
+                                    }
+
+                                    // Sembunyikan semua section, tampilkan pemilihan metode
+                                    hideAllSections();
+                                    document.getElementById('metode-pemilihan-container').style.display = 'block';
+                                    document.getElementById('dokumen-list-container').style.display = 'block';
+                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error', res.message || 'Gagal mengunggah dokumen', 'error');
+                        }
+                    } catch (err) {
+                        console.error('Reupload error:', err);
+                        Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+                    }
+                }
+                document.getElementById('hidden-reupload-input').value = '';
+            });
+        });
+
+        // Initialize state
+        // showList(); // Di-comment agar tidak langsung menampilkan tabel list
+        loadData();
+        loadDokumenData();
+    })();
+</script>
+
+<div id="modal-upload-terms" class="custom-modal-overlay"
+    style="display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div class="custom-modal-content"
+        style="background: white; border-radius: 12px; max-width: 600px; width: 90%; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="modal-header"
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 16px;">
+            <h3 style="margin: 0; font-size: 18px; color: #0f172a;">Syarat dan Ketentuan Upload</h3>
+            <button class="close-modal" onclick="closeModal('modal-upload-terms')"
+                style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ol style="padding-left: 20px; color: #334155; margin-bottom: 20px; line-height: 1.6;">
+                <li>Pastikan data yang akan diupload sudah baik dan benar tidak ada kesalahan dalam pengetikan.</li>
+                <li>Segala konsekuensi hukum yang timbul akibat data yang tidak valid sepenuhnya menjadi tanggung jawab
+                    pemohon.</li>
+                <li>Dokumen harus dicap basah dengan stempel dan diberi tanda tangan dengan yang bersangkutan.</li>
+            </ol>
+            <div
+                style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.5;">
+                    <strong>Ketentuan File:</strong><br>
+                    &#8226; Format file yang diterima: <strong>PDF</strong><br>
+                    &#8226; Ukuran maksimal file: <strong>10 MB</strong>
+                </div>
+            </div>
+            <div class="checkbox-container" style="display: flex; gap: 10px; align-items: flex-start;">
+                <input type="checkbox" id="terms-checkbox" style="margin-top: 4px;">
+                <label for="terms-checkbox" style="font-size: 13px; color: #0f172a; cursor: pointer;">Saya telah membaca
+                    dan menyetujui syarat dan ketentuan yang berlaku.</label>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="padding-top: 20px; margin-top: 20px; border-top: 1px solid #e2e8f0; text-align: right;">
+            <button id="btn-next-terms" class="btn-primary" disabled>Berikutnya</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-upload-confirm" class="custom-modal-overlay"
+    style="display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div class="custom-modal-content small-modal"
+        style="background: white; border-radius: 12px; max-width: 400px; width: 90%; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="modal-body text-center" style="text-align: center;">
+            <div style="margin-bottom: 16px; display: flex; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                    stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <p style="font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 24px;">Apakah anda sudah yakin
+                dengan dokumen yang diupload?</p>
+            <div class="modal-actions" style="display: flex; gap: 12px; justify-content: center;">
+                <button id="btn-confirm-no" class="btn-outline"
+                    onclick="closeModal('modal-upload-confirm')">Tidak</button>
+                <button id="btn-confirm-yes" class="btn-primary" onclick="confirmUpload()">Iya</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-reupload-terms" class="custom-modal-overlay"
+    style="display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
+    <div class="custom-modal-content"
+        style="background: white; border-radius: 12px; max-width: 600px; width: 90%; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+        <div class="modal-header"
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 16px;">
+            <h3 style="margin: 0; font-size: 18px; color: #0f172a;">Syarat dan Ketentuan Upload Ulang</h3>
+            <button class="close-modal" onclick="closeModal('modal-reupload-terms')"
+                style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ol style="padding-left: 20px; color: #334155; margin-bottom: 20px; line-height: 1.6;">
+                <li>Pastikan data perbaikan yang akan diupload sudah baik dan benar tidak ada kesalahan dalam
+                    pengetikan.</li>
+                <li>Segala konsekuensi hukum yang timbul akibat data yang tidak valid sepenuhnya menjadi tanggung jawab
+                    pemohon.</li>
+                <li>Dokumen harus dicap basah dengan stempel dan diberi tanda tangan dengan yang bersangkutan.</li>
+            </ol>
+            <div
+                style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="flex-shrink: 0; margin-top: 2px;">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.5;">
+                    <strong>Ketentuan File:</strong><br>
+                    &#8226; Format file yang diterima: <strong>PDF</strong> saja<br>
+                    &#8226; Ukuran maksimal file: <strong>10 MB</strong>
+                </div>
+            </div>
+            <div class="checkbox-container" style="display: flex; gap: 10px; align-items: flex-start;">
+                <input type="checkbox" id="reupload-terms-checkbox" style="margin-top: 4px;">
+                <label for="reupload-terms-checkbox" style="font-size: 13px; color: #0f172a; cursor: pointer;">Saya
+                    telah membaca dan menyetujui syarat dan ketentuan yang berlaku.</label>
+            </div>
+        </div>
+        <div class="modal-footer"
+            style="padding-top: 20px; margin-top: 20px; border-top: 1px solid #e2e8f0; text-align: right;">
+            <button id="btn-next-reupload-terms" class="btn-primary" disabled>Pilih Dokumen</button>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="hidden-upload-input" style="display: none;" accept=".pdf">
+<input type="file" id="hidden-reupload-input" style="display: none;" accept=".pdf">
+<input type="file" id="hidden-upload-langsung-input" style="display: none;" accept=".pdf,application/pdf">

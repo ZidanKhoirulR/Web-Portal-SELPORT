@@ -1,0 +1,42 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <h2>Data Pelanggan Terdaftar</h2>
+</div>
+<div class="search-bar">
+    <input type="text" id="customerSearch" placeholder="Cari nama, email, perusahaan ..." class="form-control">
+    <div class="admin-custom-select" id="dropdown-customerKategori">
+        <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Kategori</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+        <div class="select-options">
+            <div class="option selected" data-value="">Semua Kategori</div>
+            <div class="option" data-value="instansi">Instansi</div>
+            <div class="option" data-value="perusahaan">Perusahaan</div>
+            <div class="option" data-value="perorangan">Perorangan</div>
+            <div class="option" data-value="mahasiswa">Mahasiswa</div>
+        </div>
+        <input type="hidden" id="customerKategoriFilter" value="">
+    </div>
+</div>
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="customerTable">
+            <thead>
+                <tr>
+                    <th>Tanggal Daftar</th>
+                    <th>Username</th>
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>No. WhatsApp</th>
+                    <th>Perusahaan</th>
+                    <th>Kategori</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="customerPagination" class="pagination-container"></div>
+</div>

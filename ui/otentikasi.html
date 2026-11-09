@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Pelayanan Selulosa</title>
+    <!-- Clear Auth State: jika halaman ini terbuka, berarti session di server sudah habis -->
+    <script>
+        (function () {
+            try {
+                localStorage.removeItem('selport_auth');
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="icon" type="image/x-icon" href="<!-- BASE_URL -->/public/favicon.ico">
+    <link rel="stylesheet" href="<!-- BASE_URL -->/public/css/otentikasi.css?v=<!-- TIMESTAMP -->">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+    <script>
+        window.appBaseUrl = "<!-- BASE_URL -->";
+    </script>
+</head>
+
+<body>
+    <div class="background-map-container"></div>
+
+    <div class="container" id="container">
+
+        <div class="form-container sign-up-container">
+            <div class="form-card" id="registerCard">
+
+                <div class="form-header">
+                    <h2>Daftar Sekarang</h2>
+                    <p id="step-description">Lengkapi data pribadi</p>
+                </div>
+
+                
+
+                <form method="POST" action="<!-- BASE_URL -->/register" id="registerForm">
+                    <input type="hidden" name="csrf_token" value="<!-- CSRF_TOKEN -->">
+
+                    <div class="form-step active" data-step="1">
+                        <div class="form-group">
+                            <label for="nama_lengkap">Nama Lengkap <span class="required">*</span></label>
+                            <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan Nama Lengkap"
+                                required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="jenis_kelamin">Jenis Kelamin <span class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-jenis_kelamin">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Jenis</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Jenis</div>
+                                        <div class="option" data-value="Laki-laki">Laki-laki</div>
+                                        <div class="option" data-value="Perempuan">Perempuan</div>
+                                    </div>
+                                    <input type="hidden" id="jenis_kelamin" name="jenis_kelamin" value="" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="kategori_pelayanan">Kategori Pelanggan <span
+                                        class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-kategori_pelayanan">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Kategori</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Kategori</div>
+                                        <div class="option" data-value="Instansi">Instansi</div>
+                                        <div class="option" data-value="Perusahaan">Perusahaan</div>
+                                        <div class="option" data-value="Perorangan">Perorangan</div>
+                                        <div class="option" data-value="Mahasiswa">Mahasiswa</div>
+                                    </div>
+                                    <input type="hidden" id="kategori_pelayanan" name="kategori_pelayanan" value=""
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="Masukkan Email Anda" required>
+                            <div class="username-feedback" id="email-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_whatsapp">No HP <span class="required">*</span></label>
+                            <div class="phone-input-wrapper">
+                                <input type="tel" id="no_whatsapp" name="no_whatsapp" placeholder="81234567890"
+                                    required>
+                            </div>
+                            <div class="form-group personal-address-group" id="personal-address-section">
+                                <label for="alamat_tinggal" id="label-alamat-tinggal">Alamat Lengkap <span
+                                        class="required">*</span></label>
+                                <textarea id="alamat_tinggal" name="alamat_tinggal" placeholder="Jl. Contoh No. 123"
+                                    rows="1" required></textarea>
+                            </div>
+                            <div class="form-row personal-address-group">
+                                <div class="form-group">
+                                    <label for="provinsi_tinggal" id="label-provinsi-tinggal">Provinsi <span
+                                            class="required">*</span></label>
+                                    <div class="custom-select" id="dropdown-provinsi_tinggal">
+                                        <button type="button" class="select-trigger">
+                                            <span class="selected-text">Pilih Provinsi</span>
+                                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="select-options">
+                                            <div class="option" data-value="">Pilih Provinsi</div>
+                                        </div>
+                                        <input type="hidden" id="provinsi_tinggal" name="provinsi_tinggal_id" value=""
+                                            required>
+                                    </div>
+                                    <input type="hidden" id="provinsi_tinggal_name" name="provinsi_tinggal">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kabupaten_tinggal" id="label-kabupaten-tinggal">Kab/Kota <span
+                                            class="required">*</span></label>
+                                    <div class="custom-select" id="dropdown-kabupaten_tinggal">
+                                        <button type="button" class="select-trigger">
+                                            <span class="selected-text">Pilih Kab/Kota</span>
+                                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="select-options">
+                                            <div class="option" data-value="">Pilih Kab/Kota</div>
+                                        </div>
+                                        <input type="hidden" id="kabupaten_tinggal" name="kabupaten_tinggal_id" value=""
+                                            required>
+                                    </div>
+                                    <input type="hidden" id="kabupaten_tinggal_name" name="kabupaten_tinggal">
+                                </div>
+                            </div>
+                            <div class="form-row personal-address-group">
+                                <div class="form-group">
+                                    <label for="kecamatan_tinggal" id="label-kecamatan-tinggal">Kecamatan <span
+                                            class="required">*</span></label>
+                                    <div class="custom-select" id="dropdown-kecamatan_tinggal">
+                                        <button type="button" class="select-trigger">
+                                            <span class="selected-text">Pilih Kecamatan</span>
+                                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="select-options">
+                                            <div class="option" data-value="">Pilih Kecamatan</div>
+                                        </div>
+                                        <input type="hidden" id="kecamatan_tinggal" name="kecamatan_tinggal_id" value=""
+                                            required>
+                                    </div>
+                                    <input type="hidden" id="kecamatan_tinggal_name" name="kecamatan_tinggal">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kodepos_tinggal" id="label-kodepos-tinggal">Kode Pos <span
+                                            class="required">*</span></label>
+                                    <div class="custom-select" id="dropdown-kodepos_tinggal">
+                                        <button type="button" class="select-trigger">
+                                            <span class="selected-text">Pilih Kode Pos</span>
+                                            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="select-options">
+                                            <div class="option" data-value="">Pilih Kode Pos</div>
+                                        </div>
+                                        <input type="hidden" id="kodepos_tinggal" name="kodepos_tinggal" value=""
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-step" data-step="2">
+                        <div class="form-group">
+                            <label for="nama_perusahaan" id="label-nama-perusahaan">Nama Perusahaan <span
+                                    class="required">*</span></label>
+                            <input type="text" id="nama_perusahaan" name="nama_perusahaan"
+                                placeholder="Masukkan nama perusahaan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email_perusahaan" id="label-email-perusahaan">Email Perusahaan <span
+                                    class="required">*</span></label>
+                            <input type="email" id="email_perusahaan" name="email_perusahaan"
+                                placeholder="email@perusahaan.com" required>
+                            <div class="address-lhu-note">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                <span>Alamat ini adalah alamat yang akan dijadikan sebagai pengiriman <strong>Lembar
+                                        Hasil Uji</strong>.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="alamat_perusahaan" id="label-alamat-perusahaan">Alamat Perusahaan <span
+                                    class="required">*</span></label>
+                            <textarea id="alamat_perusahaan" name="alamat_perusahaan" placeholder="Alamat Perusahaan *"
+                                rows="1" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="provinsi_perusahaan">Provinsi <span class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-provinsi_perusahaan">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Provinsi</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Provinsi</div>
+                                    </div>
+                                    <input type="hidden" id="provinsi_perusahaan" name="provinsi_perusahaan_id" value=""
+                                        required>
+                                </div>
+                                <input type="hidden" id="provinsi_perusahaan_name" name="provinsi_perusahaan">
+                            </div>
+                            <div class="form-group">
+                                <label for="kabupaten_perusahaan">Kab/Kota <span class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-kabupaten_perusahaan">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Kab/Kota</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Kab/Kota</div>
+                                    </div>
+                                    <input type="hidden" id="kabupaten_perusahaan" name="kabupaten_perusahaan_id"
+                                        value="" required>
+                                </div>
+                                <input type="hidden" id="kabupaten_perusahaan_name" name="kabupaten_perusahaan">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kecamatan_perusahaan">Kecamatan <span class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-kecamatan_perusahaan">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Kecamatan</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Kecamatan</div>
+                                    </div>
+                                    <input type="hidden" id="kecamatan_perusahaan" name="kecamatan_perusahaan_id"
+                                        value="" required>
+                                </div>
+                                <input type="hidden" id="kecamatan_perusahaan_name" name="kecamatan_perusahaan">
+                            </div>
+                            <div class="form-group">
+                                <label for="kodepos_perusahaan">Kode Pos <span class="required">*</span></label>
+                                <div class="custom-select" id="dropdown-kodepos_perusahaan">
+                                    <button type="button" class="select-trigger">
+                                        <span class="selected-text">Pilih Kode Pos</span>
+                                        <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="select-options">
+                                        <div class="option" data-value="">Pilih Kode Pos</div>
+                                    </div>
+                                    <input type="hidden" id="kodepos_perusahaan" name="kodepos_perusahaan" value=""
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telp_perusahaan">No Telp</label>
+                            <div class="phone-input-wrapper">
+                                <input type="tel" id="telp_perusahaan" name="telp_perusahaan"
+                                    placeholder="No Telp">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="wa_perusahaan">No WA <span class="required">*</span></label>
+                            <div class="phone-input-wrapper">
+                                <input type="tel" id="wa_perusahaan" name="wa_perusahaan" placeholder="No WA" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fax_perusahaan">No Fax</label>
+                            <input type="tel" id="fax_perusahaan" name="fax_perusahaan" placeholder="No Fax">
+                        </div>
+                    </div>
+
+                    <div class="form-step" data-step="3">
+                        <div class="form-group">
+                            <label for="username">Username <span class="required">*</span></label>
+                            <div class="username-wrapper">
+                                <input type="text" id="username" name="username" placeholder="Pilih username" required>
+                                <span class="username-status" id="username-status"></span>
+                            </div>
+                            <div class="username-feedback" id="username-feedback"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <div class="password-wrapper">
+                                <input type="password" id="password" name="password" placeholder="Min 8 karakter"
+                                    required>
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                        </path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="password-requirements">
+                                <p>Password harus memiliki:</p>
+                                <ul>
+                                    <li id="req-length">Min 8 karakter</li>
+                                    <li id="req-uppercase">Huruf kapital (A-Z)</li>
+                                    <li id="req-number">Angka (0-9)</li>
+                                    <li id="req-special">Simbol (!@#$)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirmation">Konfirmasi Kata Sandi <span
+                                    class="required">*</span></label>
+                            <div class="password-wrapper">
+                                <input type="password" id="password_confirmation" name="password_confirmation"
+                                    placeholder="Ulangi Password" required>
+                                <button type="button" class="toggle-password"
+                                    onclick="togglePassword('password_confirmation')">
+                                    <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                        </path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="password-match-indicator">
+                                <div class="match-bar" id="match-bar-1"></div>
+                                <div class="match-bar" id="match-bar-2"></div>
+                                <div class="match-bar" id="match-bar-3"></div>
+                            </div>
+                            <div class="match-message" id="match-message"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-dots">
+                        <span class="dot active" data-step="1"></span>
+                        <span class="dot" data-step="2"></span>
+                        <span class="dot" data-step="3"></span>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-secondary" id="prevBtn"
+                            style="display: none;">Kembali</button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">Berikutnya</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn"
+                            style="display: none;">Daftar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-container sign-in-container">
+
+            <div class="form-card" id="loginCard">
+                <div class="form-header">
+                    <h2>Masuk</h2>
+                    <p>Masuk ke akun Anda</p>
+                </div>
+
+                
+
+                <form method="POST" action="<!-- BASE_URL -->/login" id="loginForm">
+                    <input type="hidden" name="csrf_token" value="<!-- CSRF_TOKEN -->">
+                    <div class="form-group">
+                        <label for="login-username">Username <span class="required">*</span></label>
+                        <input type="text" id="login-username" name="username" placeholder="Masukkan username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Kata Sandi <span class="required">*</span></label>
+                        <div class="password-wrapper">
+                            <input type="password" id="login-password" name="password" placeholder="Masukkan Kata Sandi"
+                                required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('login-password')">
+                                <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                                    </path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <div class="remember-me-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="remember_me" id="remember-me">
+                                <span class="checkmark"></span>
+                            </label>
+                            <span class="checkbox-label">Ingat saya</span>
+                        </div>
+                        <a href="#" class="forgot-link" onclick="showForgotPassword(event)">Lupa Kata Sandi?</a>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btnLoginNext">Selanjutnya</button>
+
+                    <div id="loginOtpSection" style="display: none; margin-top: 15px;">
+                        <div class="form-group">
+                            <label for="login_otp_code">Kode OTP</label>
+                            <div class="otp-action-row">
+                                <div class="otp-input-wrapper" style="display: block; width: 100%;">
+                                    <input type="text" id="login_otp_code" name="login_otp_code" placeholder="Kode OTP">
+                                </div>
+                                <button type="button" class="btn-send-otp" id="btnLoginSendOtp">Kirim OTP</button>
+                            </div>
+                            <!-- Feedback & Link switch channel OTP (sejajar) -->
+                            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 4px;">
+                                <div id="login-otp-feedback" class="username-feedback" style="margin-top: 0; width: auto; flex: 1;"></div>
+                                <div id="loginOtpChannelInfo" style="display:none; margin: 0; padding-left: 10px;">
+                                    <a href="#" id="btnSwitchOtpChannel"></a>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="btnLoginVerifyOtp"
+                                style="margin-top: 15px; width: 100%;">Verifikasi</button>
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary" id="btnLoginSubmit"
+                        style="display: none;">Masuk</button>
+                </form>
+            </div>
+
+            <div class="form-card hidden" id="forgotPasswordCard">
+                <div class="form-header">
+                    <h2>Lupa Kata Sandi</h2>
+                    <p id="forgot-description">Masukkan username untuk verifikasi</p>
+                </div>
+                
+
+                <div id="usernameVerificationSection">
+                    <div class="form-group">
+                        <label for="forgot-username">Username</label>
+                        <input type="text" id="forgot-username" name="username" placeholder="Masukkan username Anda"
+                            required>
+                    </div>
+                    <div id="forgot-feedback" class="username-feedback"></div>
+                    <div class="form-navigation"
+                        style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+                        <button type="button" class="btn btn-secondary" onclick="showLogin(event)"
+                            style="width: 140px;">Kembali</button>
+                        <button type="button" id="btnVerifyUsername" class="btn btn-primary"
+                            style="width: 140px;">Verifikasi</button>
+                    </div>
+                </div>
+
+                <div id="deliveryMethodSection" style="display: none;">
+                    <p class="delivery-instruction">Pilih metode pengiriman link reset password:</p>
+                    <div class="delivery-options">
+                        <button type="button" id="btnSendWhatsApp" class="btn-delivery">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                            </svg>
+                            <span>Kirim via WhatsApp</span>
+                        </button>
+                        <button type="button" id="btnSendEmail" class="btn-delivery">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                </path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span>Kirim via Email</span>
+                        </button>
+                    </div>
+                    <div id="delivery-feedback" class="username-feedback" style="margin-top: 15px;"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="#" class="back-link" onclick="resetForgotPassword(event)">Kembali ke verifikasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <div class="brand-section">
+                        <img src="<!-- BASE_URL -->/public/images/logo.png" alt="Logo BBSPJIS" class="brand-logo">
+                        <h1 class="brand-name">Welcome to Portal Pelayanan Selulosa</h1>
+                    </div>
+                    <div class="welcome-message">
+                        <p>Masuk kembali untuk mengakses layanan kami.</p>
+                    </div>
+                    <div class="welcome-cta">
+                        <p>Sudah punya akun?</p>
+                    </div>
+                    <button class="ghost btn-outline-white" id="signIn" onclick="showLogin(event)">Masuk</button>
+                    <div class="map-overlay">
+                        <img src="<!-- BASE_URL -->/public/images/indonesia-map-v3.png" alt="Peta Indonesia"
+                            class="indonesia-map">
+                    </div>
+                </div>
+
+                <div class="overlay-panel overlay-right">
+                    <div class="brand-section">
+                        <img src="<!-- BASE_URL -->/public/images/logo.png" alt="Logo BBSPJIS" class="brand-logo">
+                        <h1 class="brand-name">Welcome to Portal Pelayanan Selulosa</h1>
+                    </div>
+                    <div class="welcome-message">
+                        <p>Daftarkan akun Anda untuk menggunakan <br>layanan pengujian, kalibrasi, dan sertifikasi
+                            <br>secara online.
+                        </p>
+                    </div>
+                    <div class="welcome-cta">
+                        <p>Belum punya akun?</p>
+                        <button class="btn btn-outline-white" id="signUp" onclick="showRegister(event)">Daftar</button>
+                    </div>
+                    <div class="map-overlay">
+                        <img src="<!-- BASE_URL -->/public/images/indonesia-map-v3.png" alt="Peta Indonesia"
+                            class="indonesia-map">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="customAlertModal">
+        <div class="custom-alert-card">
+            
+            <div class="custom-alert-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2C7BE5" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 class="custom-alert-title">Peringatan</h3>
+            <p id="customAlertMessage" class="custom-alert-message"></p>
+            <button id="customAlertOkBtn" class="custom-alert-btn" onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+    <script src="<!-- BASE_URL -->/public/js/auth.js?v=<!-- TIMESTAMP -->"></script>
+    <script>
+        function showCustomAlert(message) {
+            document.getElementById('customAlertMessage').textContent = message;
+            const modal = document.getElementById('customAlertModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlertModal').style.display = 'none';
+        }
+
+        // Tutup modal saat klik backdrop
+        document.getElementById('customAlertModal').addEventListener('click', function (e) {
+            if (e.target === this) closeCustomAlert();
+        });
+
+        // Tutup modal dengan tombol Escape
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCustomAlert();
+        });
+    </script>
+</body>
+
+</html>

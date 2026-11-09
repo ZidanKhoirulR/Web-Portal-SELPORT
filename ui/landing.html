@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Datang di SELPORT</title>
+    <!-- Clear Auth State: jika halaman ini terbuka, berarti session di server sudah habis -->
+    <script>
+        (function () {
+            try {
+                localStorage.removeItem('selport_auth');
+            } catch (e) {}
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="{{ @BASE }}/public/images/logo.png">
+    <link rel="stylesheet" href="{{ @BASE }}/public/css/landing.css?v=9">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div class="image-background"></div>
+    <div class="overlay"></div>
+    <div class="transition-overlay" id="transition-overlay"></div>
+
+    <header class="hero">
+        <div class="header-logo-section">
+            <img src="{{ @BASE }}/public/images/logo.png" alt="Portal Logo" class="header-logo" id="logoBtn">
+        </div>
+        <div class="interactive-container">
+            <div class="welcome-header">
+                <div class="reveal-mask">
+                    <p class="welcome-badge" id="reveal-badge">
+                        <span>Selamat</span> <span>Datang</span> <span>di</span>
+                    </p>
+                </div>
+                <div class="reveal-mask">
+                    <h1 class="welcome-title" id="reveal-title">
+                        <span>Portal</span> <span class="highlight">SELPORT</span>
+                    </h1>
+                </div>
+            </div>
+            <div class="content-container">
+                <div class="auth-options" id="authOptions">
+                    <a href="{{ @BASE }}/auth" class="btn btn-primary">Masuk ke Portal</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="{{ @BASE }}/public/js/stars.js"></script>
+    <script src="{{ @BASE }}/public/js/landing.js?v=2"></script>
+</body>
+
+</html>

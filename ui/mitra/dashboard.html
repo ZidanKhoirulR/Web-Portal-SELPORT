@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitra Portal - BBSPJIS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ @BASE }}/public/css/mitra/dashboard.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="{{ @BASE }}/public/css/mitra/permohonan-alat.css">
+    <link rel="stylesheet" href="{{ @BASE }}/public/css/mitra/layanan-pelanggan.css?v=1">
+    <link rel="icon" type="image/x-icon" href="{{ @BASE }}/public/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const BASE_URL = '{{ @BASE }}';
+        const SECTION = '{{ @SECTION }}';
+        const MITRA_AVATAR = '{{ @SESSION.nama_avatar }}';
+        const MITRA_NAME = '{{ @SESSION.nama_lengkap }}';
+        const MITRA_USERNAME = '{{ @SESSION.username }}';
+        try { localStorage.setItem('selport_auth', JSON.stringify({ role: 'mitra', base: BASE_URL })); } catch(e) {}
+    </script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container"><img src="{{ @BASE }}/public/images/logo.png" alt="BBSPJIS Logo"></div>
+            </div>
+
+            <hr class="sidebar-divider my-0">
+
+            <nav class="sidebar-nav">
+                <div class="nav-separator">Dashboard</div>
+                <a href="#" class="nav-item active" data-section="ringkasan">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <hr class="sidebar-divider">
+
+                <div class="nav-separator">Mitra Menu</div>
+                <a href="#" class="nav-item" data-section="validasi-pelanggan">
+                    <i class="ri-user-search-line"></i>
+                    <span>Validasi Pelanggan</span>
+                </a>
+                <a href="#" class="nav-item" data-section="pengecualian-dokumen">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>Permohonan Pengecualian</span>
+                </a>
+                <a href="#" class="nav-item" data-section="pemberitahuan">
+                    <i class="ri-notification-3-line"></i>
+                    <span>Pemberitahuan</span>
+                </a>
+
+                <a href="#" class="nav-item" data-section="layanan-pelanggan">
+                    <i class="ri-message-3-line"></i>
+                    <span>Layanan Pelanggan</span>
+                </a>
+                <a href="#" class="nav-item" data-section="kuesioner-pelanggan">
+                    <i class="ri-survey-line"></i>
+                    <span>Kuesioner Pelanggan</span>
+                </a>
+                <a href="#" class="nav-item" data-section="permohonan-alat">
+                    <i class="ri-tools-line"></i>
+                    <span>Permohonan Alat</span>
+                </a>
+
+                <hr class="sidebar-divider">
+
+                <div class="nav-separator">Pembayaran</div>
+                <a href="#" class="nav-item" data-section="kelola-pembayaran">
+                    <i class="ri-money-dollar-circle-line"></i>
+                    <span>Kelola Pembayaran</span>
+                </a>
+                <a href="#" class="nav-item" data-section="kesanggupan-pembayaran">
+                    <i class="ri-file-text-line"></i>
+                    <span>Kesanggupan Pembayaran</span>
+                </a>
+
+                <hr class="sidebar-divider d-none d-md-block">
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="ri-menu-line"></i>
+                </button>
+                <div class="user-info">
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <button class="profile-toggle" id="profileToggle">
+                            <img src="{{ @BASE }}/public/avatar/{{ @SESSION.nama_avatar }}"
+                                 alt="Avatar"
+                                 class="profile-avatar"
+                                 onerror="this.src='{{ @BASE }}/public/avatar/avatar.png'">
+                            <span class="profile-name">{{ @SESSION.nama_lengkap }}</span>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </button>
+                        <div class="profile-menu" id="profileMenu">
+                            <a href="#" class="profile-menu-item" onclick="showEditProfileModal(); return false;">
+                                <i class="ri-user-settings-line"></i> Edit Profil
+                            </a>
+                            <hr style="margin:4px 0; border-color:#e3e6f0;">
+                            <a href="{{ @BASE }}/logout" class="profile-menu-item" style="color:#e74a3b;">
+                                <i class="ri-logout-box-line"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="content-area" id="contentArea">
+            </div>
+        </main>
+    </div>
+    <div id="detailModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <h3>Detail Pelanggan</h3>
+            <div id="detailContent"></div>
+            <div class="modal-actions"><button type="button" class="btn btn-secondary"
+                    onclick="closeModal('detailModal')">Tutup</button></div>
+        </div>
+    </div>
+    <div id="approvalModal" class="modal">
+        <div class="modal-content" style="max-width: 850px;">
+            <h3>Setujui Pelanggan</h3>
+            <input type="hidden" id="approvalUserId">
+            <div id="approvalContent"></div>
+            <div class="form-group"
+                style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                <label style="font-weight: 600; color: #0369a1; margin-bottom: 10px; display: block;">
+                    <i class="ri-building-line"></i> Pilih Perusahaan
+                </label>
+                <div class="autocomplete-wrapper">
+                    <div style="position: relative;">
+                        <input type="text" id="silCustomerSearch" class="form-control"
+                            placeholder="Ketik nama atau codex perusahaan..." autocomplete="off">
+                        <i class="ri-search-line"
+                            style="position: absolute; right: 12px; top: 12px; color: #94a3b8;"></i>
+                        <input type="hidden" id="selectedIdCustomer">
+                    </div>
+                    <div id="silCustomerResults" class="autocomplete-results"></div>
+                </div>
+
+                <div id="silCompanyDetails" style="display: none; margin-top: 20px; padding: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);">
+                    <h5 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; color: #0f172a; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                        <i class="ri-information-line" style="color: #0ea5e9; margin-right: 5px;"></i> Detail Perusahaan Terpilih
+                    </h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                        <div><strong style="color: #64748b; display: block; font-size: 11px; text-transform: uppercase;">Codex Perusahaan</strong> <span id="detailCodex" style="color: #334155; font-weight: 500;"></span></div>
+                        <div><strong style="color: #64748b; display: block; font-size: 11px; text-transform: uppercase;">Nama Perusahaan</strong> <span id="detailNama" style="color: #334155; font-weight: 500;"></span></div>
+                        <div style="grid-column: span 2;"><strong style="color: #64748b; display: block; font-size: 11px; text-transform: uppercase;">Alamat</strong> <span id="detailAlamat" style="color: #334155;"></span></div>
+                        <div><strong style="color: #64748b; display: block; font-size: 11px; text-transform: uppercase;">Email</strong> <span id="detailEmail" style="color: #334155;"></span></div>
+                        <div><strong style="color: #64748b; display: block; font-size: 11px; text-transform: uppercase;">Nama Lengkap</strong> <span id="detailContact" style="color: #334155;"></span></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('approvalModal')">Batal</button>
+                <button type="button" class="btn btn-primary" onclick="confirmApproval()">Setujui</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="announcementModal" class="modal">
+        <div class="modal-content">
+            <h3>Buat Pemberitahuan</h3>
+            <form id="announcementForm">
+                <input type="hidden" name="id" id="announcementId">
+                <input type="hidden" name="title" id="announcementTitle" value="Pemberitahuan">
+                <div class="form-group">
+                    <label>Konten</label>
+                    <textarea name="content" id="announcementContent" required class="form-control" rows="4"
+                        maxlength="200"></textarea>
+                    <small style="color: #64748b; font-size: 12px;">Maksimal 200 karakter per
+                        pemberitahuan.</small>
+                </div>
+                <input type="hidden" name="is_active" value="true">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="closeModal('announcementModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content confirmation-modal-content">
+            <div class="confirmation-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 id="confirmationTitle">Konfirmasi</h3>
+            <p id="confirmationMessage">Apakah Anda yakin ingin menyetujui pelanggan ini?</p>
+            <div class="confirmation-actions">
+                <button type="button" class="btn-confirm btn-confirm-no"
+                    onclick="closeConfirmationModal(false)">Tidak</button>
+                <button type="button" class="btn-confirm btn-confirm-yes"
+                    onclick="closeConfirmationModal(true)">Iya</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="rejectConfirmationModal" class="modal">
+        <div class="modal-content confirmation-modal-content">
+            <div class="confirmation-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+            </div>
+            <h3 style="color: #ef4444;">Konfirmasi Penolakan</h3>
+            <p id="rejectConfirmationMessage">Apakah yakin ingin menghapus data pelanggan ini?</p>
+            <div class="confirmation-actions">
+                <button type="button" class="btn-confirm btn-confirm-no"
+                    onclick="closeRejectConfirmationModal(false)">Tidak</button>
+                <button type="button" class="btn-confirm btn-confirm-yes"
+                    onclick="closeRejectConfirmationModal(true)">Iya</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="rejectReasonModal" class="modal">
+        <div class="modal-content" style="max-width: 500px; position: relative; padding-top: 40px;">
+            <button class="close-modal-btn" onclick="closeRejectReasonModal()"
+                style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">&times;</button>
+            <h3 style="text-align: center; margin-bottom: 20px;">Alasan Penolakan</h3>
+            <p style="text-align: center; color: #64748b; margin-bottom: 20px;">Silahkan isi alasan. Alasan tersebut
+                akan sampai ke email pelanggan.</p>
+            <div class="form-group">
+                <textarea id="rejectionReasonInput" class="form-control" rows="4"
+                    placeholder="Masukkan alasan penolakan..."></textarea>
+            </div>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" class="btn btn-primary" onclick="submitRejection()">Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content confirmation-modal-content">
+            <div class="confirmation-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h3 style="color: #10b981;">Berhasil</h3>
+            <p id="successMessage">Pemberitahuan Berhasil Dihapus</p>
+            <div class="confirmation-actions">
+                <button type="button" class="btn-confirm btn-confirm-yes" onclick="closeSuccessModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content" style="max-width:480px;">
+            <h3><i class="ri-user-settings-line"></i> Edit Profil</h3>
+            <form id="editProfileForm" enctype="multipart/form-data">
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                    <img id="editProfileAvatar" class="profile-avatar-large" 
+                         src="" alt="Avatar"
+                         onerror="this.src=BASE_URL+'/public/avatar/avatar.png'">
+                    <div style="flex:1;">
+                        <label class="btn btn-secondary" style="cursor:pointer; font-size:0.8rem; display:inline-block;">
+                            <i class="ri-camera-line"></i> Ganti Foto
+                            <input type="file" name="avatar" id="editAvatarInput" accept="image/*" style="display:none;">
+                        </label>
+                        <p style="font-size:0.75rem; color:#858796; margin-top:5px;">Format: JPG, PNG. Maks 2MB.</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" name="nama_lengkap" id="editNamaLengkap" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="editUsername" class="form-control" disabled style="background:#f8f9fc;">
+                </div>
+                <div class="form-group">
+                    <label>Password Baru <small style="color:#858796;">(kosongkan jika tidak ingin mengubah)</small></label>
+                    <input type="password" name="password" id="editPassword" class="form-control" placeholder="••••••••">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* ===== Session Expired Modal ===== */
+        #sessionExpiredModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+        }
+        .session-modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 48px 40px 40px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.1);
+            animation: sessionModalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes sessionModalIn {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .session-modal-icon {
+            display: block;
+            margin: 0 auto 24px;
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .session-modal-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 10px;
+            letter-spacing: -0.3px;
+        }
+        .session-modal-message {
+            font-size: 0.92rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0 0 32px;
+        }
+        .session-modal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 13px 36px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+        .session-modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+        .session-modal-btn:active {
+            transform: translateY(0);
+        }
+        .session-modal-timer {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 16px;
+        }
+    </style>
+
+    <!-- Session Expired Modal -->
+    <div id="sessionExpiredModal">
+        <div class="session-modal-content">
+            <div class="session-modal-icon">
+                ⏱️
+            </div>
+            <h3 class="session-modal-title">Sesi Telah Berakhir</h3>
+            <p class="session-modal-message">
+                Anda tidak aktif selama 10 menit.<br>
+                Silakan login ulang untuk melanjutkan.
+            </p>
+            <button class="session-modal-btn" onclick="SessionTimeout.redirect()">
+                Login Ulang
+            </button>
+            <p class="session-modal-timer" id="sessionRedirectCountdown"></p>
+        </div>
+    </div>
+
+    <script src="{{ @BASE }}/public/js/back-guard.js?v=<?= time() ?>"></script>
+    <script src="{{ @BASE }}/public/js/session-timeout.js?v=<?= time() ?>"></script>
+    <script src="{{ @BASE }}/public/js/mitra.js?v=<?= time() ?>"></script>
+</body>
+
+</html>

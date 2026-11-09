@@ -1,0 +1,601 @@
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/beranda.css?v=3">
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/pembayaran.css?v=3">
+
+<div class="home-container">
+
+  <div class="header-section">
+    <h1>Pembayaran</h1>
+    <p class="header-desc">Unggah bukti pembayaran dan isi keterangan untuk diverifikasi.</p>
+  </div>
+
+  <!-- Card: Form Upload -->
+  <div class="content-card order-section" style="min-height: unset;">
+    <div class="card-header">
+      <h3><i class="ri-upload-cloud-line" style="margin-right:8px; color:#62A0FD;"></i>Upload Bukti Pembayaran</h3>
+    </div>
+
+    <div class="form-group-pay">
+      <label class="pay-label">
+        File Bukti Pembayaran <span style="color:#e74a3b">*</span>
+      </label>
+      <div class="dropzone-container" id="dropzone-pembayaran">
+        <input type="file" id="inp-bukti-bayar" accept="image/*,.pdf" style="display:none">
+        <i class="ri-file-upload-line dropzone-icon"></i>
+        <div class="dropzone-text" id="dropzone-text">Klik atau seret file ke sini</div>
+        <div class="dropzone-subtext" id="dropzone-subtext">Format: JPG, PNG, atau PDF — Maks. 5MB</div>
+      </div>
+    </div>
+
+    <div class="form-group-pay">
+      <label class="pay-label">
+        Keterangan <span style="color:#e74a3b">*</span>
+      </label>
+      <input type="text" id="inp-keterangan-bayar" class="pay-input"
+        placeholder="Contoh: Pembayaran atas invoice INV-2025-0042" maxlength="255">
+    </div>
+
+    <div class="pay-submit-row">
+      <button type="button" id="btn-kirim-pembayaran" class="btn-pay-submit" disabled>
+        Kirim Bukti Pembayaran
+      </button>
+    </div>
+  </div>
+
+  <div class="content-card order-section" style="min-height: unset;">
+    <div class="card-header">
+      <h3><i class="ri-history-line" style="margin-right:8px; color:#62A0FD;"></i>Riwayat Pembayaran</h3>
+      <div style="display:flex; gap:12px; align-items:center;">
+
+        <!-- Dropdown Tahun -->
+        <div class="custom-select custom-select-small" id="dd-bayar-tahun">
+          <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Tahun</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="select-options" id="dd-bayar-tahun-options">
+            <div class="option selected" data-value="">Semua Tahun</div>
+          </div>
+        </div>
+
+        <!-- Dropdown Status -->
+        <div class="custom-select custom-select-small" id="dd-bayar-status">
+          <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Status</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="select-options">
+            <div class="option selected" data-value="">Semua Status</div>
+            <div class="option" data-value="Pending">Pending</div>
+            <div class="option" data-value="Disetujui">Disetujui</div>
+            <div class="option" data-value="Perbaiki">Perbaiki</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table" id="tabel-riwayat-bayar">
+        <thead>
+          <tr>
+            <th width="15%" style="text-align:center;">Tanggal Upload</th>
+            <th width="20%" style="text-align:center;">File Bukti</th>
+            <th width="25%" style="text-align:center;">Keterangan</th>
+            <th width="20%" style="text-align:center;">Catatan</th>
+            <th width="10%" style="text-align:center;">Status</th>
+            <th width="10%" style="text-align:center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-riwayat-bayar">
+          <tr>
+            <td colspan="6" style="text-align:center; padding:48px; color:#94a3b8;">
+              Memuat data...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notes -->
+    <div style="display:flex; align-items:flex-start; gap:10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; margin-top:16px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:1px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div style="font-size:13px; color:#1e40af; line-height:1.6;">
+        <span style="font-weight:700;">Perhatian</span><br>
+        Jika bukti pembayaran Anda perlu diperbaiki, gunakan tombol <strong>Upload Ulang</strong> di kolom Aksi pada baris yang sesuai.
+      </div>
+    </div>
+  </div>
+
+
+  <input type="hidden" id="csrf-token" value="{{ CSRF_TOKEN }}">
+</div>
+
+
+<div id="modal-revisi"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+  <div
+    style="background:#fff; width:90%; max-width:600px; border-radius:16px; padding:32px; position:relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif;">
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:1px solid #f1f5f9; padding-bottom:16px;">
+      <h3 style="margin:0; color:#0f172a; font-size:20px; font-weight:700;">
+        <i class="ri-refresh-line" style="color:#62A0FD; margin-right:8px;"></i> Upload Ulang Bukti Pembayaran
+      </h3>
+    </div>
+
+    <p style="color:#64748b; font-size:14px; margin-bottom:24px;">
+      Silakan unggah kembali bukti pembayaran untuk menggantikan data yang perlu diperbaiki.
+    </p>
+
+    <form id="form-revisi">
+      <input type="hidden" id="modal-id-perbaikan">
+
+      <div id="modal-reason-container"
+        style="display:none; margin-bottom:24px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px;">
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <i class="ri-information-line" style="color:#3b82f6; font-size:1.25rem; flex-shrink:0;"></i>
+          <div>
+            <div style="font-weight:700; color:#1e40af; font-size:14px; margin-bottom:4px;">Catatan Perbaikan:</div>
+            <div id="modal-reason-text" style="color:#1e3a8a; font-size:14px; line-height:1.6;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group-pay">
+        <label class="pay-label">
+          File Bukti Pembayaran <span style="color:#e74a3b">*</span>
+        </label>
+        <div class="dropzone-container" id="modal-dropzone">
+          <input type="file" id="modal-inp-file" accept="image/*,.pdf" style="display:none">
+          <i class="ri-file-upload-line dropzone-icon"></i>
+          <div class="dropzone-text" id="modal-dz-text">Klik atau seret file ke sini</div>
+          <div class="dropzone-subtext" id="modal-dz-subtext">Format: JPG, PNG, atau PDF — Maks. 5MB</div>
+        </div>
+      </div>
+
+      <div class="form-group-pay">
+        <label class="pay-label">
+          Keterangan <span style="color:#e74a3b">*</span>
+        </label>
+        <input type="text" id="modal-inp-keterangan" class="pay-input" placeholder="Pembayaran atas invoice ..."
+          maxlength="255">
+      </div>
+
+      <div
+        style="display:flex; gap:12px; justify-content:flex-end; margin-top:32px; padding-top:20px; border-top:1px solid #f1f5f9;">
+        <button type="button" onclick="tutupModalRevisi()" class="btn-outline">
+          Batal
+        </button>
+        <button type="button" id="modal-btn-submit" class="btn-pay-submit" disabled>
+          Kirim Ulang
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const dropzone = document.getElementById('dropzone-pembayaran');
+    const fileInput = document.getElementById('inp-bukti-bayar');
+    const dzText = document.getElementById('dropzone-text');
+    const dzSubtext = document.getElementById('dropzone-subtext');
+    const btnKirim = document.getElementById('btn-kirim-pembayaran');
+    const inpKet = document.getElementById('inp-keterangan-bayar');
+
+    // --- Enable/disable tombol kirim ---
+    function checkFormReady() {
+      const hasFile = fileInput.files && fileInput.files.length > 0;
+      const hasKet = inpKet.value.trim().length > 0;
+      btnKirim.disabled = !(hasFile && hasKet);
+      btnKirim.style.opacity = (hasFile && hasKet) ? '1' : '0.5';
+      btnKirim.style.cursor = (hasFile && hasKet) ? 'pointer' : 'not-allowed';
+    }
+
+    // --- Dropzone klik & drag ---
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#4e73df';
+      dropzone.style.background = '#eff6ff';
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.background = '#f8fafc';
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.background = '#f8fafc';
+      if (e.dataTransfer.files[0]) {
+        fileInput.files = e.dataTransfer.files;
+        handleFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) handleFileSelected(this.files[0]);
+    });
+
+    function handleFileSelected(file) {
+      // Validasi ekstensi
+      const allowedExts = ['jpg', 'jpeg', 'png', 'pdf'];
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowedExts.includes(ext)) {
+        showMessage('Format Tidak Diizinkan', `File .${ext} tidak diizinkan. Gunakan format: JPG, PNG, atau PDF.`, 'error');
+        fileInput.value = '';
+        dzText.innerHTML = 'Klik atau seret file ke sini';
+        dzSubtext.innerText = 'Format: JPG, PNG, atau PDF — Maks. 5MB';
+        checkFormReady();
+        return;
+      }
+
+      // Validasi ukuran maks 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage('Ukuran Terlalu Besar', 'Ukuran file maksimal 5MB.', 'error');
+        fileInput.value = '';
+        dzText.innerHTML = 'Klik atau seret file ke sini';
+        dzSubtext.innerText = 'Format: JPG, PNG, atau PDF — Maks. 5MB';
+        checkFormReady();
+        return;
+      }
+      dzText.innerHTML = `<span style="color:#4e73df;">${file.name}</span>`;
+      dzSubtext.innerText = 'File terpilih. Klik untuk mengganti.';
+      dropzone.style.borderColor = '#4e73df';
+      checkFormReady();
+    }
+
+    inpKet.addEventListener('input', checkFormReady);
+
+    // --- Submit ---
+    btnKirim.addEventListener('click', function () {
+      if (!fileInput.files || fileInput.files.length === 0) {
+        showMessage('Peringatan', 'Pilih file bukti pembayaran terlebih dahulu.', 'warning');
+        return;
+      }
+      if (!inpKet.value.trim()) {
+        showMessage('Peringatan', 'Isi keterangan pembayaran terlebih dahulu.', 'warning');
+        return;
+      }
+
+      showConfirm('Kirim bukti pembayaran ini?', function () {
+        const originalText = btnKirim.innerHTML;
+        btnKirim.disabled = true;
+        btnKirim.innerHTML = '<i class="ri-loader-4-line"></i> Mengirim...';
+
+        const formData = new FormData();
+
+        formData.append('file', fileInput.files[0]);
+        formData.append('keterangan', inpKet.value.trim());
+        formData.append('jenis', 'bukti_bayar');
+        formData.append('csrf_token', document.getElementById('csrf-token').value);
+
+        fetch(`${BASE_URL}/dashboard/pembayaran/upload`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              showMessage('Berhasil', data.message, 'success', () => location.reload());
+            } else {
+              showMessage('Gagal', data.message, 'error');
+              btnKirim.disabled = false;
+              btnKirim.innerHTML = originalText;
+            }
+          })
+          .catch(() => {
+            showMessage('Error', 'Terjadi kesalahan saat mengunggah.', 'error');
+            btnKirim.disabled = false;
+            btnKirim.innerHTML = originalText;
+          });
+      }, 'warning');
+    });
+
+    // --- Load riwayat ---
+    let allRiwayat = []; // simpan semua data untuk filtering client-side
+
+    function loadRiwayat() {
+      fetch(`${BASE_URL}/api/pembayaran/riwayat`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            allRiwayat = data.data || [];
+            populateTahunFilter(allRiwayat);
+            applyFilter();
+          }
+        })
+        .catch(() => { });
+    }
+
+    // Isi dropdown tahun dari data yang ada
+    function populateTahunFilter(rows) {
+      const optionsEl = document.getElementById('dd-bayar-tahun-options');
+      if (!optionsEl) return;
+
+      const years = [...new Set(rows.map(r => {
+        const ts = r.created_at || '';
+        return ts ? ts.substring(0, 4) : null;
+      }).filter(Boolean))].sort((a, b) => b - a);
+
+      // Reset ke "Semua Tahun"
+      optionsEl.innerHTML = '<div class="option selected" data-value="">Semua Tahun</div>';
+      years.forEach(y => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.dataset.value = y;
+        div.textContent = y;
+        optionsEl.appendChild(div);
+      });
+
+      // Re-init dropdown agar option baru bisa diklik
+      if (typeof setupCustomDropdown === 'function') {
+        setupCustomDropdown('dd-bayar-tahun', null, () => applyFilter());
+      }
+    }
+
+    // Terapkan filter dari kedua custom dropdown
+    function applyFilter() {
+      const tahun  = document.getElementById('dd-bayar-tahun')?.querySelector('.option.selected')?.dataset.value  || '';
+      const status = document.getElementById('dd-bayar-status')?.querySelector('.option.selected')?.dataset.value || '';
+
+      const filtered = allRiwayat.filter(r => {
+        const rowTahun = (r.created_at || '').substring(0, 4);
+        const matchTahun  = !tahun  || rowTahun === tahun;
+        const matchStatus = !status || r.status === status;
+        return matchTahun && matchStatus;
+      });
+
+      renderRiwayat(filtered);
+    }
+
+    // Init custom dropdown status
+    if (typeof setupCustomDropdown === 'function') {
+      setupCustomDropdown('dd-bayar-tahun',  null, () => applyFilter());
+      setupCustomDropdown('dd-bayar-status', null, () => applyFilter());
+    }
+
+    function renderRiwayat(rows) {
+      const tbody = document.getElementById('tbody-riwayat-bayar');
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;
+        padding:32px; color:#94a3b8;">Belum ada riwayat pembayaran.</td></tr>`;
+        return;
+      }
+
+      const statusColorMap = {
+        'Disetujui': '#059669',
+        'Perbaiki': '#dc2626',
+        'Pending': '#d97706'
+      };
+
+      tbody.innerHTML = rows.map(r => {
+        const baseStatus = r.status || 'Pending';
+        const labelText = r.status_label || baseStatus;
+        const stColor = statusColorMap[baseStatus] || '#d97706';
+        const revCount = parseInt(r.revision_count) || 0;
+        const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(r.file_name || '');
+        const fileUrl = r.preview_token 
+          ? `${BASE_URL}/dokumen/view/${r.preview_token}` 
+          : `${BASE_URL}/public/uploads/payments/${r.file_name}`;
+          
+        const fileLink = `<a href="${fileUrl}"
+                           target="_blank" style="color:#4e73df; text-decoration:none;">
+                          <i class="ri-${isImg ? 'image' : 'file-pdf'}-line"></i>
+                          ${r.file_name || '-'}
+                        </a>`;
+        let actionHtml = '';
+        if (baseStatus === 'Perbaiki') {
+          // Hanya tampilkan tombol Upload Ulang jika revisi belum maks (3)
+          if (revCount < 3) {
+            actionHtml = `<button
+              class="btn-action btn-text kelola btn-upload-ulang"
+              data-id="${r.id}"
+              data-reason="${(r.reason || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Upload Ulang
+            </button>`;
+          } else {
+            actionHtml = `<span style="font-size:0.78rem; color:#94a3b8; font-style:italic;">Maks. revisi</span>`;
+          }
+        } else if (baseStatus === 'Pending') {
+          actionHtml = `<button onclick="hapusPembayaran(${r.id})" class="btn-action btn-text delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Hapus
+          </button>`;
+        }
+
+        return `<tr>
+        <td>${r.tanggal_upload_formatted || '-'}</td>
+        <td>${fileLink}</td>
+        <td style="color:#1e293b; font-weight:500;">${r.keterangan || '-'}</td>
+        <td style="color:#64748b; font-size:0.85rem;">
+          ${r.reason ? `<span style="color:#1e293b; font-weight: 500;">${r.reason}</span>` : '-'}
+        </td>
+        <td>
+          <span style="color:${stColor}; font-size:0.85rem; font-weight:600;">
+            ${labelText}
+          </span>
+        </td>
+        <td>${actionHtml}</td>
+      </tr>`;
+      }).join('');
+    }
+
+    loadRiwayat();
+
+    // Event delegation untuk tombol Upload Ulang (menghindari konflik quote di onclick)
+    document.getElementById('tbody-riwayat-bayar').addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn-upload-ulang');
+      if (btn) {
+        const id = btn.getAttribute('data-id');
+        const reason = btn.getAttribute('data-reason') || '';
+        mulaiRevisi(id, reason);
+      }
+    });
+
+    window.mulaiRevisi = function (id, reason) {
+      document.getElementById('modal-id-perbaikan').value = id;
+
+      // Tampilkan keterangan alasan dari admin
+      const reasonContainer = document.getElementById('modal-reason-container');
+      if (reasonContainer) {
+        if (reason && reason.trim() && reason !== '-') {
+          reasonContainer.style.display = 'block';
+          document.getElementById('modal-reason-text').textContent = reason;
+        } else {
+          reasonContainer.style.display = 'none';
+        }
+      }
+
+      document.getElementById('modal-revisi').style.display = 'flex';
+    };
+
+    window.tutupModalRevisi = function () {
+      document.getElementById('modal-revisi').style.display = 'none';
+      document.getElementById('modal-id-perbaikan').value = '';
+      document.getElementById('modal-inp-file').value = '';
+      document.getElementById('modal-inp-keterangan').value = '';
+      document.getElementById('modal-dz-text').innerHTML = 'Klik atau seret file ke sini';
+      document.getElementById('modal-dz-subtext').innerText = 'Format: JPG, PNG, atau PDF — Maks. 5MB';
+      const rc = document.getElementById('modal-reason-container');
+      if (rc) rc.style.display = 'none';
+      checkModalReady();
+    };
+
+    // --- Modal Logic ---
+    const modalDropzone = document.getElementById('modal-dropzone');
+    const modalFileInput = document.getElementById('modal-inp-file');
+    const modalDzText = document.getElementById('modal-dz-text');
+    const modalDzSub = document.getElementById('modal-dz-subtext');
+    const modalBtn = document.getElementById('modal-btn-submit');
+    const modalInpKet = document.getElementById('modal-inp-keterangan');
+
+    function checkModalReady() {
+      const hasFile = modalFileInput.files && modalFileInput.files.length > 0;
+      const hasKet = modalInpKet.value.trim().length > 0;
+      modalBtn.disabled = !(hasFile && hasKet);
+      modalBtn.style.opacity = (hasFile && hasKet) ? '1' : '0.5';
+      modalBtn.style.cursor = (hasFile && hasKet) ? 'pointer' : 'not-allowed';
+    }
+
+    modalDropzone.addEventListener('click', () => modalFileInput.click());
+    modalDropzone.addEventListener('dragover', (e) => { e.preventDefault(); modalDropzone.style.borderColor = '#4e73df'; modalDropzone.style.background = '#eff6ff'; });
+    modalDropzone.addEventListener('dragleave', () => { modalDropzone.style.borderColor = '#cbd5e1'; modalDropzone.style.background = '#f8fafc'; });
+    modalDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      modalDropzone.style.borderColor = '#cbd5e1'; modalDropzone.style.background = '#f8fafc';
+      if (e.dataTransfer.files[0]) {
+        modalFileInput.files = e.dataTransfer.files;
+        handleModalFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    modalFileInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) handleModalFileSelected(this.files[0]);
+    });
+    modalInpKet.addEventListener('input', checkModalReady);
+
+    function handleModalFileSelected(file) {
+      const allowedExts = ['jpg', 'jpeg', 'png', 'pdf'];
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowedExts.includes(ext)) {
+        showMessage('Format Tidak Diizinkan', `File .${ext} tidak diizinkan. Gunakan format: JPG, PNG, atau PDF.`, 'error');
+        modalFileInput.value = '';
+        modalDzText.innerHTML = 'Klik atau seret file ke sini';
+        modalDzSub.innerText = 'Format: JPG, PNG, atau PDF — Maks. 5MB';
+        checkModalReady();
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showMessage('Ukuran Terlalu Besar', 'Ukuran file maksimal 5MB.', 'error');
+        modalFileInput.value = '';
+        modalDzText.innerHTML = 'Klik atau seret file ke sini';
+        modalDzSub.innerText = 'Format: JPG, PNG, atau PDF — Maks. 5MB';
+        checkModalReady();
+        return;
+      }
+      modalDzText.innerHTML = `<span style="color:#4e73df;">${file.name}</span>`;
+      modalDzSub.innerText = 'File terpilih. Klik untuk mengganti.';
+      modalDropzone.style.borderColor = '#4e73df';
+      checkModalReady();
+    }
+
+    modalBtn.addEventListener('click', function () {
+      if (!modalFileInput.files || modalFileInput.files.length === 0) return;
+
+      showConfirm('Kirim ulang bukti pembayaran ini?', function () {
+        const originalText = modalBtn.innerHTML;
+        modalBtn.disabled = true;
+        modalBtn.innerHTML = '<i class="ri-loader-4-line"></i> Mengirim...';
+
+        const formData = new FormData();
+        formData.append('id_perbaikan', document.getElementById('modal-id-perbaikan').value);
+        formData.append('file', modalFileInput.files[0]);
+        formData.append('keterangan', modalInpKet.value.trim());
+        formData.append('jenis', 'bukti_bayar');
+        formData.append('csrf_token', document.getElementById('csrf-token').value);
+
+        fetch(`${BASE_URL}/dashboard/pembayaran/upload`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              showMessage('Berhasil', data.message, 'success', () => location.reload());
+            } else {
+              showMessage('Gagal', data.message, 'error');
+              modalBtn.disabled = false;
+              modalBtn.innerHTML = originalText;
+            }
+          })
+          .catch(() => {
+            showMessage('Error', 'Terjadi kesalahan saat mengunggah.', 'error');
+            modalBtn.disabled = false;
+            modalBtn.innerHTML = originalText;
+          });
+      }, 'warning');
+    });
+
+    window.hapusPembayaran = function (id) {
+      showConfirm('Hapus bukti pembayaran ini?', function () {
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('csrf_token', document.getElementById('csrf-token').value);
+
+        fetch(`${BASE_URL}/api/pembayaran/delete`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              showMessage('Berhasil', data.message, 'success');
+              loadRiwayat();
+            } else {
+              showMessage('Gagal', data.message, 'error');
+            }
+          })
+          .catch(() => {
+            showMessage('Error', 'Terjadi kesalahan saat menghapus data.', 'error');
+          });
+      }, 'warning');
+    };
+
+  })();
+</script>

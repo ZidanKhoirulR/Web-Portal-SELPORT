@@ -1,0 +1,230 @@
+<div class="page-header" style="margin-bottom: 15px;">
+  <div>
+    <h2 style="margin:0; font-size:1.5rem; color:#5a5c69;">Kesanggupan Pembayaran</h2>
+    <p style="margin:5px 0 0 0; color:#858796; font-size:0.9rem;">Kelola template surat kesanggupan dan validasi upload
+      dari pelanggan.</p>
+  </div>
+</div>
+
+
+<div class="search-bar"
+  style="display:flex; flex-wrap:wrap; gap:12px; margin: 24px 0 16px 0; align-items:center; background:#fff; padding:15px; border-radius:10px; border:1px solid #e3e6f0; box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.05);">
+
+  <!-- Search Input -->
+  <div style="flex:1; min-width:220px; position:relative;">
+    <i class="ri-search-line"
+      style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#858796;"></i>
+    <input type="text" id="kesanggupanSearch" class="form-control" placeholder="Cari nama perusahaan ...."
+      style="width:100%; padding-left:35px; height:40px; border-radius:8px; border:1px solid #d1d3e2; font-size:0.875rem; box-sizing:border-box;">
+  </div>
+
+  <!-- Filter Dropdowns -->
+  <div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px;">
+
+    <!-- Dropdown Bulan -->
+    <div class="admin-custom-select" id="dropdown-kesanggupanMonth" style="min-width:150px; flex-shrink:0;">
+      <button type="button" class="select-trigger"
+        style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+        <span class="selected-text">Semua Bulan</span>
+        <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+      </button>
+      <div class="select-options" style="border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top:5px; max-height: 200px; overflow-y: auto; min-width:150px;">
+        <div class="option selected" data-value="all">Semua Bulan</div>
+        <div class="option" data-value="01">Januari</div>
+        <div class="option" data-value="02">Februari</div>
+        <div class="option" data-value="03">Maret</div>
+        <div class="option" data-value="04">April</div>
+        <div class="option" data-value="05">Mei</div>
+        <div class="option" data-value="06">Juni</div>
+        <div class="option" data-value="07">Juli</div>
+        <div class="option" data-value="08">Agustus</div>
+        <div class="option" data-value="09">September</div>
+        <div class="option" data-value="10">Oktober</div>
+        <div class="option" data-value="11">November</div>
+        <div class="option" data-value="12">Desember</div>
+      </div>
+      <input type="hidden" id="kesanggupanMonth" value="all">
+    </div>
+
+    <!-- Dropdown Tahun -->
+    <div class="admin-custom-select" id="dropdown-kesanggupanYear" style="min-width:140px; flex-shrink:0;">
+      <button type="button" class="select-trigger"
+        style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+        <span class="selected-text">Semua Tahun</span>
+        <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+      </button>
+      <div class="select-options" id="kesanggupanYearOptions" style="border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top:5px; max-height: 200px; overflow-y: auto; min-width:140px;">
+        <div class="option selected" data-value="all">Semua Tahun</div>
+      </div>
+      <input type="hidden" id="kesanggupanYear" value="all">
+    </div>
+
+    <!-- Dropdown Status -->
+    <div class="admin-custom-select" id="dropdown-kesanggupanFilter" style="min-width:140px; flex-shrink:0;">
+      <button type="button" class="select-trigger"
+        style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer; gap:8px; white-space:nowrap;">
+        <span class="selected-text">Pending</span>
+        <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc; flex-shrink:0;"></i>
+      </button>
+      <div class="select-options" style="border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-top:5px; min-width:140px;">
+        <div class="option selected" data-value="pending">Pending</div>
+        <div class="option" data-value="approved">Disetujui</div>
+        <div class="option" data-value="rejected">Perbaiki</div>
+      </div>
+      <input type="hidden" id="kesanggupanFilter" value="pending">
+    </div>
+
+  </div>
+</div>
+
+
+<div class="card">
+  <div class="table-responsive table-scroller">
+    <table class="table" id="kesanggupanTableFull">
+      <thead>
+        <tr>
+          <th width="12%">Tanggal Upload</th>
+          <th width="20%">Nama Perusahaan</th>
+          <th width="18%">Keterangan</th>
+          <th width="18%">Catatan</th>
+          <th width="12%">Dikelola Oleh</th>
+          <th width="10%" style="text-align:center">Status</th>
+          <th width="10%" style="text-align:center"></th>
+        </tr>
+      </thead>
+      <tbody id="list-kesanggupan-pelanggan">
+        <tr>
+          <td colspan="7" style="text-align:center; padding:30px; color:#858796;">Memuat data...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div
+    style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-top:1px solid #e3e6f0;">
+    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:0.85rem; color:#858796;">
+      <span>Menampilkan <span id="kesanggupanStart">0</span> - <span id="kesanggupanEnd">0</span> dari <span
+          id="kesanggupanTotal">0</span> data</span>
+      <label style="display:flex; align-items:center; gap:6px;">
+        Tampilkan
+        <select id="kesanggupanPageSize"
+          style="height:34px; border:1px solid #d1d3e2; border-radius:8px; color:#5a5c69; padding:0 8px; background:#fff;">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="all">Semua</option>
+        </select>
+      </label>
+    </div>
+    <div class="pagination-container" id="kesanggupanPagination">
+
+    </div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-top:20px;">
+
+  <div class="card" style="padding:15px; display:flex; flex-direction:column; justify-content:center;">
+    <h5 style="margin:0 0 10px 0; color:#5a5c69; font-size:1rem; display:flex; align-items:center; gap:8px;">
+      <i class="ri-file-info-line" style="color:#4e73df;"></i> Template Aktif
+    </h5>
+    <div id="template-aktif-container"
+      style="background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0; padding:10px;">
+      <p style="color:#94a3b8; margin:0; font-size:0.85rem;">Memuat...</p>
+    </div>
+  </div>
+
+
+  <div class="card" style="padding:15px;">
+    <h5 style="margin:0 0 10px 0; color:#5a5c69; font-size:1rem; display:flex; align-items:center; gap:8px;">
+      <i class="ri-upload-cloud-2-line" style="color:#4e73df;"></i> Upload Template Baru
+    </h5>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <div id="template-dropzone" style="border:2px dashed #cbd5e1; border-radius:8px; padding:10px; flex:1;
+                    text-align:center; cursor:pointer; background:#f8fafc;
+                    transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:10px;">
+        <input type="file" id="inp-template-file" accept=".doc,.docx,application/msword,
+                         application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none">
+        <i class="ri-file-word-line" style="font-size:1.5rem; color:#4e73df;"></i>
+        <div style="text-align:left;">
+          <div style="font-weight:600; color:#4a5568; font-size:0.8rem;" id="template-dz-text">
+            Klik atau seret file .doc/.docx
+          </div>
+          <div style="font-size:0.7rem; color:#94a3b8; margin-top:2px;" id="template-dz-subtext">
+            Maksimal 10MB
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-upload-template" disabled style="height:44px; padding:0 15px; border-radius:8px; border:none; background:#4e73df;
+                       color:white; font-weight:600; font-size:0.85rem;
+                       opacity:0.5; cursor:not-allowed; transition:all 0.2s; white-space:nowrap;">
+        <i class="ri-upload-2-line"></i> Upload
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Sunting Kesanggupan -->
+<div id="keuKesanggupanEditModal"
+  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9999; align-items:center; justify-content:center;">
+  <div
+    style="background:#fff; width:90%; max-width:520px; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.18); overflow:hidden; position:relative;">
+    <div
+      style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #e2e8f0;">
+      <h3 style="margin:0; font-size:1rem; font-weight:700; color:#1e293b;">Kelola Status Kesanggupan</h3>
+      <button onclick="closeKeuKesanggupanModal()"
+        style="background:none; border:none; cursor:pointer; font-size:1.3rem; color:#94a3b8; line-height:1;">&times;</button>
+    </div>
+    <div style="padding:20px;">
+      <input type="hidden" id="keuKesEditId">
+      <input type="hidden" id="keuKesEditFileName">
+      <!-- Catatan / Alasan -->
+      <div style="margin-bottom:16px;">
+        <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+          Catatan / Alasan <span style="color:#e74a3b;">*</span>
+        </label>
+        <textarea id="keuKesEditNote" rows="4" required placeholder="Masukkan catatan atau alasan..."
+          style="width:100%; padding:10px 12px; border:1px solid #d1d3e2; border-radius:8px; font-size:0.875rem; resize:vertical; font-family:inherit; box-sizing:border-box;"></textarea>
+      </div>
+      <!-- Status -->
+      <div style="margin-bottom:20px;">
+        <label style="font-weight:600; font-size:0.875rem; color:#374151; display:block; margin-bottom:6px;">
+          Status <span style="color:#e74a3b;">*</span>
+        </label>
+        <div class="admin-custom-select" id="dropdown-keuKesEditStatus" style="width:100%;">
+          <button type="button" class="select-trigger"
+            style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#374151; cursor:pointer; box-sizing:border-box;">
+            <span class="selected-text" id="text-keuKesEditStatus">Pending</span>
+            <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc;"></i>
+          </button>
+          <div class="select-options" style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px;">
+            <div class="option selected" data-value="pending">Pending</div>
+            <div class="option" data-value="approved">Disetujui</div>
+            <div class="option" data-value="rejected">Perbaiki</div>
+          </div>
+          <input type="hidden" id="keuKesEditStatus" value="pending">
+        </div>
+      </div>
+      <!-- Preview Dokumen -->
+      <div style="margin-bottom:20px;">
+        <a id="keuKesPreviewLink" href="#" target="_blank"
+          style="display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:10px; border:1px solid #d1d3e2; border-radius:8px; font-size:0.875rem; color:#374151; text-decoration:none; font-weight:500; background:#f8fafc; box-sizing:border-box;">
+          <i class="ri-file-search-line"></i> Preview Surat Kesanggupan
+        </a>
+      </div>
+      <!-- Tombol aksi -->
+      <div style="display:flex; gap:10px;">
+        <button type="button" onclick="closeKeuKesanggupanModal()"
+          style="flex:1; padding:10px; background:#fff; color:#374151; border:1px solid #d1d3e2; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem;">
+          Batal
+        </button>
+        <button type="button" id="keuKesBtnSimpan" onclick="keuKesSimpanPerubahan()"
+          style="flex:2; padding:10px; background:#4e73df; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.875rem;">
+          Simpan Perubahan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

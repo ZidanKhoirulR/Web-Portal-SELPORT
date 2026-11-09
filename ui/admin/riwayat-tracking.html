@@ -1,0 +1,29 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <h2>Riwayat Pelacakan Pelanggan</h2>
+</div>
+<div class="search-bar" style="justify-content: space-between;">
+    <input type="text" id="trackingSearch" placeholder="Cari user, IP, aktivitas..." class="form-control"
+        >
+    <button class="btn btn-primary" onclick="window.showDeleteHistoryModal()">
+        <i class="ri-delete-bin-line"></i> Hapus Riwayat
+    </button>
+</div>
+<div class="card">
+    <div class="table-responsive tracking-wrapper">
+        <table class="table" id="trackingTable">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Jam</th>
+                    <th>User</th>
+                    <th>IP Address</th>
+                    <th>Device</th>
+                    <th>Aktivitas</th>
+                    <th>URL</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="trackingPagination" class="pagination-container"></div>
+</div>

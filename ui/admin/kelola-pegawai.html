@@ -1,0 +1,38 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <h2>Kelola Pegawai</h2>
+</div>
+<div class="search-bar">
+    <input type="text" id="pegawaiSearch" placeholder="Cari username atau nama..." class="form-control">
+    <div class="admin-custom-select" id="dropdown-pegawaiRole">
+        <button type="button" class="select-trigger">
+            <span class="selected-text">Semua Role</span>
+            <svg class="select-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </button>
+        <div class="select-options">
+            <div class="option selected" data-value="">Semua Role</div>
+            <div class="option" data-value="admin">Admin</div>
+            <div class="option" data-value="mitra">Mitra</div>
+            <div class="option" data-value="keuangan">Keuangan</div>
+            <div class="option" data-value="sertifikasi">Sertifikasi</div>
+        </div>
+        <input type="hidden" id="pegawaiRoleFilter" value="">
+    </div>
+</div>
+<div class="card">
+    <div class="table-responsive" style="overflow: visible;">
+        <table class="table" id="pegawaiTable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Nama</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="pegawaiPagination" class="pagination-container"></div>
+</div>

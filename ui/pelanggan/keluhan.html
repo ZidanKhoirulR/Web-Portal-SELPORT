@@ -1,0 +1,915 @@
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ BASE }}/public/css/pelanggan/keluhan.css?v=3">
+
+
+<div class="order-detail-header" style="margin-bottom: 20px;">
+    <button onclick="loadSection('beranda')" class="back-btn-modern">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+    </button>
+    <div class="header-text-group">
+        <span class="header-subtitle">LAYANAN & KELUHAN</span>
+        <h1 class="header-order-id" style="font-size: 18px;">Permintaan Informasi Data Layanan /Keluhan Layanan</h1>
+    </div>
+</div>
+
+<!-- Type Choice Modal -->
+<div class="type-modal-overlay" id="typeChoiceModal">
+    <div class="type-modal-box">
+        <div class="type-modal-icon">
+            <i class="ri-customer-service-2-line"></i>
+        </div>
+        <h3>Buat Permintaan Baru</h3>
+        <p>Pilih jenis permintaan yang ingin Anda ajukan</p>
+
+        <button class="type-btn btn-layanan" onclick="startNewWithType('layanan')">
+            <i class="ri-star-line"></i>
+            <div style="text-align: left;">
+                <div>Layanan Informasi</div>
+                <div style="font-size: 11px; font-weight: 400; opacity: 0.85;">Konsultasi, permintaan data & dokumen</div>
+            </div>
+        </button>
+        <button class="type-btn btn-keluhan" onclick="startNewWithType('keluhan')">
+            <i class="ri-error-warning-line"></i>
+            <div style="text-align: left;">
+                <div>Keluhan</div>
+                <div style="font-size: 11px; font-weight: 400; opacity: 0.85;">Laporan keluhan atau masalah pelayanan</div>
+            </div>
+        </button>
+        <button class="type-btn btn-cancel" onclick="closeTypeModal()">Batal</button>
+    </div>
+</div>
+
+<div class="inbox-container">
+    <!-- Sidebar: Chat List -->
+    <div class="inbox-sidebar">
+        <div class="inbox-header">
+            <div style="display: flex; margin-bottom: 10px;">
+                <button onclick="openTypeModal()" id="btnNewTicket"
+                    style="width: 100%; justify-content: center; background: linear-gradient(135deg, #2C7BE5 0%, #1a56c4 100%); color: white; border: none; border-radius: 20px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 3px 10px rgba(44,123,229,0.3); transition: all 0.2s;">
+                    <i class="ri-add-line"></i> Buat Permintaan Baru
+                </button>
+            </div>
+            <!-- Filter Tabs -->
+            <div class="filter-tabs" id="mainFilterTabs">
+                <button class="filter-tab active active-layanan" data-filter="layanan" onclick="setMainFilter('layanan', this)">Layanan</button>
+                <button class="filter-tab" data-filter="keluhan" onclick="setMainFilter('keluhan', this)">Keluhan</button>
+                <button class="filter-tab" data-filter="active" onclick="setMainFilter('active', this)">Aktif</button>
+                <button class="filter-tab" data-filter="resolved" onclick="setMainFilter('resolved', this)">Selesai</button>
+            </div>
+        </div>
+
+        <ul class="chat-list" id="unifiedList">
+            <li class="chat-item" style="justify-content: center; color: #94a3b8; pointer-events: none;">
+                <div class="spinner-small" style="width:20px;height:20px;border:2px solid #ccc;border-top-color:#2c7be5;border-radius:50%;animation:spin 1s infinite linear;"></div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content: Active Chat -->
+    <div class="inbox-main" id="inboxMainArea">
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <i class="ri-customer-service-2-line" style="font-size: 34px; color: #2c7be5;"></i>
+            </div>
+            <h4 style="font-size: 17px; color: #1e293b; margin-bottom: 6px;">Pusat Layanan &amp; Informasi</h4>
+            <p style="color: #94a3b8; font-size: 13px; text-align: center; max-width: 220px;">Pilih percakapan di kiri atau buat permintaan baru</p>
+        </div>
+
+        <!-- Active Chat Interface -->
+        <div id="activeChatInterface" style="display: none; flex-direction: column; height: 100%;">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar" id="activeAvatar"><i class="ri-customer-service-2-line"></i></div>
+                    <div class="chat-header-text">
+                        <h3 id="activeCustomerName">Layanan &amp; Informasi</h3>
+                        <p>
+                            <span id="activeTicketId">ID: ---</span>
+                            <span id="activeCategoryContainer" style="display:none;">• <i class="ri-price-tag-3-line"></i> <span id="activeCategory">Kategori</span></span>
+                            <span id="activeStatusContainer" style="display:none;">• <span id="activeStatus" class="status-badge">Status</span></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-messages" id="chatArea"></div>
+
+            <!-- File Preview -->
+            <div id="filePreviewContainer">
+                <div class="preview-item">
+                    <i class="ri-file-line"></i>
+                    <span id="previewFileName">filename.jpg</span>
+                    <i class="ri-close-line remove-file" onclick="clearFileSelection()"></i>
+                </div>
+            </div>
+
+            <!-- Reply Preview Area -->
+            <div id="replyPreviewContainer" style="display: none; padding: 8px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; border-left: 4px solid #2C7BE5; align-items: flex-start; justify-content: space-between; font-size: 13px;">
+                <div style="flex: 1; overflow: hidden;">
+                    <div style="font-weight: 600; color: #2C7BE5; margin-bottom: 2px;" id="replyPreviewName">Name</div>
+                    <div style="color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="replyPreviewText">Text</div>
+                </div>
+                <button onclick="cancelReply()" style="background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 18px;"><i class="ri-close-line"></i></button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area" id="chatInputArea">
+                <input type="file" id="chatFileInput" style="display: none;" onchange="handleFileSelect(this)" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx">
+                <button class="btn-attach" onclick="document.getElementById('chatFileInput').click()" title="Upload file (JPG, PNG, PDF, Word, Excel)">
+                    <i class="ri-attachment-2"></i>
+                </button>
+                <input type="text" id="replyMessage" placeholder="Ketik pesan Anda di sini..." autocomplete="off" onkeypress="if(event.key==='Enter') sendReply()">
+                <button class="btn-send" id="btnSend" onclick="sendReply()">
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+            <div class="file-type-hint" id="fileTypeHint" style="padding: 4px 22px; background: white; border-top: 1px solid #e2e8f0; text-align: center;">
+                <i class="ri-information-line"></i> File yang diizinkan: JPG, PDF, Word, Excel
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== STATE =====
+    let currentItemId   = null;   // ID of active ticket
+    let currentItemType = null;   // 'layanan' | 'keluhan'
+    let allTickets      = [];     // merged list [{...ticket, _type:'layanan'|'keluhan'}]
+    let mainFilter      = 'layanan';  // layanan | keluhan | active | resolved
+    let checkInterval   = null;
+    let selectedCategory = null;  // for layanan form
+    let allOrders       = [];
+
+    // ===== INIT =====
+    window.initKeluhan = async function () {
+        currentItemId   = null;
+        currentItemType = null;
+        allTickets      = [];
+        mainFilter      = 'layanan';
+        selectedCategory = null;
+        await loadAll();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('new') === 'layanan') {
+            startNewWithType('layanan');
+        } else if (urlParams.get('new') === 'keluhan' || window.pendingComplaintOrder) {
+            startNewWithType('keluhan');
+        }
+    };
+    window.initKeluhan();
+
+    // Auto-refresh every 30s
+    const refreshInterval = setInterval(() => {
+        if (document.getElementById('unifiedList')) loadAll(true);
+        else clearInterval(refreshInterval);
+    }, 30000);
+
+    // ===== LOAD BOTH LISTS IN PARALLEL =====
+    async function loadAll(silent = false) {
+        const listEl = document.getElementById('unifiedList');
+        if (!silent) {
+            listEl.innerHTML = '<li class="chat-item" style="justify-content:center;color:#94a3b8;pointer-events:none;"><div class="spinner-small" style="width:20px;height:20px;border:2px solid #ccc;border-top-color:#2c7be5;border-radius:50%;animation:spin 1s infinite linear;"></div></li>';
+        }
+
+        try {
+            const [layananRes, keluhanRes] = await Promise.all([
+                fetch(window.BASE_URL + '/dashboard/layanan/list'),
+                fetch(window.BASE_URL + '/dashboard/keluhan/list')
+            ]);
+            const [layananData, keluhanData] = await Promise.all([layananRes.json(), keluhanRes.json()]);
+            const layananList    = (layananData.success ? layananData.data : []) || [];
+            const keluhanList  = (keluhanData.success ? keluhanData.data : []) || [];
+
+            const tagged = [
+                ...layananList.map(t => ({ ...t, _type: 'layanan' })),
+                ...keluhanList.map(t => ({ ...t, _type: 'keluhan' }))
+            ];
+
+            // Sort newest first
+            tagged.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            allTickets = tagged;
+            renderList();
+        } catch (e) {
+            console.error('loadAll error:', e);
+            listEl.innerHTML = '<li style="padding:16px;text-align:center;color:#ef4444;">Gagal memuat data. Coba muat ulang halaman.</li>';
+        }
+    }
+
+    // ===== FILTER =====
+    function setMainFilter(filter, btn) {
+        mainFilter = filter;
+        document.querySelectorAll('.filter-tab').forEach(t => {
+            t.classList.remove('active', 'active-layanan', 'active-keluhan', 'active-active', 'active-resolved');
+        });
+        
+        const colorMap = {
+            'layanan': 'active-layanan',
+            'keluhan': 'active-keluhan',
+            'active': 'active-active',
+            'resolved': 'active-resolved'
+        };
+        btn.classList.add('active', colorMap[filter] || 'active-layanan');
+        renderList();
+    }
+
+    // ===== RENDER SIDEBAR LIST =====
+    function renderList() {
+        const listEl = document.getElementById('unifiedList');
+        let filtered = allTickets;
+
+        if (mainFilter === 'layanan')      filtered = allTickets.filter(t => t._type === 'layanan');
+        else if (mainFilter === 'keluhan') filtered = allTickets.filter(t => t._type === 'keluhan');
+        else if (mainFilter === 'active')    filtered = allTickets.filter(t => (t.status || '').toLowerCase() !== 'resolved');
+        else if (mainFilter === 'resolved')  filtered = allTickets.filter(t => (t.status || '').toLowerCase() === 'resolved');
+
+        if (filtered.length === 0) {
+            listEl.innerHTML = `<li style="padding:30px 16px;text-align:center;color:#94a3b8;">
+                <i class="ri-inbox-line" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+                Belum ada permintaan
+            </li>`;
+            return;
+        }
+
+        let html = '';
+        filtered.forEach(item => {
+            const isActive = currentItemId == item.id && currentItemType === item._type;
+            const activeClass = isActive ? (item._type === 'layanan' ? 'active-layanan' : 'active-keluhan') : '';
+            const avatarClass = item._type === 'layanan' ? 'type-layanan' : 'type-keluhan';
+
+            const dateObj = new Date(item.created_at);
+            const isToday = new Date().toDateString() === dateObj.toDateString();
+            const timeStr = isToday
+                ? dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':')
+                : dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+
+            const statusLower = (item.status || '').toLowerCase();
+            let statusMini = '';
+            if (statusLower === 'pending')  statusMini = '<span class="status-mini" style="background:#fef3c7;color:#d97706;">Menunggu</span>';
+            else if (statusLower === 'resolved') statusMini = '<span class="status-mini" style="background:#d1fae5;color:#059669;">Selesai</span>';
+            else if (item.status)           statusMini = '<span class="status-mini" style="background:#e0f2fe;color:#0284c7;">Proses</span>';
+
+            const typeBadge = item._type === 'layanan'
+                ? '<span class="type-badge layanan"><i class="ri-star-line"></i> LYN</span>'
+                : '<span class="type-badge keluhan"><i class="ri-error-warning-line"></i> KLH</span>';
+
+            const ticketId = item._type === 'layanan'
+                ? (item.no_layanan   || `LYN-${item.id}`)
+                : (item.no_pengaduan || `KLH-${item.id}`);
+
+            const preview = item._type === 'layanan'
+                ? getCategoryLabel(item.category)
+                : (item.topic_name || 'Topik Umum');
+
+            const avatarIcon = item._type === 'layanan' ? 'ri-customer-service-line' : 'ri-error-warning-line';
+
+            const clickArgs = item._type === 'layanan'
+                ? `viewTicket('layanan', ${item.id}, '${escJS(getCategoryLabel(item.category))}', '${escJS(item.status)}', '${escJS(item.created_at)}', '${escJS(ticketId)}')`
+                : `viewTicket('keluhan', ${item.id}, '${escJS(item.topic_name || 'Topik Umum')}', '${escJS(item.status)}', '${escJS(item.created_at)}', '${escJS(ticketId)}')`;
+
+            html += `
+                <li class="chat-item ${activeClass}" onclick="${clickArgs}">
+                    <div class="chat-avatar ${avatarClass}"><i class="${avatarIcon}"></i></div>
+                    <div class="chat-info">
+                        <div class="chat-name-row">
+                            <div class="chat-name">${typeBadge} #${ticketId}${statusMini}</div>
+                            <div class="chat-time">${timeStr}</div>
+                        </div>
+                        <div class="chat-preview">${preview}</div>
+                    </div>
+                </li>`;
+        });
+        listEl.innerHTML = html;
+    }
+
+    function escJS(str) {
+        if (!str) return '';
+        return String(str).replace(/'/g, "\\'").replace(/\n/g, ' ');
+    }
+
+    function getCategoryLabel(category) {
+        const labels = {
+            'info': 'Informasi Umum', 'konsultasi': 'Konsultasi Teknis',
+            'permintaan': 'Permintaan Data', 'dokumen': 'Permintaan Dokumen', 'lainnya': 'Lainnya'
+        };
+        return labels[category] || category || 'Umum';
+    }
+
+    // ===== TYPE MODAL =====
+    function openTypeModal() {
+        document.getElementById('typeChoiceModal').classList.add('active');
+    }
+    function closeTypeModal() {
+        document.getElementById('typeChoiceModal').classList.remove('active');
+    }
+    document.getElementById('typeChoiceModal').addEventListener('click', function(e) {
+        if (e.target === this) closeTypeModal();
+    });
+
+    // ===== START NEW CHAT =====
+    async function startNewWithType(type) {
+        closeTypeModal();
+        currentItemId   = null;
+        currentItemType = type;
+        selectedCategory = null;
+
+        document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active', 'active-layanan'));
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('activeChatInterface').style.display = 'flex';
+
+        // Header color
+        const avatar = document.getElementById('activeAvatar');
+        const sendBtn = document.getElementById('btnSend');
+        if (type === 'layanan') {
+            avatar.style.background = '#10b981';
+            sendBtn.className = 'btn-send green-send';
+            document.getElementById('activeCustomerName').textContent = 'Layanan Informasi Baru';
+            document.getElementById('activeTicketId').textContent = 'Pilih kategori layanan';
+        } else {
+            avatar.style.background = '#f59e0b';
+            sendBtn.className = 'btn-send';
+            sendBtn.style.background = '#f59e0b';
+            document.getElementById('activeCustomerName').textContent = 'Keluhan Baru';
+            document.getElementById('activeTicketId').textContent = 'Isi detail keluhan';
+        }
+        document.getElementById('activeCategoryContainer').style.display = 'none';
+        document.getElementById('activeStatusContainer').style.display  = 'none';
+        document.getElementById('chatInputArea').style.display = 'flex';
+        document.getElementById('fileTypeHint').style.display = 'block';
+
+        if (type === 'layanan') {
+            await renderNewLayananForm();
+        } else {
+            await renderNewKeluhanForm();
+        }
+
+        document.getElementById('replyMessage').value = '';
+        clearFileSelection();
+        if (checkInterval) clearInterval(checkInterval);
+    }
+
+    // ===== LAYANAN NEW FORM =====
+    async function renderNewLayananForm() {
+        document.getElementById('chatArea').innerHTML = `
+            <div style="margin:auto;text-align:center;padding:16px 0;max-width:480px;">
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:22px;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+                        <div style="width:32px;height:32px;background:#10b981;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            <i class="ri-star-line" style="color:white;font-size:16px;"></i>
+                        </div>
+                        <h4 style="font-size:15px;color:#1e293b;margin:0;">Layanan Informasi Baru</h4>
+                    </div>
+
+                    <label style="display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:10px;text-align:left;">Pilih Kategori</label>
+                    <div class="category-grid">
+                        <div class="category-item" onclick="selectCategory('info')" data-cat="info">
+                            <i class="ri-information-line"></i><span>Informasi Umum</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('konsultasi')" data-cat="konsultasi">
+                            <i class="ri-customer-service-line"></i><span>Konsultasi Teknis</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('permintaan')" data-cat="permintaan">
+                            <i class="ri-file-list-line"></i><span>Permintaan Data</span>
+                        </div>
+                        <div class="category-item" onclick="selectCategory('dokumen')" data-cat="dokumen">
+                            <i class="ri-folder-line"></i><span>Permintaan Dokumen</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align:left;margin-bottom:12px;">
+                        <label style="display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;">Subkategori</label>
+                        <input type="text" id="subcategoryInput" placeholder="Contoh: Sertifikasi Produk"
+                            style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:8px;outline:none;font-size:13px;background:white;">
+                    </div>
+
+                    <div style="text-align:left;margin-bottom:12px;">
+                        <label style="display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">Order Terkait</label>
+                        <div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;">
+                            <select id="oLYearSelect" onchange="filterOrders(currentOFilter, '#newLayananOrderSelect')"
+                                style="flex:1;height:32px;padding:0 24px 0 10px;border:1px solid #cbd5e1;border-radius:14px;outline:none;font-size:11px;background:white url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22/%3E%3C/svg%3E') no-repeat right 8px center;appearance:none;-webkit-appearance:none;cursor:pointer;color:#475569;font-weight:500;box-sizing:border-box;">
+                                <option value="">Semua Tahun</option>
+                            </select>
+                            <button onclick="filterOrders('ongoing', '#newLayananOrderSelect')" id="oLFilterOngoing"
+                                style="flex:1;height:32px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;padding:0;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;">
+                                <i class="ri-time-line"></i> Berjalan
+                            </button>
+                            <button onclick="filterOrders('completed', '#newLayananOrderSelect')" id="oLFilterCompleted"
+                                style="flex:1;height:32px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;padding:0;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;">
+                                <i class="ri-check-line"></i> Selesai
+                            </button>
+                        </div>
+                        <select id="newLayananOrderSelect" style="width:100%;height:38px;padding:0 30px 0 12px;border:1px solid #cbd5e1;border-radius:8px;outline:none;font-size:12px;background:white url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22/%3E%3C/svg%3E') no-repeat right 12px center;appearance:none;-webkit-appearance:none;cursor:pointer;color:#1e293b;text-overflow:ellipsis;">
+                            <option value="">-- Tidak ada order --</option>
+                        </select>
+                    </div>
+
+                    <div style="background:#f0fdf4;border-left:3px solid #10b981;padding:10px 12px;border-radius:6px;text-align:left;">
+                        <p style="font-size:12px;color:#166534;margin:0;">
+                            <i class="ri-information-line"></i>
+                            Pilih kategori dan isi detail permintaan Anda. Anda bisa berkonsultasi atau bertanya langsung melalui chat ini.
+                        </p>
+                    </div>
+                </div>
+            </div>`;
+
+        await fetchOrders('#newLayananOrderSelect');
+    }
+
+    // ===== KELUHAN NEW FORM =====
+    async function renderNewKeluhanForm() {
+        document.getElementById('chatArea').innerHTML = `
+            <div style="margin:auto;text-align:center;padding:16px 0;max-width:480px;">
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:22px;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+                        <div style="width:32px;height:32px;background:#f59e0b;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            <i class="ri-error-warning-line" style="color:white;font-size:16px;"></i>
+                        </div>
+                        <h4 style="font-size: 15px; color: #1e293b; margin: 0;">Keluhan Baru</h4>
+                    </div>
+
+                    <div style="text-align:left;margin-bottom:12px;">
+                        <label style="display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:8px;">Order Terkait</label>
+                        <div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;">
+                            <select id="oYearSelect" onchange="filterOrders(currentOFilter, '#newKeluhanOrderSelect')"
+                                style="flex:1;height:32px;padding:0 24px 0 10px;border:1px solid #cbd5e1;border-radius:14px;outline:none;font-size:11px;background:white url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22/%3E%3C/svg%3E') no-repeat right 8px center;appearance:none;-webkit-appearance:none;cursor:pointer;color:#475569;font-weight:500;box-sizing:border-box;">
+                                <option value="">Semua Tahun</option>
+                            </select>
+                            <button onclick="filterOrders('ongoing', '#newKeluhanOrderSelect')" id="oFilterOngoing"
+                                style="flex:1;height:32px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;padding:0;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;">
+                                <i class="ri-time-line"></i> Berjalan
+                            </button>
+                            <button onclick="filterOrders('completed', '#newKeluhanOrderSelect')" id="oFilterCompleted"
+                                style="flex:1;height:32px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;padding:0;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;box-sizing:border-box;">
+                                <i class="ri-check-line"></i> Selesai
+                            </button>
+                        </div>
+                        <select id="newKeluhanOrderSelect" style="width:100%;height:38px;padding:0 30px 0 12px;border:1px solid #cbd5e1;border-radius:8px;outline:none;font-size:12px;background:white url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2364748b%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22/%3E%3C/svg%3E') no-repeat right 12px center;appearance:none;-webkit-appearance:none;cursor:pointer;color:#1e293b;text-overflow:ellipsis;">
+                            <option value="">-- Keluhan Umum / Tanpa Order --</option>
+                        </select>
+                    </div>
+
+                    <div style="background:#fffbeb;border-left:3px solid #f59e0b;padding:10px 12px;border-radius:6px;text-align:left;">
+                        <p style="font-size:12px;color:#92400e;margin:0;">
+                            <i class="ri-information-line"></i>
+                            Pilih order terkait jika masalah spesifik pada order tertentu. Ketik pesan dan kirim untuk memulai chat langsung dengan admin.
+                        </p>
+                    </div>
+                </div>
+            </div>`;
+
+        await fetchOrders('#newKeluhanOrderSelect');
+    }
+
+    let currentOFilter = 'all';
+    async function fetchOrders(selectSelector) {
+        try {
+            const res = await fetch(window.BASE_URL + '/dashboard/keluhan/orders');
+            const result = await res.json();
+            if (result.success && result.data.length > 0) {
+                allOrders = result.data;
+                
+                const years = [...new Set(allOrders.map(o => o.year).filter(y => y))].sort((a,b) => b-a);
+                const yearOpts = '<option value="">Semua Tahun</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+                
+                const ySelect1 = document.getElementById('oLYearSelect');
+                if (ySelect1) ySelect1.innerHTML = yearOpts;
+                
+                const ySelect2 = document.getElementById('oYearSelect');
+                if (ySelect2) ySelect2.innerHTML = yearOpts;
+
+                filterOrders('all', selectSelector);
+            }
+        } catch(e) { console.error('fetchOrders error', e); }
+    }
+
+    function populateOrderSelect(selector, orders) {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        const fallbackText = selector === '#newLayananOrderSelect' ? '-- Tidak ada order --' : '-- Keluhan Umum / Tanpa Order --';
+        let opts = `<option value="">${fallbackText}</option>`;
+        orders.forEach(o => { opts += `<option value="${o.no}" data-name="${o.name}">${o.name}</option>`; });
+        el.innerHTML = opts;
+    }
+
+    function filterOrders(f, selectSelector) {
+        if (currentOFilter === f && f !== 'all') {
+            f = 'all'; 
+        }
+        currentOFilter = f;
+        
+        const prefix = selectSelector === '#newLayananOrderSelect' ? 'oLFilter' : 'oFilter';
+        const activeColor = selectSelector === '#newLayananOrderSelect' ? '#10b981' : '#f59e0b';
+        const yearSelectId = selectSelector === '#newLayananOrderSelect' ? 'oLYearSelect' : 'oYearSelect';
+
+        ['Ongoing','Completed'].forEach(v => {
+            const btn = document.getElementById(prefix + v);
+            if (btn) { btn.style.background = '#f1f5f9'; btn.style.color = '#64748b'; }
+        });
+        
+        if (f !== 'all') {
+            const activeId = prefix + f.charAt(0).toUpperCase() + f.slice(1);
+            const activeBtn = document.getElementById(activeId);
+            if (activeBtn) { activeBtn.style.background = activeColor; activeBtn.style.color = 'white'; }
+        }
+
+        const selectedYear = document.getElementById(yearSelectId) ? document.getElementById(yearSelectId).value : '';
+
+        let filtered = allOrders;
+        if (f === 'ongoing')   filtered = filtered.filter(o => o.status === 'ongoing');
+        if (f === 'completed') filtered = filtered.filter(o => o.status === 'completed');
+        
+        if (selectedYear) {
+            filtered = filtered.filter(o => o.year === selectedYear);
+        }
+
+        populateOrderSelect(selectSelector, filtered);
+    }
+
+    function selectCategory(cat) {
+        selectedCategory = cat;
+        document.querySelectorAll('.category-item').forEach(i => i.classList.remove('selected'));
+        document.querySelector(`[data-cat="${cat}"]`)?.classList.add('selected');
+    }
+
+    // ===== VIEW EXISTING TICKET =====
+    async function viewTicket(type, id, categoryOrTopic, status, dateStr, ticketId) {
+        currentItemId   = id;
+        currentItemType = type;
+        selectedCategory = null;
+
+        document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active', 'active-layanan'));
+        renderList();
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('activeChatInterface').style.display = 'flex';
+
+        const avatar  = document.getElementById('activeAvatar');
+        const sendBtn = document.getElementById('btnSend');
+        const nameEl  = document.getElementById('activeCustomerName');
+        const catEl   = document.getElementById('activeCategory');
+        const catCont = document.getElementById('activeCategoryContainer');
+
+        if (type === 'layanan') {
+            avatar.style.background = '#10b981';
+            sendBtn.className = 'btn-send green-send';
+            sendBtn.style.background = '';
+            avatar.innerHTML = '<i class="ri-customer-service-line"></i>';
+            nameEl.textContent = 'Layanan Informasi';
+            catEl.textContent  = categoryOrTopic;
+        } else {
+            avatar.style.background = '#f59e0b';
+            sendBtn.className = 'btn-send';
+            sendBtn.style.background = '#f59e0b';
+            avatar.innerHTML = '<i class="ri-message-2-line"></i>';
+            nameEl.textContent = 'Keluhan';
+            catEl.textContent  = categoryOrTopic;
+        }
+        catCont.style.display = 'inline';
+
+        document.getElementById('activeTicketId').textContent = `#${ticketId}`;
+
+        const statusEl   = document.getElementById('activeStatus');
+        const statusCont = document.getElementById('activeStatusContainer');
+        statusCont.style.display = 'inline';
+        setStatusBadge(statusEl, status);
+
+        document.getElementById('replyMessage').value = '';
+        await loadMessages(type, id);
+
+        if (checkInterval) clearInterval(checkInterval);
+        checkInterval = setInterval(() => {
+            if (currentItemId === id && currentItemType === type) loadMessages(type, id, true);
+            else clearInterval(checkInterval);
+        }, 5000);
+    }
+
+    function setStatusBadge(el, status) {
+        el.className = 'status-badge';
+        el.style = '';
+        const s = (status || '').toLowerCase();
+        if (s === 'pending') {
+            el.classList.add('pending');
+            el.innerHTML = '<i class="ri-time-line"></i> Menunggu';
+        } else if (s === 'resolved') {
+            el.classList.add('resolved');
+            el.innerHTML = '<i class="ri-checkbox-circle-line"></i> Selesai';
+        } else {
+            el.classList.add('in-progress');
+            el.innerHTML = '<i class="ri-refresh-line"></i> Diproses';
+        }
+    }
+
+    // ===== LOAD MESSAGES =====
+    async function loadMessages(type, id, silent = false) {
+        const chatArea = document.getElementById('chatArea');
+
+        if (!silent) {
+            const spinColor = type === 'layanan' ? '#10b981' : '#f59e0b';
+            chatArea.innerHTML = `<div style="text-align:center;padding:20px;"><div class="spinner-small" style="width:20px;height:20px;border:2px solid #ccc;border-top-color:${spinColor};border-radius:50%;animation:spin 1s infinite linear;display:inline-block;"></div></div>`;
+        }
+
+        const endpoint = type === 'layanan'
+            ? `${window.BASE_URL}/dashboard/layanan/chat/${id}`
+            : `${window.BASE_URL}/dashboard/keluhan/chat/${id}`;
+
+        try {
+            const resp = await fetch(endpoint);
+            if (!resp.ok) throw new Error('Network error');
+            const data = await resp.json();
+            if (!data.success) return;
+
+            const ticket = allTickets.find(t => t.id == id && t._type === type);
+            const isScrolledToBottom = silent
+                ? chatArea.scrollHeight - chatArea.clientHeight <= chatArea.scrollTop + 50
+                : false;
+
+            let isResolved = false;
+            if (ticket) {
+                // Sync status badge
+                const statusEl = document.getElementById('activeStatus');
+                if (statusEl) setStatusBadge(statusEl, ticket.status);
+                isResolved = (ticket.status || '').toLowerCase() === 'resolved';
+            }
+
+            // Show/hide input
+            const inputArea  = document.getElementById('chatInputArea');
+            const hintDiv    = document.getElementById('fileTypeHint');
+            if (inputArea) {
+                inputArea.style.display = isResolved ? 'none' : 'flex';
+                if (hintDiv) hintDiv.style.display = isResolved ? 'none' : 'block';
+            }
+
+            // Render messages
+            let html = '';
+            let lastDateLabel = null;
+
+            function getDateLabel(d) {
+                const today = new Date(), yesterday = new Date();
+                yesterday.setDate(today.getDate() - 1);
+                if (d.toDateString() === today.toDateString())     return 'Hari Ini';
+                if (d.toDateString() === yesterday.toDateString()) return 'Kemarin';
+                return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+            }
+
+            function dateDivider(dateStr) {
+                const d = new Date(dateStr);
+                const lbl = getDateLabel(d);
+                if (lbl !== lastDateLabel) {
+                    lastDateLabel = lbl;
+                    return `<div class="date-divider"><span>${lbl}</span></div>`;
+                }
+                return '';
+            }
+
+            if (data.data && data.data.length > 0) {
+                data.data.forEach(msg => {
+                    const dateObj = new Date(msg.created_at);
+                    const time = msg.created_at_formatted ||
+                        dateObj.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' }).replace('.', ':');
+
+                    html += dateDivider(msg.created_at);
+                    const isCustomer = msg.is_admin == 0;
+                    const cls = isCustomer ? 'customer' : 'admin';
+                    const sender = msg.nama_pengirim || (isCustomer ? 'Saya' : 'Admin');
+
+                    let fileHtml = '';
+                    if (msg.file_path) {
+                        const folder = type === 'layanan' ? 'services/chats' : 'complaints/chats';
+                        const fileUrl = `${window.BASE_URL}/public/uploads/${folder}/${msg.file_path}`;
+                        const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(msg.file_path);
+                        if (isImage) {
+                            fileHtml = `<div class="chat-file-preview"><img src="${fileUrl}" alt="Attachment" onclick="window.open(this.src)"></div>`;
+                        } else {
+                            fileHtml = `<a href="${fileUrl}" target="_blank" class="chat-file-link"><i class="ri-file-text-line"></i><span>${msg.original_filename || 'Unduh File'}</span></a>`;
+                        }
+                    }
+
+                    let cleanMsg = msg.message || '';
+                    let previewText = cleanMsg.replace(/<div class="reply-box"[\s\S]*?<\/div>\s*<\/div>/g, '').replace(/<[^>]*>?/gm, ' ').trim().substring(0, 60);
+                    if(previewText.length === 60) previewText += '...';
+                    if(!previewText && msg.file_path) previewText = 'Lampiran File';
+
+                    const safeName = sender.replace(/'/g, "\\'");
+                    const safeText = previewText.replace(/`/g, '\\`').replace(/'/g, "\\'");
+
+                    const replyBtnHtml = `
+                        <div class="chat-actions">
+                            <button class="btn-reply-action" onclick="prepareReply('${msg.id}', '${safeName}', '${safeText}')" title="Balas pesan ini"><i class="ri-reply-line"></i></button>
+                        </div>
+                    `;
+
+                    html += `
+                        <div class="chat-row ${cls}">
+                            ${!isCustomer ? replyBtnHtml : ''}
+                            <div class="chat-bubble ${cls}" style="margin-bottom: 0;">
+                                ${cleanMsg ? cleanMsg.replace(/\n/g, '<br>') : ''}
+                                ${fileHtml}
+                                <div class="chat-meta">${sender} — ${time}</div>
+                            </div>
+                            ${isCustomer ? replyBtnHtml : ''}
+                        </div>`;
+                });
+            }
+
+            if (isResolved) {
+                const label = type === 'layanan' ? 'Layanan ini' : 'Keluhan ini';
+                html += `<div style="text-align:center;margin:16px 0;">
+                    <span style="background:#e5e7eb;color:#4b5563;padding:6px 14px;border-radius:12px;font-size:12px;">
+                        <i class="ri-lock-line"></i> ${label} telah selesai dan ditutup.
+                    </span></div>`;
+            }
+
+            if (!silent || chatArea.innerHTML !== html) {
+                chatArea.innerHTML = html;
+                if (!silent || isScrolledToBottom) setTimeout(() => scrollToBottom(), 50);
+            }
+        } catch (e) {
+            console.error('loadMessages error:', e);
+        }
+    }
+
+    function scrollToBottom() {
+        const ca = document.getElementById('chatArea');
+        if (ca) ca.scrollTop = ca.scrollHeight;
+    }
+
+    window.activeReply = null;
+    function prepareReply(id, name, text) {
+        window.activeReply = { id, name, text };
+        document.getElementById('replyPreviewName').textContent = name;
+        document.getElementById('replyPreviewText').textContent = text;
+        document.getElementById('replyPreviewContainer').style.display = 'flex';
+        document.getElementById('replyMessage').focus();
+    }
+    function cancelReply() {
+        window.activeReply = null;
+        document.getElementById('replyPreviewContainer').style.display = 'none';
+    }
+
+    // ===== SEND REPLY / SUBMIT NEW =====
+    async function sendReply() {
+        const input   = document.getElementById('replyMessage');
+        const fileInp = document.getElementById('chatFileInput');
+        let text    = input.value.trim();
+        const file    = fileInp.files[0];
+        if (!text && !file) return;
+
+        if (window.activeReply) {
+            const replyHtml = `<div class="reply-box" style="background: rgba(0,0,0,0.05); padding: 8px 12px; border-left: 3px solid #2C7BE5; border-radius: 6px; margin-bottom: 8px; font-size: 12px; color: #475569;">
+                <div style="font-weight: 600; color: #2C7BE5; margin-bottom: 4px;"><i class="ri-reply-line"></i> Membalas ${window.activeReply.name}</div>
+                <div>${window.activeReply.text}</div>
+            </div>`;
+            text = replyHtml + text;
+        }
+
+        input.disabled = true;
+        const btn = document.getElementById('btnSend');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner-small" style="width:16px;height:16px;border:2px solid #ccc;border-top-color:#fff;border-radius:50%;animation:spin 1s infinite linear;display:inline-block;"></div>';
+
+        try {
+            const fd = new FormData();
+
+            if (currentItemId === null) {
+                // ======= CREATE NEW =======
+                if (currentItemType === 'layanan') {
+                    if (!selectedCategory) {
+                        alert('Silakan pilih kategori layanan terlebih dahulu.');
+                        return;
+                    }
+                    const subcategory = document.getElementById('subcategoryInput')?.value || '';
+                    const orderSel    = document.getElementById('newLayananOrderSelect');
+                    let orderNo = '', orderName = '';
+                    let finalMsg = text;
+                    if (orderSel && orderSel.value) {
+                        orderNo   = orderSel.value;
+                        orderName = orderSel.options[orderSel.selectedIndex].getAttribute('data-name') || '';
+                        finalMsg  = `[Terkait Order: ${orderNo}]\n${finalMsg}`;
+                    }
+                    fd.append('category',    selectedCategory);
+                    fd.append('subcategory', subcategory);
+                    fd.append('message',     finalMsg);
+                    if (orderNo)   fd.append('order_no',   orderNo);
+                    if (orderName) fd.append('order_name', orderName);
+                    if (file)      fd.append('chat_file',  file);
+                    fd.append('csrf_token', window.CSRF_TOKEN || '');
+
+                    const resp   = await fetch(window.BASE_URL + '/dashboard/layanan/submit', { method:'POST', body:fd });
+                    const result = await resp.json();
+                    if (result.success) {
+                        input.value = '';
+                        clearFileSelection();
+                        cancelReply();
+                        await loadAll(false);
+                        if (result.id) {
+                            await viewTicket('layanan', result.id, getCategoryLabel(selectedCategory), 'Pending',
+                                new Date().toISOString(), result.no_layanan || `LYN-${result.id}`);
+                            setTimeout(() => scrollToBottom(), 100);
+                        }
+                    } else {
+                        alert('Gagal mengirim layanan: ' + (result.message || ''));
+                    }
+
+                } else {
+                    // Keluhan
+                    const orderSel = document.getElementById('newKeluhanOrderSelect');
+                    let orderNo = '', orderName = '';
+                    let finalMsg = text;
+                    if (orderSel && orderSel.value) {
+                        orderNo   = orderSel.value;
+                        orderName = orderSel.options[orderSel.selectedIndex].getAttribute('data-name') || '';
+                        finalMsg  = `[Masalah pada Order: ${orderNo}]\n${finalMsg}`;
+                    }
+                    fd.append('topic_id',     '');
+                    fd.append('layanan_name', 'Umum');
+                    fd.append('reason',       finalMsg);
+                    if (orderNo)   fd.append('order_no',   orderNo);
+                    if (orderName) fd.append('order_name', orderName);
+                    if (file)      fd.append('chat_file',  file);
+                    fd.append('csrf_token', window.CSRF_TOKEN || '');
+
+                    const resp   = await fetch(window.BASE_URL + '/dashboard/keluhan/submit', { method:'POST', body:fd });
+                    const result = await resp.json();
+                    if (result.success) {
+                        input.value = '';
+                        clearFileSelection();
+                        cancelReply();
+                        await loadAll(false);
+                        if (result.id) {
+                            await viewTicket('keluhan', result.id, 'Umum', 'Pending',
+                                new Date().toISOString(), result.no_keluhan || `KLH-${result.id}`);
+                            setTimeout(() => scrollToBottom(), 100);
+                        }
+                    } else {
+                        alert('Gagal mengirim keluhan: ' + (result.message || ''));
+                    }
+                }
+
+            } else {
+                // ======= REPLY =======
+                const sendEndpoint = currentItemType === 'layanan'
+                    ? window.BASE_URL + '/dashboard/layanan/chat/send'
+                    : window.BASE_URL + '/dashboard/keluhan/chat/send';
+
+                if (currentItemType === 'layanan') {
+                    fd.append('service_id', currentItemId);
+                } else {
+                    fd.append('complaint_id', currentItemId);
+                }
+                fd.append('message',    text);
+                if (file) fd.append('chat_file', file);
+                fd.append('csrf_token', window.CSRF_TOKEN || '');
+
+                const resp   = await fetch(sendEndpoint, { method:'POST', body:fd });
+                const result = await resp.json();
+                if (result.success) {
+                    input.value = '';
+                    clearFileSelection();
+                    cancelReply();
+                    await loadMessages(currentItemType, currentItemId);
+                    setTimeout(() => scrollToBottom(), 100);
+                    await loadAll(true);
+                } else {
+                    alert('Gagal mengirim pesan: ' + (result.message || ''));
+                }
+            }
+        } catch (e) {
+            console.error('sendReply error:', e);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ri-send-plane-fill"></i>';
+            input.disabled = false;
+            input.focus();
+        }
+    }
+
+    // ===== FILE =====
+    function handleFileSelect(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const allowed = ['jpg','jpeg','png','pdf','doc','docx','xls','xlsx'];
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!allowed.includes(ext)) {
+            showMessage('Format Tidak Diizinkan', `File .${ext} tidak diizinkan. Gunakan format: JPG, PNG, PDF, Word, atau Excel.`, 'error');
+            input.value = '';
+            return;
+        }
+        document.getElementById('previewFileName').textContent = file.name;
+        document.getElementById('filePreviewContainer').style.display = 'flex';
+    }
+
+    function clearFileSelection() {
+        document.getElementById('chatFileInput').value = '';
+        document.getElementById('filePreviewContainer').style.display = 'none';
+    }
+
+    // Support pendingComplaintOrder from DashboardController
+    if (window.pendingComplaintOrder) {
+        startNewWithType('keluhan');
+    }
+</script>

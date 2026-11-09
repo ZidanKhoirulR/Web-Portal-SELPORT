@@ -1,0 +1,58 @@
+<div class="page-header" style="margin-bottom: 15px;">
+    <div>
+        <h2 style="margin:0; font-size:1.5rem; color:#5a5c69;">Kelola Pembayaran</h2>
+        <p style="margin:5px 0 0 0; color:#858796; font-size:0.9rem;">Lihat data bukti pembayaran yang diunggah
+            pelanggan.</p>
+    </div>
+</div>
+
+<div class="search-bar"
+    style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; align-items:center; background:#fff; padding:15px; border-radius:10px; border:1px solid #e3e6f0; box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.05);">
+    <div style="flex:1; min-width:300px; display:flex; gap:10px; align-items:center;">
+        <div style="position:relative; flex:1;">
+            <i class="ri-search-line"
+                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#858796;"></i>
+            <input type="text" id="mitra-paymentsSearch" class="form-control" placeholder="Cari nama perusahaan ...."
+                style="width:100%; padding-left:35px; height:40px; border-radius:8px; border:1px solid #d1d3e2; font-size:0.875rem;">
+        </div>
+
+        <div class="admin-custom-select" id="dropdown-mitra-paymentsFilter" style="width:180px; flex-shrink:0;">
+            <button type="button" class="select-trigger"
+                style="height:40px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 12px; background:#fff; border:1px solid #d1d3e2; font-size:0.875rem; color:#5a5c69; cursor:pointer;">
+                <span class="selected-text">Pending</span>
+                <i class="ri-arrow-down-s-line select-arrow" style="color:#b7b9cc;"></i>
+            </button>
+            <div class="select-options"
+                style="border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-top:5px;">
+                <div class="option selected" data-value="Pending">Pending</div>
+                <div class="option" data-value="Disetujui">Disetujui</div>
+                <div class="option" data-value="Perbaiki">Perbaiki</div>
+            </div>
+            <input type="hidden" id="mitra-paymentsFilter" value="Pending">
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive table-scroller">
+        <table class="table" id="mitra-paymentsTableFull">
+            <thead>
+                <tr>
+                    <th width="13%">Tanggal Upload</th>
+                    <th width="22%">Nama Perusahaan</th>
+                    <th width="20%">Keterangan</th>
+                    <th width="18%">Catatan</th>
+                    <th width="13%">Dikelola Oleh</th>
+                    <th width="14%" style="text-align:center">Status</th>
+                </tr>
+            </thead>
+            <tbody id="mitra-paymentsBody">
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:30px; color:#858796;">Memuat data...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="mitra-paymentsPagination" class="pagination-container"></div>
+</div>
