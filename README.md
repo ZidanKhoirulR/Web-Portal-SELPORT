@@ -17,7 +17,6 @@ BBSPJIS specializes in industrial standardization, research, testing, calibratio
 
 ### 1. Context and Problem Statement
 Prior to the implementation of SELPORT, industrial clients engaging BBSPJIS for technical services navigated fragmented workflows across distinct departments:
-- **Disparate Legacy Systems:** Testing operations, certification records, and calibration archives operated on independent, siloed database systems (`sil2020`, `serti2020`, and `sikalib2024`), preventing clients from viewing an aggregated progress report of their service orders.
 - **Manual Document Distribution:** Crucial legal and operational documents—including Minutes of Acceptance (BAPC), Certificate of Analysis / Test Result Reports (LHU), calibration certificates, and billing invoices—required in-person retrieval or manual administrative dispatch, resulting in turnaround bottlenecks.
 - **Data Privacy & Tampering Risks:** Unprotected direct links to sensitive test reports risked unauthorized enumeration and document exposure without strict cryptographic session binding.
 - **Communication Gaps:** Industrial customers lacked real-time visibility into milestone transitions, leading to repetitive inquiries and administrative workload.
