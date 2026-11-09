@@ -23,7 +23,7 @@ Prior to the implementation of SELPORT, industrial clients engaging BBSPJIS for 
 
 ### 2. The Architectural Solution
 SELPORT was architected as a lightweight, performant, and secure single-window service portal:
-- **Multi-Database Federation:** A centralized service layer dynamically bridges multiple MySQL databases (`portal_selport`, `sil2020`, `serti2020`, `sikalib2024`), presenting a consolidated, unified dashboard to authenticated clients while preserving database autonomy.
+- **Multi-Database Federation:** A centralized service layer dynamically bridges multiple internal service databases, presenting a consolidated, unified dashboard to authenticated clients while preserving operational autonomy.
 - **Cryptographic Tokenized Document Access:** Direct document paths are strictly hidden behind HMAC-SHA256 signature tokens with configurable time-to-live (`DOC_SECRET`). Document downloads validate caller identity, order ownership, and signature integrity before streaming, preventing link forgery and unauthorized snooping.
 - **Automated Multi-Channel Communication:** Integrated background notifications via PHPMailer (transactional email) and WhatsApp Gateway (instant order notifications and OTPs) ensure clients receive timely alerts at every review milestone.
 - **Auditable Administrative Governance:** Granular role-based controls for staff across administration, finance, certification, and calibration units, backed by real-time request tracking, profile change logs, and IP blocking defense.
@@ -40,7 +40,7 @@ SELPORT was architected as a lightweight, performant, and secure single-window s
 
 - **Backend:** PHP 8.x
 - **Framework:** [Fat-Free Framework (F3) v3.9](https://fatfreeframework.com/)
-- **Database:** MySQL / MariaDB (Multi-database support: `portal_selport`, `sil2020`, `serti2020`, `sikalib2024`)
+- **Database:** MySQL / MariaDB
 - **PDF Generation:** TCPDF
 - **Email Service:** PHPMailer
 - **Frontend:** Responsive HTML5 / CSS3 / JavaScript
