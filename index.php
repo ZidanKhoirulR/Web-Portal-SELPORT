@@ -59,9 +59,9 @@ $f3->set('DEBUG', 0);
 $f3->set('BASE', (isset($_SERVER['BASE']) ? $_SERVER['BASE'] : (($pos = strpos($_SERVER['SCRIPT_NAME'], '/index.php')) !== false ? substr($_SERVER['SCRIPT_NAME'], 0, $pos) : '')));
 
 $dbHost = getenv('DB_HOST') ?: 'localhost';
-$dbPort = getenv('DB_PORT') ?: '3306';
-$dbName = getenv('DB_NAME') ?: 'portal_selport';
-$dbUser = getenv('DB_USER') ?: 'root';
+$dbPort = getenv('DB_PORT') ?: '';
+$dbName = getenv('DB_NAME') ?: '';
+$dbUser = getenv('DB_USER') ?: '';
 $dbPass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
 
 $f3->set('DB', new DB\SQL(
@@ -71,9 +71,9 @@ $f3->set('DB', new DB\SQL(
 ));
 
 $dbSilHost = getenv('DB_SIL_HOST') ?: 'localhost';
-$dbSilPort = getenv('DB_SIL_PORT') ?: '3306';
-$dbSilName = getenv('DB_SIL_NAME') ?: 'sil2020';
-$dbSilUser = getenv('DB_SIL_USER') ?: 'root';
+$dbSilPort = getenv('DB_SIL_PORT') ?: '';
+$dbSilName = getenv('DB_SIL_NAME') ?: '';
+$dbSilUser = getenv('DB_SIL_USER') ?: '';
 $dbSilPass = getenv('DB_SIL_PASS') !== false ? getenv('DB_SIL_PASS') : '';
 
 $f3->set('DB_SIL', new DB\SQL(
@@ -90,9 +90,9 @@ $dbSil = $f3->get('DB_SIL');
 $dbSerti = null;
 try {
     $dbSertiHost = getenv('DB_SERTI_HOST') ?: 'localhost';
-    $dbSertiPort = getenv('DB_SERTI_PORT') ?: '3306';
-    $dbSertiName = getenv('DB_SERTI_NAME') ?: 'serti2020';
-    $dbSertiUser = getenv('DB_SERTI_USER') ?: 'root';
+    $dbSertiPort = getenv('DB_SERTI_PORT') ?: '';
+    $dbSertiName = getenv('DB_SERTI_NAME') ?: '';
+    $dbSertiUser = getenv('DB_SERTI_USER') ?: '';
     $dbSertiPass = getenv('DB_SERTI_PASS') !== false ? getenv('DB_SERTI_PASS') : '';
 
     $f3->set('DB_SERTI', new DB\SQL(
@@ -109,9 +109,9 @@ try {
 $dbKalib = null;
 try {
     $dbKalibHost = getenv('DB_KALIB_HOST') ?: 'localhost';
-    $dbKalibPort = getenv('DB_KALIB_PORT') ?: '3306';
-    $dbKalibName = getenv('DB_KALIB_NAME') ?: 'sikalib2024';
-    $dbKalibUser = getenv('DB_KALIB_USER') ?: 'root';
+    $dbKalibPort = getenv('DB_KALIB_PORT') ?: '';
+    $dbKalibName = getenv('DB_KALIB_NAME') ?: '';
+    $dbKalibUser = getenv('DB_KALIB_USER') ?: '';
     $dbKalibPass = getenv('DB_KALIB_PASS') !== false ? getenv('DB_KALIB_PASS') : '';
 
     $f3->set('DB_KALIB', new DB\SQL(
@@ -125,7 +125,7 @@ try {
     $dbKalib = null;
 }
 
-// Set Timezone Database agar sinkron dengan PHP (WIB / Asia/Jakarta)
+// Set Timezone Database
 $db->exec("SET time_zone = '+07:00';");
 
 $trackingService = new TrackingService($db);
@@ -1163,7 +1163,7 @@ $f3->route('GET /mitra/@file', function ($f3, $params) use ($mitraController) {
     $mitraController->loadSection($f3, $params['file']);
 });
 
-// --- ROUTE KELUHAN & LAYANAN (PELANGGAN) ---
+// PELANGGAN
 $f3->route('POST /dashboard/keluhan/submit', function ($f3) use ($keluhanController) { $keluhanController->submit($f3); });
 $f3->route('GET /dashboard/keluhan/list', function ($f3) use ($keluhanController) { $keluhanController->getChatList($f3); });
 $f3->route('GET /dashboard/keluhan/messages/@id', function ($f3) use ($keluhanController) { $keluhanController->getMessages($f3); });
@@ -1186,7 +1186,7 @@ $f3->route('POST /dashboard/layanan/chat/send', function ($f3) use ($layananCont
 $f3->route('POST /dashboard/layanan/chat/clear', function ($f3) use ($layananController) { $layananController->clearMessages($f3); });
 $f3->route('GET /dashboard/layanan/categories', function ($f3) use ($layananController) { $layananController->getCategories($f3); });
 
-// --- ROUTE KELUHAN & LAYANAN (ADMIN/MITRA) ---
+// ADMIN/MITRA
 $f3->route('GET /mitra/keluhan-pelanggan', function ($f3) { $f3->reroute('/mitra/layanan-pelanggan'); });
 $f3->route('GET /mitra/layanan-pelanggan', function ($f3) use ($mitraController) { $mitraController->index($f3, 'layanan-pelanggan'); });
 
@@ -1211,7 +1211,7 @@ $f3->route('POST /mitra/api/layanan/clear', function ($f3) use ($layananControll
 
 
 // =========================================================
-// SERTIFIKASI ROUTES
+// SERTIFIKASI
 // =========================================================
 $f3->route('GET /sertifikasi', function ($f3) {
     $f3->reroute('/sertifikasi/dashboard');
@@ -1280,30 +1280,8 @@ $f3->route('GET /sertifikasi/@section', function ($f3, $params) use ($sertifikas
 });
 
 // =========================================================================
-// HELPER: Token Dokumen Aman (HMAC-signed)
+// HELPER
 // =========================================================================
-//
-// Cara kerja:
-//   1. Saat controller ingin membuat link unduh, panggil doc_make_token($filename, $type).
-//   2. Token = base64url( JSON{filename, type, exp} ) + "." + HMAC-SHA256( payload, DOC_SECRET ).
-//   3. URL yang tampil di browser: /dokumen/view/{type}/{token} — tidak ada nama file asli.
-//   4. Saat route /dokumen/view dibuka, token diverifikasi; jika palsu/expired → 403.
-//   5. File dibaca dari server dan di-stream ke browser (tidak redirect ke URL asli).
-//
-// Fungsi ini bisa dipanggil dari controller manapun dengan:
-//   doc_make_token($namaFile, 'invoice')
-//   doc_make_token($namaFile, 'bapc')
-//   dst.
-
-/**
- * Buat token URL yang aman untuk sebuah file dokumen.
- *
- * @param string $filename  Nama file asli (bukan path lengkap).
- * @param string $type      Jenis dokumen: 'bapc','lhu','invoice','surat-penawaran',
- *                          'pengecualian-dokumen','serti-*', dsb.
- * @param int    $ttl       Masa berlaku token dalam detik (default 1 jam).
- * @return string  Token yang siap disematkan ke URL.
- */
 function doc_make_token(string $filename, string $type, int $ttl = 3600): string {
     $f3     = \Base::instance();
     $secret = $f3->get('DOC_SECRET');
@@ -1318,12 +1296,6 @@ function doc_make_token(string $filename, string $type, int $ttl = 3600): string
     return $payload . '.' . $sig;
 }
 
-/**
- * Verifikasi token dan kembalikan data payload-nya, atau null jika tidak valid.
- *
- * @param string $token
- * @return array|null  Array ['f' => filename, 't' => type, 'exp' => timestamp] atau null.
- */
 function doc_verify_token(string $token): ?array {
     $f3     = \Base::instance();
     $secret = $f3->get('DOC_SECRET');
@@ -1346,13 +1318,6 @@ function doc_verify_token(string $token): ?array {
     return $data;
 }
 
-/**
- * Map tipe dokumen ke folder lokalnya (path absolut di server).
- * Sesuaikan jika ada penambahan tipe baru.
- *
- * @param string $type
- * @return string|null  Path folder (diakhiri '/'), atau null jika tipe tidak dikenal.
- */
 function doc_resolve_folder(string $type): ?string {
     $f3 = \Base::instance();
     $map = [
@@ -1400,14 +1365,6 @@ function doc_resolve_folder(string $type): ?string {
     return isset($map[$type]) ? rtrim($map[$type], '/') . '/' : null;
 }
 
-// =========================================================================
-// ROUTE: Proxy Unduh Dokumen Aman
-// =========================================================================
-// URL publik : /dokumen/view/{token}
-// Contoh pakai di controller:
-//   $token   = doc_make_token($namaFile, 'invoice');
-//   $linkUrl = $f3->get('BASE') . '/dokumen/view/' . $token;
-// =========================================================================
 $f3->route('GET /dokumen/view/@token', function ($f3, $params) {
     $token = $params['token'];
     $data  = doc_verify_token($token);
@@ -1462,21 +1419,21 @@ $f3->route('GET /dokumen/view/@token', function ($f3, $params) {
         while (ob_get_level()) ob_end_clean();
         header('Content-Type: ' . $mime);
         
-        // Jika ada Content-Length dari server asal, teruskan (abaikan array multiple)
+        // Jika ada Content-Length dari server asal, teruskan
         $contentLength = is_array($headers['Content-Length'] ?? null) ? $headers['Content-Length'][0] : ($headers['Content-Length'] ?? null);
         if ($contentLength) {
             header('Content-Length: ' . $contentLength);
         }
         
-        // Sembunyikan nama file asli
+        // Sembunyikan nama file 
         header('Content-Disposition: inline; filename="dokumen.' . $ext . '"'); 
         
-        // Stream file ke browser (true proxy) tanpa mengekspos URL sippisan
+        // Stream file ke browser (true proxy)
         @readfile($fileUrl, false, $context);
         exit;
     }
 
-    // File ada secara lokal — baca dan stream (nama file tetap tersembunyi)
+    // File ada secara lokal — baca dan stream
     $filepath = __DIR__ . '/' . ltrim($folder, '/') . $filename;
 
     if (!is_file($filepath)) {
@@ -1506,7 +1463,7 @@ $f3->route('GET /dokumen/view/@token', function ($f3, $params) {
 });
 
 // =========================================================================
-// ROUTE: Download Sertifikat Kalibrasi (Data Alat)
+// Download Sertifikat Kalibrasi (Data Alat)
 // =========================================================================
 $f3->route('GET /api/kalibrasi/sertifikat', function ($f3) {
     $token = $f3->get('GET.t');
@@ -1559,7 +1516,7 @@ $f3->route('GET /api/kalibrasi/sertifikat', function ($f3) {
 
     $filename = $result[0]['alat_sertifikat'];
     
-    $baseUrl = $f3->get('SIKALIB_SERTIFIKAT_URL') ?: 'https://sippisan-bbs.kemenperin.go.id/sikalib2024/public/uploads/sertifikat/';
+    $baseUrl = $f3->get('SIKALIB_SERTIFIKAT_URL') ?: '';
     
     // Tentukan apakah folder adalah URL eksternal atau path lokal
     if (strpos($baseUrl, 'http') === 0) {
@@ -1625,27 +1582,6 @@ $f3->route('GET /api/kalibrasi/sertifikat', function ($f3) {
     }
 });
 
-// =========================================================================
-// HELPER: Token Order ID Aman (HMAC-signed)
-// =========================================================================
-// Cara kerja (Order):
-//   1. Ketika user klik "Detail", JS memanggil GET /api/order/token?id=X&src=sil
-//   2. Server memvalidasi bahwa order X benar-benar milik user yang sedang login.
-//   3. Server mengembalikan token terenkripsi (HMAC), bukan angka aslinya.
-//   4. JS menyematkan token ke URL browser: /detailorder?t={token}&src=sil
-//   5. Saat section loader berjalan, token dikirim ke server untuk di-resolve
-//      kembali ke order_id asli → jika token palsu/expired → data tidak ditemukan.
-
-/**
- * Buat token aman untuk order_id.
- *
- * @param int|string $orderId  ID order asli.
- * @param string     $section  Nama section: 'detailorder' atau 'detailorderserti'.
- * @param string     $source   Sumber data: 'sil', 'pengecualian', dsb.
- * @param string     $sample   Jenis sampel (opsional).
- * @param int        $ttl      Masa berlaku dalam detik (default 2 jam).
- * @return string  Token siap pakai.
- */
 function order_make_token($orderId, string $section, string $source = 'sil', string $sample = '', int $ttl = 7200): string {
     $f3     = \Base::instance();
     $secret = $f3->get('DOC_SECRET');
@@ -1661,12 +1597,6 @@ function order_make_token($orderId, string $section, string $source = 'sil', str
     return $payload . '.' . $sig;
 }
 
-/**
- * Verifikasi token order dan kembalikan payload, atau null jika tidak valid.
- *
- * @param string $token
- * @return array|null
- */
 function order_verify_token(string $token): ?array {
     $f3     = \Base::instance();
     $secret = $f3->get('DOC_SECRET');
@@ -1688,15 +1618,11 @@ function order_verify_token(string $token): ?array {
 }
 
 // =========================================================================
-// ROUTE: Terbitkan token order (dipanggil oleh JavaScript saat klik Detail)
-// =========================================================================
-// GET /api/order/token?id={order_id}&section={detailorder|detailorderserti}&src={sil|pengecualian}&sample={...}
-// Mengembalikan: { "success": true, "token": "xxx" }
+// ROUTE: Terbitkan order
 // =========================================================================
 $f3->route('GET /api/order/token', function ($f3) use ($db) {
     header('Content-Type: application/json; charset=utf-8');
 
-    // Harus sudah login
     $userId = $f3->get('SESSION.user_id');
     if (!$userId) {
         echo json_encode(['success' => false, 'message' => 'Unauthorized']);
@@ -1713,8 +1639,7 @@ $f3->route('GET /api/order/token', function ($f3) use ($db) {
         return;
     }
 
-    // Validasi: pastikan order ini benar-benar milik user yang sedang login.
-    // Cek berdasarkan sumber (src): kalib → sikalib2024, selainnya → sil2020.
+    // Validasi
     try {
         $userRow    = $db->exec('SELECT id_customer FROM users WHERE id = ? LIMIT 1', [$userId]);
         $idCustomer = (int) ($userRow[0]['id_customer'] ?? 0);
@@ -1749,7 +1674,7 @@ $f3->route('GET /api/order/token', function ($f3) use ($db) {
                 }
             }
         }
-        // Jika id_customer = 0 (akun baru/belum terhubung), izinkan tapi tidak ada data yang tampil
+        // Jika id_customer = 0, izinkan tapi tidak ada data yang tampil
     } catch (\Exception $e) {
         // Jika tabel tidak ada atau query gagal, tetap terbitkan token (fallback)
     }
@@ -1759,11 +1684,9 @@ $f3->route('GET /api/order/token', function ($f3) use ($db) {
 });
 
 // =========================================================================
-// ROUTE: Resolve token order → kembalikan order_id asli ke section loader
+// ROUTE: Resolve  order
 // =========================================================================
-// GET /api/order/resolve?t={token}
-// Mengembalikan: { "success": true, "id": "16506", "section": "detailorder", ... }
-// =========================================================================
+
 $f3->route('GET /api/order/resolve', function ($f3) {
     header('Content-Type: application/json; charset=utf-8');
 
@@ -1803,7 +1726,7 @@ function formatTanggalIndo($tanggal) {
 
 
 // =========================================================
-// NOTIFIKASI ROUTES
+// NOTIFIKASI
 // =========================================================
 $f3->route('GET /dashboard/notifikasi/belum-dibaca', function ($f3) use ($notifikasiController) {
     $notifikasiController->getUnreadNotifications($f3);
